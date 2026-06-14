@@ -63,6 +63,8 @@ Based on mpvEx & mpvRex, with additional enhancements, optimizations and own cus
 
 ## Installation
 
+Download the latest stable version from the [GitHub releases page](https://github.com/aransari1/mpvNext/releases).
+
 <div class="image-row" align="center">
   <a href="https://github.com/aransari1/mpvNext/releases">
     <img src="https://img.shields.io/badge/Download-Stable_Release-blue?style=for-the-badge&logo=github" alt="Stable Release">
@@ -75,12 +77,6 @@ Based on mpvEx & mpvRex, with additional enhancements, optimizations and own cus
 <div align="center">
   <i>Note: Previews may be unstable and are intended for testing purposes only.</i>
 </div>
-
-### Stable Release
-Download the latest stable version from the [GitHub releases page](https://github.com/aransari1/mpvNext/releases).
-
-[![Download Release](https://img.shields.io/badge/Download-Release-blue?style=for-the-badge)](https://github.com/aransari1/mpvNext/releases)
-
 ---
 
 ## Credits
