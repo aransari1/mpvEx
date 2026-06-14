@@ -1,5 +1,5 @@
+![banner](fastlane/metadata/android/en-US/images/featureGraphic.png)
 # mpvNext
-
 <p align="center">
   <img src="app/src/main/ic_launcher-playstore.png" width="128" height="128" />
 </p>
@@ -40,7 +40,7 @@ mpvNext is an advanced, customizable video player for Android. It combines the v
 
 ## Features
 
-Based on mpvNext, with additional enhancements and optimizations built on top.
+Based on mpvEx & mpvRex, with additional enhancements, optimizations and own customizations built on top.
 
 *   **Subtitle Swipe Seeking:** Intuitive gestures to jump between subtitle lines.
 *   **Refined Tap Logic:** Enhanced single-tap response with exclusion zones and reverse double-tap options.
@@ -76,16 +76,32 @@ Based on mpvNext, with additional enhancements and optimizations built on top.
   <i>Note: Previews may be unstable and are intended for testing purposes only.</i>
 </div>
 
+### Stable Release
+Download the latest stable version from the [GitHub releases page](https://github.com/aransari1/mpvNext/releases).
+
+[![Download Release](https://img.shields.io/badge/Download-Release-blue?style=for-the-badge)](https://github.com/aransari1/mpvNext/releases)
+
 ---
 
 ## Credits
 
 mpvNext is a fork of **[mpvEx](https://github.com/marlboro-advance/mpvEx)** (based on **[mpv-android](https://github.com/mpv-android/mpv-android)**). Special thanks for the foundation and inspiration:
 
-[mpvEx](https://github.com/marlboro-advance/mpvEx) • [mpv-android](https://github.com/mpv-android) • [mpvKt](https://github.com/abdallahmehiz/mpvKt) • [Next player](https://github.com/anilbeesetti/nextplayer) • [Gramophone](https://github.com/FoedusProgramme/Gramophone)
+[mpvEx](https://github.com/marlboro-advance/mpvEx) • [mpvRex](https://github.com/sfsakhawat999/mpvRex) • [mpvRx](https://github.com/Riteshp2001/mpvRx) • [mpv-android](https://github.com/mpv-android) • [mpvKt](https://github.com/abdallahmehiz/mpvKt) • [Next player](https://github.com/anilbeesetti/nextplayer) • [Gramophone](https://github.com/FoedusProgramme/Gramophone)
 
 ---
 
 ## License
 
 Distributed under the **Apache License 2.0**. See `LICENSE` for more information.
+
+---
+## Star History <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Star.png" alt="Star" width="25" height="25" />
+
+<a href="https://www.star-history.com/#aransari1/mpvNext&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=aransari1/mpvNext&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=aransari1/mpvNext&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=aransari1/mpvNext&type=date&legend=top-left" />
+ </picture>
+</a>
