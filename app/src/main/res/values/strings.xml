@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name" translatable="false">mpvRex</string>
-    <string name="author_name" translatable="false">Sakhawat</string>
+    <string name="app_name" translatable="false">mpvNext</string>
+    <string name="author_name" translatable="false">Abdurrahman Ansari</string>
 
     <string name="generic_reset">Reset</string>
     <string name="generic_share">Share</string>
@@ -16,7 +16,7 @@
     <string name="pref_appearance_category_bottom_nav">Bottom Navigation Tabs</string>
     <string name="pref_appearance_tab_home_title">Home / Files</string>
     <string name="pref_appearance_tab_home_summary">Show local folders &amp; file explorer</string>
-    <string name="pref_appearance_tab_shorts_title">RexShorts</string>
+    <string name="pref_appearance_tab_shorts_title">NextShorts</string>
     <string name="pref_appearance_tab_shorts_summary">Toggle high-tempo vertical video feeds</string>
     <string name="pref_appearance_tab_recents_title">Recently Played</string>
     <string name="pref_appearance_tab_recents_summary">Quickly resume previous video sessions</string>
@@ -366,8 +366,8 @@
     <string name="pref_about_telegram_group_summary">Discuss and chat with the community</string>
     <string name="pref_about_show_community_icon_title">Community Shortcut</string>
     <string name="pref_about_show_community_icon_summary">Show community links shortcut in the home header</string>
-    <string name="pref_about_telegram_url" translatable="false">https://t.me/mpvRex</string>
-    <string name="pref_about_telegram_chat_url" translatable="false">https://t.me/mpvRex_chat</string>
+    <string name="pref_about_telegram_url" translatable="false">https://t.me/mpvNext</string>
+    <string name="pref_about_telegram_chat_url" translatable="false">https://t.me/mpvNext_chat</string>
 
     <string name="player_sheets_add_ext_sub">Add external subtitles</string>
     <string name="player_sheets_add_ext_audio">Add external audio tracks</string>
@@ -475,7 +475,7 @@
 
     <string name="value_percentage_int" translatable="false">%d%%</string>
 
-    <string name="github_repo_url" translatable="false">https://github.com/sfsakhawat999/mpvRex</string>
+    <string name="github_repo_url" translatable="false">https://github.com/aransari1/mpvNext</string>
     <string name="swap_the_volume_and_brightness_slider">Swap volume and brightness slider</string>
     <string name="pref_player_display_reduce_player_animation">Reduce player animation</string>
     <string name="pref_player_display_hide_player_control_time">Hide player control time</string>

@@ -84,7 +84,7 @@ jobs:
           apks=("universal" "arm64-v8a" "armeabi-v7a" "x86" "x86_64")
           for abi in "${apks[@]}"; do
             src="app/build/outputs/apk/release/app-${abi}-release.apk"
-            dst="mpvRex-${abi}-${VERSION_TAG}.apk"
+            dst="mpvNext-${abi}-${VERSION_TAG}.apk"
             if [ ! -f "$src" ]; then
               echo "::error file=$src::Signed APK for $abi was not found"
               exit 1
@@ -95,13 +95,13 @@ jobs:
             echo "$varname=$checksum" >> "$GITHUB_ENV"
           done
           
-          ls -lah mpvRex-*.apk
+          ls -lah mpvNext-*.apk
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VERSION_TAG }}
-          name: mpvRex ${{ env.VERSION_TAG }}
+          name: mpvNext ${{ env.VERSION_TAG }}
           body: |
             ---
             ### Checksums
@@ -114,11 +114,11 @@ jobs:
             | x86 | ${{ env.apk_x86_sha256 }} |
             | x86_64 | ${{ env.apk_x86_64_sha256 }} |
           files: |
-            mpvRex-universal-${{ env.VERSION_TAG }}.apk
-            mpvRex-arm64-v8a-${{ env.VERSION_TAG }}.apk
-            mpvRex-armeabi-v7a-${{ env.VERSION_TAG }}.apk
-            mpvRex-x86-${{ env.VERSION_TAG }}.apk
-            mpvRex-x86_64-${{ env.VERSION_TAG }}.apk
+            mpvNext-universal-${{ env.VERSION_TAG }}.apk
+            mpvNext-arm64-v8a-${{ env.VERSION_TAG }}.apk
+            mpvNext-armeabi-v7a-${{ env.VERSION_TAG }}.apk
+            mpvNext-x86-${{ env.VERSION_TAG }}.apk
+            mpvNext-x86_64-${{ env.VERSION_TAG }}.apk
           draft: true
           prerelease: false
         env:

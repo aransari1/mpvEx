@@ -55,7 +55,7 @@ class BrowserPreferences(
   val showAudioFiles = preferenceStore.getBoolean("show_audio_files", false)
   val showTreeViewPath = preferenceStore.getBoolean("show_tree_view_path", false)
 
-  // RexShorts preferences
+  // NextShorts preferences
   val enableShorts = preferenceStore.getBoolean("enable_shorts", true)
   val autoSwipeShorts = preferenceStore.getBoolean("shorts_auto_swipe", false)
   val includeShortHorizontalVideos = preferenceStore.getBoolean("shorts_include_horizontal", false)

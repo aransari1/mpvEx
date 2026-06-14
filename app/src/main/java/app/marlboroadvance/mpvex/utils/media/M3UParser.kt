@@ -49,7 +49,7 @@ object M3UParser {
       connection.connectTimeout = TIMEOUT_MS
       connection.readTimeout = TIMEOUT_MS
       connection.requestMethod = "GET"
-      connection.setRequestProperty("User-Agent", "mpvEx/1.0")
+      connection.setRequestProperty("User-Agent", "mpvNext/1.0")
       
       val responseCode = connection.responseCode
       if (responseCode != HttpURLConnection.HTTP_OK) {

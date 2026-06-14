@@ -307,15 +307,15 @@ object PreferencesScreen : Screen {
             }
           }
 
-          // RexShorts Section
+          // NextShorts Section
           item {
-            PreferenceSectionHeader(title = "RexShorts")
+            PreferenceSectionHeader(title = "NextShorts")
           }
 
           item {
             PreferenceCard {
               Preference(
-                title = { Text(text = "RexShorts Settings") },
+                title = { Text(text = "NextShorts Settings") },
                 summary = {
                   Text(
                     text = "Manage enable/disable, shuffle, and blocked content",

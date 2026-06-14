@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name" translatable="false">mpvRex</string>
-    <string name="author_name" translatable="false">Sakhawat</string>
+    <string name="app_name" translatable="false">mpvNext</string>
+    <string name="author_name" translatable="false">Abdurrahman Ansari</string>
 
     <string name="generic_reset">Restablecer</string>
     <string name="generic_share">Compartir</string>
@@ -16,7 +16,7 @@
     <string name="pref_appearance_category_bottom_nav">Pestañas de navegación inferior</string>
     <string name="pref_appearance_tab_home_title">Inicio / Archivos</string>
     <string name="pref_appearance_tab_home_summary">Mostrar carpetas locales y el explorador de archivos</string>
-    <string name="pref_appearance_tab_shorts_title">RexShorts</string>
+    <string name="pref_appearance_tab_shorts_title">NextShorts</string>
     <string name="pref_appearance_tab_shorts_summary">Alternar fuentes de video vertical de ritmo rápido</string>
     <string name="pref_appearance_tab_recents_title">Reproducidos recientemente</string>
     <string name="pref_appearance_tab_recents_summary">Reanudar rápidamente sesiones de video anteriores</string>
@@ -460,7 +460,7 @@
 
     <string name="value_percentage_int" translatable="false">%d%%</string>
 
-    <string name="github_repo_url" translatable="false">https://github.com/sfsakhawat999/mpvRex</string>
+    <string name="github_repo_url" translatable="false">https://github.com/aransari1/mpvNext</string>
     <string name="swap_the_volume_and_brightness_slider">Intercambiar deslizadores de volumen y brillo</string>
     <string name="pref_player_display_reduce_player_animation">Reducir animaciones del reproductor</string>
     <string name="pref_player_display_hide_player_control_time">Ocultar tiempo de los controles del reproductor</string>

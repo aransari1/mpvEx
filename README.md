@@ -1,4 +1,4 @@
-# mpvRex
+# mpvNext
 
 <p align="center">
   <img src="app/src/main/ic_launcher-playstore.png" width="128" height="128" />
@@ -12,10 +12,10 @@
   <img src="https://img.shields.io/badge/Platform-Android-brightgreen.svg" />
   <img src="https://img.shields.io/badge/License-Apache--2.0-blue.svg" />
   <img src="https://img.shields.io/badge/Kotlin-2.3.10-purple.svg" />
-  <a href="https://github.com/sfsakhawat999/mpvRex/releases"><img src="https://img.shields.io/github/downloads/sfsakhawat999/mpvRex/total?logo=Github"/></a>
+  <a href="https://github.com/aransari1/mpvNext/releases"><img src="https://img.shields.io/github/downloads/aransari1/mpvNext/total?logo=Github"/></a>
 </p>
 
-mpvRex is an advanced, customizable video player for Android. It combines the versatility of libmpv with a modern Jetpack Compose interface and unique user-centric features.
+mpvNext is an advanced, customizable video player for Android. It combines the versatility of libmpv with a modern Jetpack Compose interface and unique user-centric features.
 
 ---
 
@@ -40,7 +40,7 @@ mpvRex is an advanced, customizable video player for Android. It combines the ve
 
 ## Features
 
-Based on mpvEx, with additional enhancements and optimizations built on top.
+Based on mpvNext, with additional enhancements and optimizations built on top.
 
 *   **Subtitle Swipe Seeking:** Intuitive gestures to jump between subtitle lines.
 *   **Refined Tap Logic:** Enhanced single-tap response with exclusion zones and reverse double-tap options.
@@ -64,10 +64,10 @@ Based on mpvEx, with additional enhancements and optimizations built on top.
 ## Installation
 
 <div class="image-row" align="center">
-  <a href="https://github.com/sfsakhawat999/mpvRex/releases">
+  <a href="https://github.com/aransari1/mpvNext/releases">
     <img src="https://img.shields.io/badge/Download-Stable_Release-blue?style=for-the-badge&logo=github" alt="Stable Release">
   </a>
-  <a href="https://sfsakhawat999.github.io/mpvRex">
+  <a href="https://aransari1.github.io/mpvNext">
     <img src="https://img.shields.io/badge/Download-Preview_Build-orange?style=for-the-badge&logo=github" alt="Preview Release">
   </a>
 </div>
@@ -80,7 +80,7 @@ Based on mpvEx, with additional enhancements and optimizations built on top.
 
 ## Credits
 
-mpvRex is a fork of **[mpvEx](https://github.com/marlboro-advance/mpvEx)** (based on **[mpv-android](https://github.com/mpv-android/mpv-android)**). Special thanks for the foundation and inspiration:
+mpvNext is a fork of **[mpvEx](https://github.com/marlboro-advance/mpvEx)** (based on **[mpv-android](https://github.com/mpv-android/mpv-android)**). Special thanks for the foundation and inspiration:
 
 [mpvEx](https://github.com/marlboro-advance/mpvEx) • [mpv-android](https://github.com/mpv-android) • [mpvKt](https://github.com/abdallahmehiz/mpvKt) • [Next player](https://github.com/anilbeesetti/nextplayer) • [Gramophone](https://github.com/FoedusProgramme/Gramophone)
 

@@ -90,7 +90,7 @@ jobs:
           
           for arch in "${apks[@]}"; do
             src="app/build/outputs/apk/preview/app-${arch}-preview.apk"
-            dest="output/mpvRex-preview-r${commit_count}-${arch}.apk"
+            dest="output/mpvNext-preview-r${commit_count}-${arch}.apk"
             
             if [ ! -f "$src" ]; then
               echo "::error file=$src::Signed APK for $arch was not found"

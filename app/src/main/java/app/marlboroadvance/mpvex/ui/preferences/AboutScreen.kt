@@ -205,7 +205,7 @@ object AboutScreen : Screen {
 
                 Column(modifier = Modifier.weight(1f)) {
                   Text(
-                    text = "mpvRex",
+                    text = "mpvNext",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = cs.onPrimaryContainer,

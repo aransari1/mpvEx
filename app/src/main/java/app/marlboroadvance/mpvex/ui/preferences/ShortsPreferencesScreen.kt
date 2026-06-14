@@ -52,7 +52,7 @@ object ShortsPreferencesScreen : Screen {
                 TopAppBar(
                     title = {
                         Text(
-                            text = "RexShorts Settings",
+                            text = "NextShorts Settings",
                             style = MaterialTheme.typography.headlineSmall,
                             fontWeight = FontWeight.ExtraBold,
                             color = MaterialTheme.colorScheme.primary,
@@ -85,7 +85,7 @@ object ShortsPreferencesScreen : Screen {
                             SwitchPreference(
                                 value = enableShorts,
                                 onValueChange = { browserPreferences.enableShorts.set(it) },
-                                title = { Text("Enable RexShorts") },
+                                title = { Text("Enable NextShorts") },
                                 summary = { Text("Show the Shorts tab in the bottom navigation bar") },
                                 icon = {
                                     Icon(
