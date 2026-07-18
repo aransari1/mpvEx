@@ -23,6 +23,7 @@ mpvNext is an advanced, customizable video player for Android. It combines the v
 
 <div class="image-row" align="center">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/player.png" width="92%">
+  <p><i>Player UI — Material You adaptive controls, seek capsule OSD, and gesture zones</i></p>
 </div>
 
 <div class="image-row" align="center">
@@ -30,11 +31,13 @@ mpvNext is an advanced, customizable video player for Android. It combines the v
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/pip.png" width="31%">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/about.png" width="31%">
 </div>
+<p align="center"><i>Video browser · Picture-in-picture · About screen</i></p>
 
 <div class="image-row" align="center">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/playlistwindow.png" width="48%">
   <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/moresheet.png" width="48%">
 </div>
+<p align="center"><i>Playlist window · File options sheet</i></p>
 
 ---
 
