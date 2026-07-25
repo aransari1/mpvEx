@@ -114,7 +114,7 @@
     <string name="settings_search_no_results">No settings found</string>
     <string name="settings_search_title">Search</string>
 
-    <!-- Player Preferences Hardcoded -->
+    <!-- Player Preferences -->
     <string name="pref_autoplay_title">Enable next/previous navigation</string>
     <string name="pref_autoplay_summary">Show next/previous buttons for all videos in folder</string>
     <string name="pref_autoplay_next_video_title">Autoplay next video</string>
@@ -128,11 +128,11 @@
     <string name="pref_dynamic_speed_overlay_summary">Show advance overlay for speed control during long press and swipe</string>
     <string name="pref_show_navigation_bar_title">Show navigation bar with controls</string>
 
-    <!-- Gesture Preferences Hardcoded -->
+    <!-- Gesture Preferences -->
     <string name="pref_double_tap_seek_area_width_title">Double Tap Seek Area Width</string>
     <string name="pref_double_tap_seek_area_width_summary">Current: %d%%</string>
 
-    <!-- Advanced Preferences Hardcoded -->
+    <!-- Advanced Preferences -->
     <string name="pref_export_settings_title">Export Settings</string>
     <string name="pref_export_settings_summary">Export settings to an XML file</string>
     <string name="pref_import_settings_title">Import Settings</string>
@@ -312,6 +312,9 @@
     <string name="pref_advanced">Advanced</string>
     <string name="pref_advanced_summary">Configuration location, mpv.conf</string>
     <string name="pref_advanced_mpv_conf_storage_location">Pick configuration storage location</string>
+    <string name="config_editor_unsaved_changes">Unsaved changes</string>
+    <string name="config_editor_no_storage_location">No storage location set</string>
+    <string name="config_editor_create_failed">Failed to create file</string>
     <string name="pref_advanced_mpv_conf">Edit mpv.conf</string>
     <string name="pref_advanced_input_conf">Edit input.conf</string>
     <string name="pref_advanced_dump_logs_title">Dump logs</string>
@@ -355,6 +358,7 @@
     <string name="pref_about_title">About</string>
     <string name="pref_about_summary">Acknowledgments, licenses</string>
     <string name="pref_about_oss_libraries">Libraries</string>
+    <string name="pref_about_device_info">Device Info</string>
     <string name="pref_about_donate_title">Donate</string>
     <string name="pref_about_donate_kofi">Ko-fi</string>
     <string name="pref_about_donate_kofi_summary">Support the developer on Ko-fi</string>
@@ -437,15 +441,11 @@
     <string name="player_sheets_filters_hue">Hue</string>
     <string name="player_sheets_filters_sharpness">Sharpness</string>
     <string name="player_sheets_filters_warning">Some filters may not work on your current video driver</string>
-
     <string name="player_sheets_speed_slider_label">Speed</string>
     <string name="player_sheets_speed_make_default">Make default speed</string>
-
     <string name="player_sheets_decoder_formatted" formatted="false">%s (%s)</string>
-
     <string name="numeric_chooser_value_too_big">Value too big</string>
     <string name="numeric_chooser_value_too_small">Value too small</string>
-
     <string name="player_sheets_more_title">More</string>
     <string name="player_sheets_stats_page_title">Default statistics page</string>
     <string name="player_sheets_stats_page_chip">Page %d</string>
@@ -456,6 +456,14 @@
     <string name="player_sheets_stats_page_4_desc">Current keybindings. List of mapped keyboard shortcuts.</string>
     <string name="player_sheets_stats_page_5_desc">Track list. Details of video, audio and subtitle tracks.</string>
     <string name="player_speed" translatable="false">%.2fx</string>
+
+    <string name="playlist_now_playing">Now Playing</string>
+    <string name="playlist_playing">Playing</string>
+    <string name="playlist_reorder">Reorder Playlist</string>
+    <string name="playlist_search_placeholder">Search...</string>
+    <string name="playlist_no_items">No items found</string>
+    <string name="playlist_items_count">%1$d of %2$d items</string>
+    <string name="playlist_selected_count">%1$d selected</string>
 
     <string name="player_aspect_fit">Fit Screen</string>
     <string name="player_aspect_crop">Crop</string>
@@ -474,11 +482,8 @@
     <string name="timer_picker_pick_time">Pick time</string>
     <string name="timer_title">Sleep timer</string>
     <string name="timer_remaining">%s remaining</string>
-
     <string name="toast_sleep_timer_ended">Sleep timer ended</string>
-
     <string name="volume_slider_absolute_value" translatable="false">%d</string>
-
     <string name="value_percentage_int" translatable="false">%d%%</string>
 
     <string name="github_repo_url" translatable="false">https://github.com/aransari1/mpvNext</string>
@@ -585,7 +590,6 @@
     <string name="notification_playing">Playing</string>
 
     <!-- Media Info Activity -->
-
     <string name="pref_player_use_precise_seeking">Use precise seeking</string>
     <string name="pref_player_show_seekbar_when_seeking_title">Show seekbar when seeking</string>
     <string name="pref_player_show_seekbar_when_seeking_summary">Display the video progress bar during gesture seeking</string>
@@ -755,7 +759,7 @@
     <string name="no_playlists_yet_desc">Create a playlist or add one from an m3u URL</string>
     <string name="empty_playlists_desc">Create a playlist to see it listed here</string>
 
-    <!-- Recently Played Screen Strings -->
+    <!-- Recently Played Screen -->
     <string name="recently_played_disabled_title">Recently Played is disabled</string>
     <string name="recently_played_disabled_message">Enable it in Advanced Settings to track your playback history</string>
     <string name="no_recently_played_videos">No recently played videos</string>
@@ -938,6 +942,8 @@
     <string name="pref_about_check_updates">Check for Updates</string>
     <string name="pref_about_checking">Checking…</string>
     <string name="pref_about_check_updates_summary">Manually check for new versions on GitHub</string>
+    <string name="pref_about_up_to_date">You are up to date!</string>
+    <string name="pref_about_check_updates_failed">Failed to check for updates</string>
 
     <!-- Player Button Labels -->
     <string name="btn_label_back">Back Arrow</string>
@@ -1071,7 +1077,7 @@
     <string name="pref_appearance_thumbnail_position_reset_confirm">Reset thumbnail at %1$d%% of the video duration.</string>
     <string name="pref_appearance_thumbnail_position_dialog_message">Changing the extraction position will clear your currently saved thumbnail cache. New thumbnails will be generated automatically as you browse.</string>
 
-           <!-- Control Layout Editor Screen — new keys -->
+           <!-- Control Layout Editor Screen -->
     <string name="control_layout_edit_title_top_right">Edit Top Right</string>
     <string name="control_layout_edit_title_bottom_right">Edit Bottom Right</string>
     <string name="control_layout_edit_title_bottom_left">Edit Bottom Left</string>
@@ -1087,7 +1093,7 @@
     <string name="control_layout_all_buttons_in_use">All available buttons are in use.</string>
     <string name="control_layout_icons_legend_title">Icons Legend</string>
 
-           <!-- Gesture Preferences Screen — new keys -->
+           <!-- Gesture Preferences Screen -->
     <string name="pref_gesture_custom_value">Custom</string>
     <string name="pref_gesture_double_tap_seek_area_width_title">Double Tap Seek Area Width</string>
     <string name="pref_gesture_custom_seek_dialog_hint">Enter custom seek duration in seconds (1-120)</string>
@@ -1142,5 +1148,38 @@
         <item quantity="one">This action cannot be undone. The selected item will be permanently deleted.</item>
         <item quantity="other">This action cannot be undone. The selected items will be permanently deleted.</item>
     </plurals>
+
+    <string name="export_failed">Export failed: %1$s</string>
+    <string name="import_failed">Import failed: %1$s</string>
+    <string name="clear_failed">Failed to clear: %1$s</string>
+    <string name="export_complete_details">Successfully exported %1$d items!\n\n</string>
+    <string name="import_complete_details">Successfully imported: %1$d\nFailed: %2$d\nVersion: %3$s\n\nPlease restart the app for all changes to take effect.</string>
+    <string name="pref_advanced_section_backup_restore">Backup &amp; Restore</string>
+    <string name="pref_advanced_section_mpv_configuration">MPV Configuration</string>
+    <string name="pref_advanced_section_scripts">Scripts</string>
+    <string name="pref_advanced_section_history">History</string>
+    <string name="pref_advanced_section_cache">Cache</string>
+    <string name="pref_advanced_section_system_integration">System Integration</string>
+    <string name="pref_advanced_section_logging">Logging</string>
+    <string name="pref_advanced_tap_to_edit_configuration">Tap to edit configuration</string>
+    <string name="pref_advanced_mpv_directory_ready">MPV directory ready ✓</string>
+    <string name="pref_advanced_lua_set_storage_first">Set storage location and enable Lua scripts first</string>
+    <string name="pref_advanced_no_scripts_enabled">No scripts enabled</string>
+    <string name="pref_advanced_custom_lua_summary">Create and manage custom Lua buttons</string>
+    <string name="pref_advanced_config_cache_cleared">Config cache cleared</string>
+    <string name="pref_advanced_delete_thumbnails_summary">Delete all cached video thumbnails (will regenerate as you browse folders)</string>
+    <string name="pref_advanced_clear_thumbnail_cache_confirm_title">Clear thumbnail cache?</string>
+    <string name="pref_advanced_clear_thumbnail_cache_confirm_subtitle">This will delete all cached thumbnails (local and network) from storage and memory.</string>
+    <string name="pref_advanced_thumbnail_cache_cleared">Thumbnail cache cleared</string>
+    <string name="pref_advanced_remove_cached_fonts_summary">Remove all cached subtitle fonts</string>
+    <string name="pref_advanced_enable_media_info_title">Enable Media Info Activity</string>
+    <string name="pref_advanced_enable_media_info_summary">Show \'Media Info\' as an option in system-wide \'Open with\' menus</string>
+
+    <string name="blocked_shorts_empty_state">No blocked videos</string>
+    <string name="blocked_shorts_unblock_button">Blocked</string>
+    
+    <string name="media_info_selection_title">Selection Info</string>
+    <string name="media_info_selected_label">Selected</string>
+    <string name="media_info_total_length">Total length</string>
 
 </resources>
