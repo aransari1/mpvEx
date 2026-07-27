@@ -814,12 +814,13 @@ class PlayerViewModel(
       val pos1 = MPVLib.getPropertyDouble("time-pos") ?: 0.0
       MPVLib.command("sub-seek", "-1")
 
-      android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-        val pos2 = MPVLib.getPropertyDouble("time-pos") ?: 0.0
+      viewModelScope.launch(Dispatchers.IO) {
+        kotlinx.coroutines.delay(50)
+        val pos2 = MPVLib.getPropertyDouble("time-pos") ?: pos1
         val diff = pos2 - pos1
         _isSeekingForwards.value = false
         _doubleTapSeekAmount.value += diff.toInt()
-      }, 10)
+      }
       if (playerPreferences.showSeekBarWhenSeeking.get()) showSeekBar()
     } else leftSeek()
   }
@@ -830,12 +831,13 @@ class PlayerViewModel(
       val pos1 = MPVLib.getPropertyDouble("time-pos") ?: 0.0
       MPVLib.command("sub-seek", "1")
 
-      android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-        val pos2 = MPVLib.getPropertyDouble("time-pos") ?: 0.0
+      viewModelScope.launch(Dispatchers.IO) {
+        kotlinx.coroutines.delay(50)
+        val pos2 = MPVLib.getPropertyDouble("time-pos") ?: pos1
         val diff = pos2 - pos1
         _isSeekingForwards.value = true
         _doubleTapSeekAmount.value += diff.toInt()
-      }, 10)
+      }
       if (playerPreferences.showSeekBarWhenSeeking.get()) showSeekBar()
     } else rightSeek()
   }
