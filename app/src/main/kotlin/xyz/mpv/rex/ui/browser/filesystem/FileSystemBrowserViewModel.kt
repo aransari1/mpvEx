@@ -316,7 +316,7 @@ class FileSystemBrowserViewModel(
               val basicEnrichedItems = filteredItems.map { item ->
                 if (item is FileSystemItem.VideoFile) {
                   val video = item.video
-                  val state = basicPlaybackStates.find { it.mediaTitle == video.displayName }
+                  val state = basicPlaybackStates.find { it.mediaTitle == video.path || it.mediaTitle == video.displayName }
                   
                   var updatedVideo = video
                   if (state != null) {
@@ -389,7 +389,7 @@ class FileSystemBrowserViewModel(
                     when (item) {
                       is FileSystemItem.VideoFile -> {
                         var video = enrichedVideoMap[item.video.id] ?: item.video
-                        val state = finalPlaybackStates.find { it.mediaTitle == video.displayName }
+                        val state = finalPlaybackStates.find { it.mediaTitle == video.path || it.mediaTitle == video.displayName }
                         
                         if (state != null) {
                           if (state.savedOrientation != null) {

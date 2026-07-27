@@ -359,10 +359,10 @@ class WyzieSearchRepository(
 
     suspend fun download(subtitle: WyzieSubtitle, mediaTitle: String): Result<Uri> = withContext(Dispatchers.IO) {
         try {
-            val response = client.newCall(Request.Builder().url(subtitle.url).build()).execute()
-            if (!response.isSuccessful) return@withContext Result.failure(Exception("Download failed: ${response.code}"))
-
-            val bytes = response.body?.bytes() ?: return@withContext Result.failure(Exception("Empty body"))
+            val bytes = client.newCall(Request.Builder().url(subtitle.url).build()).execute().use { response ->
+                if (!response.isSuccessful) return@withContext Result.failure(Exception("Download failed: ${response.code}"))
+                response.body?.bytes() ?: return@withContext Result.failure(Exception("Empty body"))
+            }
             val urlExtension = subtitle.url.substringAfterLast("/", "").substringBefore("?").substringAfterLast(".", "")
             val extension = subtitle.format?.lowercase() ?: urlExtension.takeIf { it.isNotEmpty() } ?: "srt"
             

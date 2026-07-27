@@ -177,80 +177,78 @@ fun <T> UnifiedExplorerContent(
       }
     }
 
-    if (autoScrollToLastPlayed && recentlyPlayedFilePath != null && items.isNotEmpty()) {
-      val lastPlayedIndex = items.indexOfFirst { item ->
-        when (item) {
-          is Video -> item.path == recentlyPlayedFilePath
-          is VideoWithPlaybackInfo -> item.video.path == recentlyPlayedFilePath
-          is RecentlyPlayedItem.VideoItem -> item.video.path == recentlyPlayedFilePath
-          is FileSystemItem.VideoFile -> item.video.path == recentlyPlayedFilePath
-          is VideoFolder -> {
-            if (showSections) {
-              recentlyPlayedFilePath.startsWith(item.path + "/") || recentlyPlayedFilePath == item.path || java.io.File(recentlyPlayedFilePath).parent == item.path
-            } else {
-              java.io.File(recentlyPlayedFilePath).parent == item.path
+    val hasAutoScrolled = rememberSaveable(inputs = arrayOf(recentlyPlayedFilePath ?: "")) { mutableStateOf(false) }
+    LaunchedEffect(recentlyPlayedFilePath, items, autoScrollToLastPlayed) {
+      if (autoScrollToLastPlayed && recentlyPlayedFilePath != null && items.isNotEmpty() && !hasAutoScrolled.value) {
+        val lastPlayedIndex = items.indexOfFirst { item ->
+          when (item) {
+            is Video -> item.path == recentlyPlayedFilePath
+            is VideoWithPlaybackInfo -> item.video.path == recentlyPlayedFilePath
+            is RecentlyPlayedItem.VideoItem -> item.video.path == recentlyPlayedFilePath
+            is FileSystemItem.VideoFile -> item.video.path == recentlyPlayedFilePath
+            is VideoFolder -> {
+              if (showSections) {
+                recentlyPlayedFilePath.startsWith(item.path + "/") || recentlyPlayedFilePath == item.path || java.io.File(recentlyPlayedFilePath).parent == item.path
+              } else {
+                java.io.File(recentlyPlayedFilePath).parent == item.path
+              }
             }
-          }
-          is FileSystemItem.Folder -> {
-            if (showSections) {
-              recentlyPlayedFilePath.startsWith(item.path + "/") || recentlyPlayedFilePath == item.path || java.io.File(recentlyPlayedFilePath).parent == item.path
-            } else {
-              java.io.File(recentlyPlayedFilePath).parent == item.path
+            is FileSystemItem.Folder -> {
+              if (showSections) {
+                recentlyPlayedFilePath.startsWith(item.path + "/") || recentlyPlayedFilePath == item.path || java.io.File(recentlyPlayedFilePath).parent == item.path
+              } else {
+                java.io.File(recentlyPlayedFilePath).parent == item.path
+              }
             }
+            else -> false
           }
-          else -> false
         }
-      }
-      if (lastPlayedIndex != -1) {
-        val hasAutoScrolled = rememberSaveable(inputs = arrayOf(recentlyPlayedFilePath)) { mutableStateOf(false) }
-        LaunchedEffect(recentlyPlayedFilePath) {
-          if (!hasAutoScrolled.value) {
-            hasAutoScrolled.value = true
-            if (showSections) {
-              val matchedItem = items[lastPlayedIndex]
-              val isFolder = matchedItem is VideoFolder || matchedItem is FileSystemItem.Folder
-              val folderItems = items.filter { it is VideoFolder || it is FileSystemItem.Folder }
-              val videoItems = items.filter { it is Video || it is VideoWithPlaybackInfo || it is FileSystemItem.VideoFile || it is RecentlyPlayedItem.VideoItem }
+        if (lastPlayedIndex != -1) {
+          hasAutoScrolled.value = true
+          if (showSections) {
+            val matchedItem = items[lastPlayedIndex]
+            val isFolder = matchedItem is VideoFolder || matchedItem is FileSystemItem.Folder
+            val folderItems = items.filter { it is VideoFolder || it is FileSystemItem.Folder }
+            val videoItems = items.filter { it is Video || it is VideoWithPlaybackInfo || it is FileSystemItem.VideoFile || it is RecentlyPlayedItem.VideoItem }
 
-              val targetIndex = if (isFolder) {
-                val folderIndex = folderItems.indexOf(matchedItem)
-                if (folderIndex != -1) {
+            val targetIndex = if (isFolder) {
+              val folderIndex = folderItems.indexOf(matchedItem)
+              if (folderIndex != -1) {
+                if (mediaLayoutMode == MediaLayoutMode.GRID) {
+                  val folderGridColumns = if (isLandscape) folderGridColumnsLandscape else folderGridColumnsPortrait
+                  1 + (folderIndex / folderGridColumns)
+                } else {
+                  1 + folderIndex
+                }
+              } else 0
+            } else {
+              val videoIndex = videoItems.indexOf(matchedItem)
+              if (videoIndex != -1) {
+                if (folderItems.isNotEmpty()) {
                   if (mediaLayoutMode == MediaLayoutMode.GRID) {
                     val folderGridColumns = if (isLandscape) folderGridColumnsLandscape else folderGridColumnsPortrait
-                    1 + (folderIndex / folderGridColumns)
+                    val videoGridColumns = if (isLandscape) videoGridColumnsLandscape else videoGridColumnsPortrait
+                    val numFolderRows = (folderItems.size + folderGridColumns - 1) / folderGridColumns
+                    numFolderRows + 3 + (videoIndex / videoGridColumns)
                   } else {
-                    1 + folderIndex
+                    folderItems.size + 3 + videoIndex
                   }
-                } else 0
-              } else {
-                val videoIndex = videoItems.indexOf(matchedItem)
-                if (videoIndex != -1) {
-                  if (folderItems.isNotEmpty()) {
-                    if (mediaLayoutMode == MediaLayoutMode.GRID) {
-                      val folderGridColumns = if (isLandscape) folderGridColumnsLandscape else folderGridColumnsPortrait
-                      val videoGridColumns = if (isLandscape) videoGridColumnsLandscape else videoGridColumnsPortrait
-                      val numFolderRows = (folderItems.size + folderGridColumns - 1) / folderGridColumns
-                      numFolderRows + 3 + (videoIndex / videoGridColumns)
-                    } else {
-                      folderItems.size + 3 + videoIndex
-                    }
+                } else {
+                  if (mediaLayoutMode == MediaLayoutMode.GRID) {
+                    val videoGridColumns = if (isLandscape) videoGridColumnsLandscape else videoGridColumnsPortrait
+                    1 + (videoIndex / videoGridColumns)
                   } else {
-                    if (mediaLayoutMode == MediaLayoutMode.GRID) {
-                      val videoGridColumns = if (isLandscape) videoGridColumnsLandscape else videoGridColumnsPortrait
-                      1 + (videoIndex / videoGridColumns)
-                    } else {
-                      1 + videoIndex
-                    }
+                    1 + videoIndex
                   }
-                } else 0
-              }
-              listState.scrollToItem(targetIndex)
+                }
+              } else 0
+            }
+            listState.scrollToItem(targetIndex)
+          } else {
+            if (mediaLayoutMode == MediaLayoutMode.GRID) {
+              gridState.scrollToItem(lastPlayedIndex)
             } else {
-              if (mediaLayoutMode == MediaLayoutMode.GRID) {
-                gridState.scrollToItem(lastPlayedIndex)
-              } else {
-                listState.scrollToItem(lastPlayedIndex)
-              }
+              listState.scrollToItem(lastPlayedIndex)
             }
           }
         }

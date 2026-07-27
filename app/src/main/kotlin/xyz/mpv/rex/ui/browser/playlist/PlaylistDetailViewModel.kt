@@ -111,7 +111,7 @@ class PlaylistDetailViewModel(
                 )
                 
                 // Map saved orientation
-                val state = playbackStates.find { it.mediaTitle == video.displayName }
+                val state = playbackStates.find { it.mediaTitle == item.filePath || it.mediaTitle == video.displayName }
                 if (state?.savedOrientation != null) {
                   video = video.copy(savedOrientation = state.savedOrientation)
                 }
@@ -129,7 +129,7 @@ class PlaylistDetailViewModel(
               var matchedVideo = allVideos.find { video -> video.path == item.filePath }
               if (matchedVideo != null) {
                 // Map saved orientation
-                val state = playbackStates.find { it.mediaTitle == matchedVideo.displayName }
+                val state = playbackStates.find { it.mediaTitle == matchedVideo.path || it.mediaTitle == matchedVideo.displayName }
                 if (state?.savedOrientation != null) {
                   matchedVideo = matchedVideo.copy(savedOrientation = state.savedOrientation)
                 }

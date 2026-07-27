@@ -20,10 +20,15 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+
+import kotlinx.coroutines.FlowPreview
 
 /**
  * Base ViewModel for browser screens with shared functionality
@@ -31,6 +36,7 @@ import org.koin.core.component.inject
  * 
  * @param T The type of items displayed in the list
  */
+@OptIn(FlowPreview::class)
 abstract class BaseBrowserViewModel<T>(
   application: Application,
 ) : AndroidViewModel(application),
@@ -81,28 +87,21 @@ abstract class BaseBrowserViewModel<T>(
 
   init {
     // Reactive Synchronization:
-    // Observe playback state changes and invalidate the media scanner cache.
-    // This ensures that 'NEW' counts are updated immediately across all views
-    // as soon as a video is watched.
+    // Observe playback state changes and media library events, debouncing triggers
+    // to prevent redundant reload storms and cache invalidation races.
     viewModelScope.launch(Dispatchers.Main) {
-      playbackStateRepository.observeAllPlaybackStates().collectLatest {
-        Log.d("BaseBrowserViewModel", "Playback states changed, invalidating scanner cache")
-        viewModelScope.launch(Dispatchers.IO) {
-          MediaFileRepository.clearCache()
+      merge(
+        playbackStateRepository.observeAllPlaybackStates(),
+        MediaLibraryEvents.changes
+      )
+        .debounce(300L)
+        .collectLatest {
+          Log.d("BaseBrowserViewModel", "Invalidating scanner cache and refreshing browser data")
+          withContext(Dispatchers.IO) {
+            MediaFileRepository.clearCache()
+          }
+          loadData()
         }
-        loadData()
-      }
-    }
-
-    // Observe global media library changes (e.g. from MediaScanReceiver)
-    viewModelScope.launch(Dispatchers.Main) {
-      MediaLibraryEvents.changes.collectLatest { _ ->
-        Log.d("BaseBrowserViewModel", "Media library changed, refreshing")
-        viewModelScope.launch(Dispatchers.IO) {
-          MediaFileRepository.clearCache()
-        }
-        loadData()
-      }
     }
   }
 

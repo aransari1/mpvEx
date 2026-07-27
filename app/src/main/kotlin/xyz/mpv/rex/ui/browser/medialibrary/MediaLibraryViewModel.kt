@@ -92,7 +92,7 @@ class MediaLibraryViewModel(
 
     val videosWithInfo =
       videos.map { video ->
-        val playbackState = playbackStates.find { it.mediaTitle == video.displayName }
+        val playbackState = playbackStates.find { it.mediaTitle == video.path || it.mediaTitle == video.displayName }
 
         // Map saved orientation to video
         val videoWithOrientation = if (playbackState?.savedOrientation != null) {

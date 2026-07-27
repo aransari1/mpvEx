@@ -679,19 +679,20 @@ class PlayerActivity :
         mediaPlaybackService = null
       }
 
-      // Wait for any pending save operation to complete before destroying MPV
-      // This prevents the race condition where the save coroutine tries to access
-      // MPV properties after MPVLib.destroy() has been called
+      // Wait for any pending save operation to complete before destroying MPV with a 200ms bounded timeout
+      // This prevents the main thread from blocking infinitely during activity destruction (ANR prevention)
       savePlaybackStateJob?.let { job ->
-        Log.d(TAG, "Waiting for save playback state job to complete...")
-        runCatching {
-          // Use runBlocking to ensure we wait for the job to finish
-          // This is safe here as onDestroy is already on the main thread
-          kotlinx.coroutines.runBlocking {
-            job.join()
+        if (job.isActive) {
+          Log.d(TAG, "Waiting for save playback state job to complete (bounded timeout)...")
+          runCatching {
+            kotlinx.coroutines.runBlocking {
+              kotlinx.coroutines.withTimeoutOrNull(200) {
+                job.join()
+              }
+            }
           }
+          Log.d(TAG, "Save playback state job finished or timed out safely")
         }
-        Log.d(TAG, "Save playback state job completed")
       }
 
       cleanupMPV()

@@ -929,26 +929,34 @@ private fun ShortPageItem(
 
 @Composable
 private fun ConfettiBurst(trigger: Long, center: Offset) {
-    if (trigger == 0L || center == Offset.Zero) return
-    
+    val animProgress = remember(trigger) { Animatable(0f) }
     val particles = remember(trigger) {
-        List(15) {
-            val angle = Random.nextFloat() * 360f
-            val distance = 50f + Random.nextFloat() * 150f
-            Offset(
-                x = center.x + Math.cos(Math.toRadians(angle.toDouble())).toFloat() * distance,
-                y = center.y + Math.sin(Math.toRadians(angle.toDouble())).toFloat() * distance
-            )
+        if (trigger == 0L || center == Offset.Zero) {
+            emptyList()
+        } else {
+            val colors = listOf(Color.Red, Color.Yellow, Color.White, Color.Magenta)
+            List(15) {
+                val angle = Random.nextFloat() * 360f
+                val distance = 50f + Random.nextFloat() * 150f
+                val target = Offset(
+                    x = center.x + Math.cos(Math.toRadians(angle.toDouble())).toFloat() * distance,
+                    y = center.y + Math.sin(Math.toRadians(angle.toDouble())).toFloat() * distance
+                )
+                val color = colors.random()
+                target to color
+            }
         }
     }
 
-    particles.forEach { targetOffset ->
-        val animProgress = remember(trigger) { Animatable(0f) }
-        LaunchedEffect(trigger) {
+    LaunchedEffect(trigger) {
+        if (trigger != 0L && center != Offset.Zero) {
+            animProgress.snapTo(0f)
             animProgress.animateTo(1f, tween(600))
         }
-        
-        if (animProgress.value < 1f) {
+    }
+
+    if (trigger != 0L && center != Offset.Zero && animProgress.value < 1f) {
+        particles.forEach { (targetOffset, color) ->
             Box(
                 modifier = Modifier
                     .graphicsLayer {
@@ -960,7 +968,7 @@ private fun ConfettiBurst(trigger: Long, center: Offset) {
                     }
                     .size(8.dp)
                     .clip(RoundedCornerShape(50))
-                    .background(listOf(Color.Red, Color.Yellow, Color.White, Color.Magenta).random())
+                    .background(color)
             )
         }
     }

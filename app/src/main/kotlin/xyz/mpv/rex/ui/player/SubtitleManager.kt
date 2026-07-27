@@ -142,24 +142,17 @@ class SubtitleManager(
             runCatching {
                 val trackToRemove = tracks.firstOrNull { it.id == id }
                 
-                // If it's external, physically delete the file if we can find its URI
                 if (trackToRemove?.external == true && trackToRemove.externalFilename != null) {
                     val mpvPath = trackToRemove.externalFilename
                     val originalUriString = mpvPathToUriMap[mpvPath] ?: mpvPath
-                    val uri = Uri.parse(originalUriString)
-                    
-                    val deleted = wyzieRepository.deleteSubtitleFile(uri)
-                    
-                    if (deleted) {
-                        _externalSubtitles.remove(originalUriString)
-                        mpvPathToUriMap.remove(mpvPath)
-                        withContext(Dispatchers.Main) {
-                            onShowToast("Subtitle deleted")
-                        }
-                    }
+                    _externalSubtitles.remove(originalUriString)
+                    mpvPathToUriMap.remove(mpvPath)
                 }
                 
                 MPVLib.command("sub-remove", id.toString())
+                withContext(Dispatchers.Main) {
+                    onShowToast("Subtitle removed")
+                }
             }.onFailure {
                 Log.e(TAG, "Failed to remove subtitle", it)
             }
