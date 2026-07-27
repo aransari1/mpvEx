@@ -14,11 +14,11 @@ android {
   compileSdk = 36
 
   defaultConfig {
-    applicationId = "xyz.mpv.rex"
+    applicationId = "aransari1.mpv.next"
     minSdk = 26
     targetSdk = 36
-    versionCode = 207
-    versionName = "4.3.0"
+    versionCode = 100
+    versionName = "1.0.0"
 
     vectorDrawables {
       useSupportLibrary = true
