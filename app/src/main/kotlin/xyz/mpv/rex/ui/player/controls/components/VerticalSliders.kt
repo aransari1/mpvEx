@@ -155,7 +155,7 @@ fun VerticalSlider(
         Modifier
           .fillMaxWidth()
           .fillMaxHeight(targetHeight)
-          .background(MaterialTheme.colorScheme.tertiary),
+          .background(MaterialTheme.colorScheme.primary),
       )
       if (overflowRange != null && overflowValue != null) {
         val overflowHeight by animateFloatAsState(
@@ -269,7 +269,7 @@ fun VerticalSlider(
         Modifier
           .fillMaxWidth()
           .fillMaxHeight(targetHeight)
-          .background(MaterialTheme.colorScheme.tertiary),
+          .background(MaterialTheme.colorScheme.primary),
       )
       if (overflowRange != null && overflowValue != null) {
         val overflowHeight by animateFloatAsState(

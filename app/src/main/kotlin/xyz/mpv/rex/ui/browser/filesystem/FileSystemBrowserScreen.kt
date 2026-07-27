@@ -418,7 +418,7 @@ fun FileSystemBrowserScreen(path: String? = null) {
   DisposableEffect(lifecycleOwner) {
     val observer = LifecycleEventObserver { _, event ->
       if (event == Lifecycle.Event.ON_RESUME) {
-        viewModel.refresh()
+        viewModel.refresh(silent = true)
       }
     }
     lifecycleOwner.lifecycle.addObserver(observer)

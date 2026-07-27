@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import xyz.mpv.rex.domain.media.model.Video
@@ -203,15 +204,24 @@ fun <T, ID> rememberSelectionManager(
   val context = LocalContext.current
   val scope = rememberCoroutineScope()
 
-  return remember(items, getId, onDeleteItems, onRenameItem) {
+  val currentItemsState = rememberUpdatedState(items)
+  val currentGetIdState = rememberUpdatedState(getId)
+  val currentOnDeleteItemsState = rememberUpdatedState(onDeleteItems)
+  val currentOnRenameItemState = rememberUpdatedState(onRenameItem)
+  val currentOnOperationCompleteState = rememberUpdatedState(onOperationComplete)
+
+  return remember {
     SelectionManager(
-      items = { items },
-      getId = getId,
+      items = { currentItemsState.value },
+      getId = { currentGetIdState.value(it) },
       context = context,
       scope = scope,
-      onDeleteItems = onDeleteItems,
-      onRenameItem = onRenameItem,
-      onOperationComplete = onOperationComplete,
+      onDeleteItems = { list, delete -> currentOnDeleteItemsState.value(list, delete) },
+      onRenameItem = { item, name ->
+        currentOnRenameItemState.value?.invoke(item, name)
+          ?: Result.failure(IllegalStateException("Rename not supported"))
+      },
+      onOperationComplete = { currentOnOperationCompleteState.value() },
     )
   }
 }

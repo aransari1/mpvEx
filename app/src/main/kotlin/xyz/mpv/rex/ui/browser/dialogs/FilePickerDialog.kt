@@ -488,8 +488,8 @@ private fun NavigationButtons(
     onClick = onSystemPicker,
     modifier = Modifier.size(buttonSize),
     colors = IconButtonDefaults.filledTonalIconButtonColors(
-      containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-      contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+      containerColor = MaterialTheme.colorScheme.secondaryContainer,
+      contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
     )
   ) {
     Icon(Icons.Default.DriveFolderUpload, "System Picker", modifier = Modifier.size(iconSize))

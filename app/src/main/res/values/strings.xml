@@ -911,7 +911,7 @@
     <string name="pref_category_rexshorts_settings_desc">Manage enable/disable, shuffle, and blocked content</string>
     <string name="pref_category_advanced_about">Advanced &amp; About</string>
 
-    <!-- Shorts Preference Screen Strings -->
+    <!-- Shorts preference screen -->
     <string name="pref_enable_rexshorts">Enable RexShorts</string>
     <string name="pref_enable_rexshorts_summary">Show the Shorts tab in the bottom navigation bar</string>
     <string name="pref_auto_swipe_shorts">Auto Swipe to Next Short</string>
@@ -924,7 +924,10 @@
     <string name="pref_include_short_horizontal_videos">Include Short Normal Videos</string>
     <string name="pref_include_short_horizontal_videos_summary">Show horizontal videos in the feed if they are short</string>
     <string name="pref_max_horizontal_video_duration">Max Horizontal Duration</string>
-    <string name="pref_max_horizontal_video_duration_desc">Limit horizontal videos to %1$d minute%2$s</string>
+    <plurals name="pref_max_horizontal_video_duration_desc">
+        <item quantity="one">Limit horizontal videos to %d minute</item>
+        <item quantity="other">Limit horizontal videos to %d minutes</item>
+    </plurals>
     <string name="pref_sourced_folders">Sourced Folders</string>
     <string name="pref_sourced_folders_all">Sourced from all scanned directories</string>
     <string name="pref_sourced_folders_count">Sourced from %1$d folder(s)</string>
@@ -935,7 +938,7 @@
     <string name="pref_select_sourced_folders">Select Sourced Folders</string>
     <string name="pref_select_sourced_folders_desc">Choose directories to source shorts from. If none are selected, shorts will be sourced from all folders.</string>
 
-    <!-- Updates Strings -->
+    <!-- Update features -->
     <string name="pref_category_updates">Updates</string>
     <string name="pref_about_auto_check_updates">Auto Check for Updates</string>
     <string name="pref_about_auto_check_updates_summary">Check for new versions on startup</string>
@@ -944,6 +947,18 @@
     <string name="pref_about_check_updates_summary">Manually check for new versions on GitHub</string>
     <string name="pref_about_up_to_date">You are up to date!</string>
     <string name="pref_about_check_updates_failed">Failed to check for updates</string>
+    <string name="update_ready_to_install">Ready to Install</string>
+    <string name="update_available_title">Update Available</string>
+    <string name="update_current_version">Current Version</string>
+    <string name="update_latest_version">Latest Version</string>
+    <string name="update_release_date">Release Date</string>
+    <string name="update_size">Size</string>
+    <string name="update_release_notes">Release Notes</string>
+    <string name="update_downloading">Downloading…</string>
+    <string name="update_install">Install</string>
+    <string name="update_download">Download</string>
+    <string name="update_ignore">Ignore</string>
+    <string name="update_cancel">Cancel</string>
 
     <!-- Player Button Labels -->
     <string name="btn_label_back">Back Arrow</string>
@@ -1001,7 +1016,7 @@
     <string name="permission_explanation_tiramisu_plus">On Android 13 and above, this permission allows the app to read video files from your device\'s storage, including Downloads, Movies, and DCIM folders.</string>
     <string name="permission_explanation_pre_tiramisu">This permission allows the app to read media files from your device\'s storage to play videos and audio.</string>
 
-        <!-- PlayerControlsShared -->
+    <!-- Player controls shared -->
     <string name="playlist_separator">• %1$s</string>
     <string name="chapters">Chapters</string>
     <string name="skip_seconds">Skip %1$ds</string>
@@ -1031,7 +1046,7 @@
     <string name="ambience_mode">Ambience Mode</string>
     <string name="sleep_timer">Sleep Timer</string>
 
-        <!-- Preference section headers -->
+    <!-- Preference section headers -->
     <string name="pref_layout_landscape_controls_header">Landscape Controls</string>
     <string name="pref_layout_portrait_controls_header">Portrait Controls</string>
     <string name="pref_layout_more_sheet_controls_header">More Sheet Controls</string>
@@ -1040,35 +1055,35 @@
     <string name="pref_controls_layout_header">Controls Layout</string>
     <string name="pref_player_appearance_header">Appearance</string>
 
-        <!-- Controls Layout: below/above seekbar -->
+    <!-- Controls Layout: below/above seekbar -->
     <string name="pref_controls_layout_below_seekbar_title">Bottom controls below seekbar</string>
     <string name="pref_controls_layout_below_seekbar_summary_true">Control buttons appear below the seekbar</string>
     <string name="pref_controls_layout_below_seekbar_summary_false">Control buttons appear above the seekbar</string>
 
-        <!-- Appearance section -->
+    <!-- Appearance section -->
     <string name="pref_appearance_show_controls_on_play_title">Show controls on play start</string>
     <string name="pref_appearance_show_controls_on_play_summary">Show player controls overlay when a video starts playing</string>
     <string name="pref_appearance_player_gradient_opacity_title">Player gradient opacity</string>
     <string name="pref_appearance_player_gradient_opacity_current">Current: %1$d%%</string>
 
-        <!-- Custom hide-time dialog -->
+    <!-- Custom hide-time dialog -->
     <string name="pref_player_display_custom_hide_time_dialog_message">Enter custom hide time in milliseconds</string>
     <string name="pref_player_display_time_ms_format">%1$d ms</string>
     <string name="pref_player_display_custom_time_summary">Custom (%1$d ms)</string>
 
-        <!-- Generic reusable strings -->
+    <!-- Generic reusable strings -->
     <string name="generic_none">None</string>
     <string name="generic_custom">Custom</string>
     <string name="generic_edit_content_description">Edit %1$s</string>
 
-            <!-- Network Streaming Screen — new keys -->
+    <!-- Network Streaming Screen -->
     <string name="network_recent_links">Recent Links</string>
     <string name="network_local_network">Local Network</string>
     <string name="network_empty_title">No network connections</string>
     <string name="network_empty_description">Add SMB, FTP, or WebDAV connections to browse network files</string>
     <string name="network_remove_link_action">Remove Link</string>
 
-           <!-- Appearance Preferences Screen — new keys -->
+    <!-- Appearance Preferences Screen -->
     <string name="pref_appearance_network_thumbnails_dialog_title">Enable Network Thumbnails?</string>
     <string name="pref_appearance_network_thumbnails_dialog_message">Generating thumbnails for network streams (M3U/HTTP) may significantly increase background data usage and loading times. Proceed?</string>
     <string name="pref_appearance_thumbnail_strategy_dialog_title">Change Thumbnail Strategy?</string>
@@ -1077,7 +1092,7 @@
     <string name="pref_appearance_thumbnail_position_reset_confirm">Reset thumbnail at %1$d%% of the video duration.</string>
     <string name="pref_appearance_thumbnail_position_dialog_message">Changing the extraction position will clear your currently saved thumbnail cache. New thumbnails will be generated automatically as you browse.</string>
 
-           <!-- Control Layout Editor Screen -->
+    <!-- Control Layout Editor Screen -->
     <string name="control_layout_edit_title_top_right">Edit Top Right</string>
     <string name="control_layout_edit_title_bottom_right">Edit Bottom Right</string>
     <string name="control_layout_edit_title_bottom_left">Edit Bottom Left</string>

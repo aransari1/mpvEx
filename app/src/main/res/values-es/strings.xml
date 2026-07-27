@@ -857,7 +857,10 @@ Next: NEXT</string>
     <string name="pref_include_short_horizontal_videos">Incluir videos normales en Shorts</string>
     <string name="pref_include_short_horizontal_videos_summary">Mostrar vídeos horizontales en el feed si son shorts</string>
     <string name="pref_max_horizontal_video_duration">Duración horizontal máxima</string>
-    <string name="pref_max_horizontal_video_duration_desc">Limitar vídeos horizontales a %1$d minutos%2$s</string>
+    <plurals name="pref_max_horizontal_video_duration_desc">
+        <item quantity="one">Limitar vídeos horizontales a %d minuto</item>
+        <item quantity="other">Limitar vídeos horizontales a %d minutos</item>
+    </plurals>
     <string name="pref_sourced_folders">Carpetas de origen</string>
     <string name="playlist_now_playing">Reproduciendo ahora</string>
     <string name="playlist_playing">Reproduciendo</string>

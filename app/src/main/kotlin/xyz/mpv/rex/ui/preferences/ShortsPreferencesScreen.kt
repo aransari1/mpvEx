@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import xyz.mpv.rex.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -208,7 +209,7 @@ object ShortsPreferencesScreen : Screen {
                                 title = { Text(stringResource(R.string.pref_max_horizontal_video_duration)) },
                                 summary = { 
                                     Text(
-                                        text = stringResource(R.string.pref_max_horizontal_video_duration_desc, maxDuration, if (maxDuration > 1) "s" else ""),
+                                        text = pluralStringResource(R.plurals.pref_max_horizontal_video_duration_desc, maxDuration, maxDuration),
                                         color = MaterialTheme.colorScheme.outline
                                     ) 
                                 },

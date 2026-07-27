@@ -421,7 +421,7 @@ private fun FrameInfoDisplay(
       Text(
         text = stringResource(R.string.player_sheets_frame_navigation_frame_label),
         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.ExtraBold),
-        color = MaterialTheme.colorScheme.tertiary,
+        color = MaterialTheme.colorScheme.primary,
       )
       Text(
         text =
@@ -445,7 +445,7 @@ private fun FrameInfoDisplay(
       Text(
         text = stringResource(R.string.player_sheets_frame_navigation_timestamp_label),
         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.ExtraBold),
-        color = MaterialTheme.colorScheme.tertiary,
+        color = MaterialTheme.colorScheme.primary,
       )
       Text(
         text = timestamp,

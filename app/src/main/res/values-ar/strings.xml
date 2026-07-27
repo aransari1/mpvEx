@@ -825,7 +825,14 @@
     <string name="pref_include_short_horizontal_videos">تضمين الفيديوهات القصيرة العادية</string>
     <string name="pref_include_short_horizontal_videos_summary">إظهار الفيديوهات الأفقية في التغذية إذا كانت قصيرة</string>
     <string name="pref_max_horizontal_video_duration">الحد الأقصى لمدة الفيديوهات الأفقية</string>
-    <string name="pref_max_horizontal_video_duration_desc">تقييد الفيديوهات الأفقية إلى%1$d دقيقة%2$s</string>
+    <plurals name="pref_max_horizontal_video_duration_desc">
+        <item quantity="zero">تقييد الفيديوهات الأفقية إلى %d دقيقة</item>
+        <item quantity="one">تقييد الفيديوهات الأفقية إلى دقيقة واحدة</item>
+        <item quantity="two">تقييد الفيديوهات الأفقية إلى دقيقتين</item>
+        <item quantity="few">تقييد الفيديوهات الأفقية إلى %d دقائق</item>
+        <item quantity="many">تقييد الفيديوهات الأفقية إلى %d دقيقة</item>
+        <item quantity="other">تقييد الفيديوهات الأفقية إلى %d دقيقة</item>
+    </plurals>
     <string name="pref_sourced_folders">المجلدات المصدرية</string>
     <string name="pref_sourced_folders_all">مصدرها جميع المجلدات المفحوصة</string>
     <string name="pref_sourced_folders_count">مصدرها %1$d مجلد(مجلدات)</string>
@@ -1138,6 +1145,18 @@
     <string name="pref_about_up_to_date">أنت تستخدم آخر إصدار!</string>
     <string name="pref_about_check_updates_failed">فشل التحقق من التحديثات</string>
     <string name="pref_about_device_info">معلومات الجهاز</string>
+    <string name="update_ready_to_install">جاهز للتثبيت</string>
+    <string name="update_available_title">تحديث متوفر</string>
+    <string name="update_current_version">الإصدار الحالي</string>
+    <string name="update_latest_version">آخر إصدار</string>
+    <string name="update_release_date">تاريخ الإصدار</string>
+    <string name="update_size">الحجم</string>
+    <string name="update_release_notes">ملاحظات الإصدار</string>
+    <string name="update_downloading">جارٍ التنزيل…</string>
+    <string name="update_install">تثبيت</string>
+    <string name="update_download">تنزيل</string>
+    <string name="update_ignore">تجاهل</string>
+    <string name="update_cancel">إلغاء</string>
 
     <string name="config_editor_unsaved_changes">تغييرات غير محفوظة</string>
     <string name="config_editor_no_storage_location">لم يتم تحديد موقع التخزين</string>

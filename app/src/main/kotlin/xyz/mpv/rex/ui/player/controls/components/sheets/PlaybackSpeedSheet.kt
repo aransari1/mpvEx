@@ -196,8 +196,8 @@ fun PlaybackSpeedSheet(
                 leadingIcon = null,
                 colors = if (!isDefault) {
                     androidx.compose.material3.FilterChipDefaults.filterChipColors(
-                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                        labelColor = MaterialTheme.colorScheme.onTertiaryContainer
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        labelColor = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 } else {
                     androidx.compose.material3.FilterChipDefaults.filterChipColors()
