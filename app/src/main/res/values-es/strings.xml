@@ -841,11 +841,11 @@ Next: NEXT</string>
     <string name="pref_category_file_management">Gestión de archivos</string>
     <string name="pref_category_playback_controls">Reproducción y controles</string>
     <string name="pref_category_media_settings">Configuración de medios</string>
-    <string name="pref_category_rexshorts">RexShorts</string>
-    <string name="pref_category_rexshorts_settings">Ajustes de RexShorts</string>
+    <string name="pref_category_rexshorts">NextShorts</string>
+    <string name="pref_category_rexshorts_settings">Ajustes de NextShorts</string>
     <string name="pref_category_rexshorts_settings_desc">Administrar contenido activado/desactivado, aleatorio y bloqueado</string>
     <string name="pref_category_advanced_about">Avanzado y Acerca de</string>
-    <string name="pref_enable_rexshorts">Habilitar RexShorts</string>
+    <string name="pref_enable_rexshorts">Habilitar NextShorts</string>
     <string name="pref_enable_rexshorts_summary">Mostrar la pestaña Shorts en la barra de navegación inferior</string>
     <string name="pref_auto_swipe_shorts">Deslizar automáticamente al siguiente short</string>
     <string name="pref_auto_swipe_shorts_summary">Pase automáticamente al siguiente short cuando finalice el actual</string>

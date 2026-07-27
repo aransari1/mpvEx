@@ -14,7 +14,7 @@
     <string name="pref_appearance_category_bottom_nav">تبويبات شريط التنقل السفلي</string>
     <string name="pref_appearance_tab_home_title">الرئيسية / الملفات</string>
     <string name="pref_appearance_tab_home_summary">عرض المجلدات المحلية ومستعرض الملفات</string>
-    <string name="pref_appearance_tab_shorts_title">RexShorts</string>
+    <string name="pref_appearance_tab_shorts_title">NextShorts</string>
     <string name="pref_appearance_tab_shorts_summary">تبديل تدفقات الفيديو الرأسي السريعة</string>
     <string name="pref_appearance_tab_recents_title">المشغَّل مؤخراً</string>
     <string name="pref_appearance_tab_recents_summary">استئناف جلسات الفيديو السابقة بسرعة</string>
@@ -814,7 +814,7 @@
     <string name="pref_category_file_management">إدارة الملفات</string>
     <string name="pref_category_media_settings">إعدادات الوسائط</string>
     <string name="pref_category_rexshorts">ريكس شورتس</string>
-    <string name="pref_category_rexshorts_settings">إعدادات RexShorts</string>
+    <string name="pref_category_rexshorts_settings">إعدادات NextShorts</string>
     <string name="pref_category_rexshorts_settings_desc">إدارة التفعيل والتعطيل والتشغيل العشوائي والمحتوى المحجوب</string>
     <string name="pref_category_advanced_about">المتقدمة وحول التطبيق</string>
     <string name="pref_enable_rexshorts">تفعيل ريكس شورتس</string>

@@ -906,13 +906,13 @@
     <string name="pref_category_playback_controls">Playback &amp; Controls</string>
     <string name="pref_category_file_management">File Management</string>
     <string name="pref_category_media_settings">Media Settings</string>
-    <string name="pref_category_rexshorts">RexShorts</string>
-    <string name="pref_category_rexshorts_settings">RexShorts Settings</string>
+    <string name="pref_category_rexshorts">NextShorts</string>
+    <string name="pref_category_rexshorts_settings">NextShorts Settings</string>
     <string name="pref_category_rexshorts_settings_desc">Manage enable/disable, shuffle, and blocked content</string>
     <string name="pref_category_advanced_about">Advanced &amp; About</string>
 
     <!-- Shorts preference screen -->
-    <string name="pref_enable_rexshorts">Enable RexShorts</string>
+    <string name="pref_enable_rexshorts">Enable NextShorts</string>
     <string name="pref_enable_rexshorts_summary">Show the Shorts tab in the bottom navigation bar</string>
     <string name="pref_auto_swipe_shorts">Auto Swipe to Next Short</string>
     <string name="pref_auto_swipe_shorts_summary">Automatically swipe to the next short when current one ends</string>
