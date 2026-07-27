@@ -2,12 +2,12 @@ name: CI/CD Build
 
 on:
   push:
-  branches:
-  - main
+    branches:
+      - main
   pull_request:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # CRITICAL: Required for getCommitCount() and getCommitSha() functions to work!
 
       - name: Generate short SHA
         id: set-short-sha
@@ -29,34 +31,51 @@ jobs:
           java-version: 17
           cache: 'gradle'
 
+      # Programmatically generates a public testing keystore container right inside the execution worker
+      - name: Generate Temporary Testing Keystore
+        run: |
+          keytool -genkeypair -v -keystore app/testing-debug.keystore -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+       Silber step
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      # Compiles and injects the testing keys inline to satisfy project.property checks
       - name: Build with Gradle
-        run: ./gradlew assembleRelease
+        run: |
+          ./gradlew assembleRelease \
+            -PreleaseKeyStore="testing-debug.keystore" \
+            -PreleaseKeyStorePassword="android" \
+            -PreleaseKeyAlias="androiddebugkey" \
+            -PreleaseKeyPassword="android"
 
+      # NOTE: Artifact outputs updated from "-unsigned.apk" to "-release.apk" since they are now signed!
       - name: Upload app-arm64-v8a Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-arm64-v8a-release-unsigned-${{ env.SHORT_SHA }}
-          path: app/build/outputs/apk/release/app-arm64-v8a-release-unsigned.apk
+          name: mpvNext-arm64-v8a-release-signed-${{ env.SHORT_SHA }}
+          path: app/build/outputs/apk/release/app-arm64-v8a-release.apk
+
       - name: Upload app-armeabi-v7a Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-armeabi-v7a-release-unsigned-${{ env.SHORT_SHA }}
-          path: app/build/outputs/apk/release/app-armeabi-v7a-release-unsigned.apk
+          name: mpvNext-armeabi-v7a-release-signed-${{ env.SHORT_SHA }}
+          path: app/build/outputs/apk/release/app-armeabi-v7a-release.apk
+
       - name: Upload app-universal Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-universal-release-unsigned-${{ env.SHORT_SHA }}
-          path: app/build/outputs/apk/release/app-universal-release-unsigned.apk
+          name: mpvNext-universal-release-signed-${{ env.SHORT_SHA }}
+          path: app/build/outputs/apk/release/app-universal-release.apk
+
       - name: Upload app-x86 Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-x86-release-unsigned-${{ env.SHORT_SHA }}
-          path: app/build/outputs/apk/release/app-x86-release-unsigned.apk
+          name: mpvNext-x86-release-signed-${{ env.SHORT_SHA }}
+          path: app/build/outputs/apk/release/app-x86-release.apk
+
       - name: Upload app-x86_64 Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-x86_64-release-unsigned-${{ env.SHORT_SHA }}
-          path: app/build/outputs/apk/release/app-x86_64-release-unsigned.apk
+          name: mpvNext-x86_64-release-signed-${{ env.SHORT_SHA }}
+          path: app/build/outputs/apk/release/app-x86_64-release.apk
