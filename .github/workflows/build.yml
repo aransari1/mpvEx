@@ -40,9 +40,9 @@ jobs:
           cache: gradle
 
       - name: Make Gradle wrapper executable
-        run: chmod +x gradlew
+        run: chmod +x ./gradlew
 
-      - name: Generate temporary release keystore
+      - name: Generate temporary testing keystore
         run: |
           keytool -genkeypair \
             -v \
@@ -55,13 +55,22 @@ jobs:
             -validity 10000 \
             -dname "CN=Android Debug,O=Android,C=US"
 
+      - name: Verify keystore
+        run: |
+          echo "Current directory:"
+          pwd
+          echo
+          echo "Keystore:"
+          ls -lah app/testing-debug.keystore
+
       - name: Build Release APKs
         run: |
           ./gradlew clean assembleRelease \
-            -PreleaseKeyStore="app/testing-debug.keystore" \
+            -PreleaseKeyStore="testing-debug.keystore" \
             -PreleaseKeyStorePassword="android" \
             -PreleaseKeyAlias="androiddebugkey" \
-            -PreleaseKeyPassword="android"
+            -PreleaseKeyPassword="android" \
+            --stacktrace
 
       - name: List generated APKs
         run: |
