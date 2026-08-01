@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.tween
 import android.text.format.DateUtils
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.ScreenRotation
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material.icons.filled.Tune
@@ -41,6 +44,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Tab
@@ -90,6 +95,7 @@ import xyz.mpv.rex.ui.player.PlayerViewModel
 import xyz.mpv.rex.ui.player.Sheets
 import xyz.mpv.rex.ui.player.controls.RenderPlayerButton
 import xyz.mpv.rex.ui.theme.spacing
+import xyz.mpv.rex.ui.player.PlayerOrientation
 import `is`.xyz.mpv.*
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.Dispatchers
@@ -110,7 +116,7 @@ fun MoreSheet(
   modifier: Modifier = Modifier,
 ) {
   val lastTab by viewModel.lastMoreSheetTab.collectAsState()
-  val pagerState = rememberPagerState(initialPage = lastTab.coerceIn(0, 2)) { 3 }
+  val pagerState = rememberPagerState(initialPage = lastTab.coerceIn(0, 4)) { 5 }
   val scope = rememberCoroutineScope()
 
   // Persist tab change
@@ -122,6 +128,8 @@ fun MoreSheet(
 
   val tabs = listOf(
     stringResource(R.string.player_sheets_tab_controls),
+    stringResource(R.string.player_sheets_tab_aesthetics),
+    stringResource(R.string.player_sheets_tab_gestures),
     stringResource(R.string.player_sheets_tab_settings),
     stringResource(R.string.player_sheets_tab_interaction),
   )
@@ -135,10 +143,11 @@ fun MoreSheet(
         .fillMaxWidth()
         .animateContentSize(animationSpec = tween(durationMillis = 300))
     ) {
-      PrimaryTabRow(
+      PrimaryScrollableTabRow(
         selectedTabIndex = pagerState.currentPage,
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.primary,
+        edgePadding = 12.dp,
         divider = {}
       ) {
         tabs.forEachIndexed { index, title ->
@@ -149,16 +158,29 @@ fun MoreSheet(
             },
             selectedContentColor = MaterialTheme.colorScheme.primary,
             unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            text = { Text(title) },
-            icon = {
-              Icon(
-                imageVector = when(index) {
-                    0 -> Icons.Default.Widgets
-                    1 -> Icons.Default.Settings
-                    else -> Icons.Default.TouchApp
-                },
-                contentDescription = null
-              )
+            modifier = Modifier.height(44.dp).padding(horizontal = 4.dp),
+            text = {
+              Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+              ) {
+                Icon(
+                  imageVector = when(index) {
+                      0 -> Icons.Default.Widgets
+                      1 -> Icons.Default.Palette
+                      2 -> Icons.Default.TouchApp
+                      3 -> Icons.Default.Settings
+                      else -> Icons.Default.Tune
+                  },
+                  contentDescription = null,
+                  modifier = Modifier.size(18.dp)
+                )
+                Text(
+                  text = title,
+                  style = MaterialTheme.typography.titleMedium,
+                  fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Medium
+                )
+              }
             }
           )
         }
@@ -180,7 +202,9 @@ fun MoreSheet(
             onDismissRequest = onDismissRequest,
             onShowSheet = onShowSheet
           )
-          1 -> SettingsTab(
+          1 -> AestheticsTab()
+          2 -> GesturesTab()
+          3 -> SettingsTab(
             remainingTime = remainingTime,
             onStartTimer = onStartTimer,
             onEnterFiltersPanel = onEnterFiltersPanel,
@@ -188,7 +212,7 @@ fun MoreSheet(
             onDismissRequest = onDismissRequest,
             onShowSheet = onShowSheet,
           )
-          2 -> InteractionTab()
+          4 -> InteractionTab()
         }
       }
 
@@ -427,11 +451,16 @@ fun ControlsTab(
   onShowSheet: (Sheets) -> Unit,
 ) {
   val appearancePreferences = koinInject<AppearancePreferences>()
+  val playerPreferences = koinInject<PlayerPreferences>()
+
   val topRightControlsPref by appearancePreferences.topRightControls.collectAsState()
   val bottomRightControlsPref by appearancePreferences.bottomRightControls.collectAsState()
   val bottomLeftControlsPref by appearancePreferences.bottomLeftControls.collectAsState()
   val portraitBottomControlsPref by appearancePreferences.portraitBottomControls.collectAsState()
   val moreSheetControlsPref by appearancePreferences.moreSheetControls.collectAsState()
+
+  val bottomControlsBelowSeekbar by playerPreferences.bottomControlsBelowSeekbar.collectAsState()
+  val showControlsOnPlay by playerPreferences.showControlsOnPlay.collectAsState()
 
   val configuration = LocalConfiguration.current
   val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
@@ -575,28 +604,39 @@ fun ControlsTab(
               )
           }
       }
+
+      Spacer(modifier = Modifier.height(MaterialTheme.spacing.small))
+
+      InteractionSwitch(
+        label = stringResource(R.string.pref_controls_layout_below_seekbar_title),
+        description = stringResource(if (bottomControlsBelowSeekbar) R.string.pref_controls_layout_below_seekbar_summary_true else R.string.pref_controls_layout_below_seekbar_summary_false),
+        checked = bottomControlsBelowSeekbar,
+        onCheckedChange = { playerPreferences.bottomControlsBelowSeekbar.set(it) }
+      )
+
+      Spacer(modifier = Modifier.height(MaterialTheme.spacing.smaller))
+
+      InteractionSwitch(
+        label = stringResource(R.string.pref_appearance_show_controls_on_play_title),
+        description = stringResource(R.string.pref_appearance_show_controls_on_play_summary),
+        checked = showControlsOnPlay,
+        onCheckedChange = { playerPreferences.showControlsOnPlay.set(it) }
+      )
   }
 }
 
 @Composable
-fun InteractionTab() {
+fun AestheticsTab() {
   val appearancePreferences = koinInject<AppearancePreferences>()
-  val gesturePreferences = koinInject<GesturePreferences>()
   val playerPreferences = koinInject<PlayerPreferences>()
 
+  val whiteSeekBar by playerPreferences.whiteSeekBar.collectAsState()
+  val enableBounceAnimation by appearancePreferences.enableBounceAnimation.collectAsState()
   val hideBackground by appearancePreferences.hidePlayerButtonsBackground.collectAsState()
   val enableGlass by appearancePreferences.enableGlassPlayerControls.collectAsState()
   val enableGlassSeekbar by appearancePreferences.enableGlassSeekbarBackground.collectAsState()
-  val enableBounceAnimation by appearancePreferences.enableBounceAnimation.collectAsState()
-  val preventSeekbarTap by gesturePreferences.preventSeekbarTap.collectAsState()
-  val useSingleTapForCenter by gesturePreferences.useSingleTapForCenter.collectAsState()
-  val useSingleTapForLeftRight by gesturePreferences.useSingleTapForLeftRight.collectAsState()
-  val swipeToSubtitleSeek by playerPreferences.swipeToSubtitleSeek.collectAsState()
-  val keepScreenOnWhenPaused by playerPreferences.keepScreenOnWhenPaused.collectAsState()
-  val playlistMode by playerPreferences.playlistMode.collectAsState()
-  val showSeekBarWhenSeeking by playerPreferences.showSeekBarWhenSeeking.collectAsState()
-  val savePositionOnQuit by playerPreferences.savePositionOnQuit.collectAsState()
-  val autoPiPOnNavigation by playerPreferences.autoPiPOnNavigation.collectAsState()
+  val matchPlayerControlsToTheme by appearancePreferences.matchPlayerControlsToTheme.collectAsState()
+  val playerAlwaysDarkMode by appearancePreferences.playerAlwaysDarkMode.collectAsState()
 
   Column(
     modifier = Modifier
@@ -606,44 +646,9 @@ fun InteractionTab() {
     verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.smaller),
   ) {
     Text(
-      text = stringResource(R.string.pref_player_interaction_header),
+      text = stringResource(R.string.player_sheets_tab_aesthetics),
       style = MaterialTheme.typography.titleLarge,
       modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
-    )
-
-    InteractionSwitch(
-      label = stringResource(R.string.pref_autoplay_title),
-      description = stringResource(R.string.pref_autoplay_summary),
-      checked = playlistMode,
-      onCheckedChange = { playerPreferences.playlistMode.set(it) }
-    )
-
-    InteractionSwitch(
-      label = stringResource(R.string.pref_player_show_seekbar_when_seeking_title),
-      description = stringResource(R.string.pref_player_show_seekbar_when_seeking_summary),
-      checked = showSeekBarWhenSeeking,
-      onCheckedChange = { playerPreferences.showSeekBarWhenSeeking.set(it) }
-    )
-
-    InteractionSwitch(
-      label = stringResource(R.string.pref_gesture_use_single_tap_for_center_title),
-      description = stringResource(R.string.pref_gesture_use_single_tap_for_center_summary),
-      checked = useSingleTapForCenter,
-      onCheckedChange = { gesturePreferences.useSingleTapForCenter.set(it) }
-    )
-
-    InteractionSwitch(
-      label = stringResource(R.string.pref_gesture_use_single_tap_for_left_right_title),
-      description = stringResource(R.string.pref_gesture_use_single_tap_for_left_right_summary),
-      checked = useSingleTapForLeftRight,
-      onCheckedChange = { gesturePreferences.useSingleTapForLeftRight.set(it) }
-    )
-
-    InteractionSwitch(
-      label = stringResource(R.string.pref_appearance_enable_bounce_animation_title),
-      description = stringResource(R.string.pref_appearance_enable_bounce_animation_summary),
-      checked = enableBounceAnimation,
-      onCheckedChange = { appearancePreferences.enableBounceAnimation.set(it) }
     )
 
     InteractionSwitch(
@@ -669,6 +674,96 @@ fun InteractionTab() {
     )
 
     InteractionSwitch(
+      label = stringResource(R.string.pref_player_white_seekbar_title),
+      description = stringResource(R.string.pref_player_white_seekbar_summary),
+      checked = whiteSeekBar,
+      onCheckedChange = { playerPreferences.whiteSeekBar.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_appearance_enable_bounce_animation_title),
+      description = stringResource(R.string.pref_appearance_enable_bounce_animation_summary),
+      checked = enableBounceAnimation,
+      onCheckedChange = { appearancePreferences.enableBounceAnimation.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_appearance_match_player_controls_to_theme_title),
+      description = stringResource(R.string.pref_appearance_match_player_controls_to_theme_summary),
+      checked = matchPlayerControlsToTheme,
+      onCheckedChange = { appearancePreferences.matchPlayerControlsToTheme.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_appearance_player_always_dark_mode_title),
+      description = stringResource(R.string.pref_appearance_player_always_dark_mode_summary),
+      checked = playerAlwaysDarkMode,
+      onCheckedChange = { appearancePreferences.playerAlwaysDarkMode.set(it) }
+    )
+  }
+}
+
+@Composable
+fun GesturesTab() {
+  val playerPreferences = koinInject<PlayerPreferences>()
+  val gesturePreferences = koinInject<GesturePreferences>()
+
+  val brightnessGesture by playerPreferences.brightnessGesture.collectAsState()
+  val volumeGesture by playerPreferences.volumeGesture.collectAsState()
+  val pinchToZoomGesture by playerPreferences.pinchToZoomGesture.collectAsState()
+  val horizontalSwipeToSeek by playerPreferences.horizontalSwipeToSeek.collectAsState()
+  val preventSeekbarTap by gesturePreferences.preventSeekbarTap.collectAsState()
+  val useSingleTapForCenter by gesturePreferences.useSingleTapForCenter.collectAsState()
+  val useSingleTapForLeftRight by gesturePreferences.useSingleTapForLeftRight.collectAsState()
+  val swipeToSubtitleSeek by playerPreferences.swipeToSubtitleSeek.collectAsState()
+  val moveSubtitleByDragging by playerPreferences.moveSubtitleByDragging.collectAsState()
+  val panAndZoomEnabled by playerPreferences.panAndZoomEnabled.collectAsState()
+
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(horizontal = MaterialTheme.spacing.medium)
+      .verticalScroll(rememberScrollState()),
+    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.smaller),
+  ) {
+    Text(
+      text = stringResource(R.string.player_sheets_tab_gestures),
+      style = MaterialTheme.typography.titleLarge,
+      modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
+    )
+
+    // Player Orientation Preference Item
+    OrientationPreferenceItem()
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_gestures_brightness),
+      description = stringResource(R.string.pref_player_gestures_brightness),
+      checked = brightnessGesture,
+      onCheckedChange = { playerPreferences.brightnessGesture.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_gestures_volume),
+      description = stringResource(R.string.pref_player_gestures_volume),
+      checked = volumeGesture,
+      onCheckedChange = { playerPreferences.volumeGesture.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_gestures_pinch_to_zoom),
+      description = stringResource(R.string.pref_player_gestures_pinch_to_zoom),
+      checked = pinchToZoomGesture,
+      onCheckedChange = { playerPreferences.pinchToZoomGesture.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_gestures_horizontal_swipe_to_seek),
+      description = stringResource(R.string.pref_player_gestures_horizontal_swipe_to_seek),
+      checked = horizontalSwipeToSeek,
+      onCheckedChange = { playerPreferences.horizontalSwipeToSeek.set(it) }
+    )
+
+    InteractionSwitch(
       label = stringResource(R.string.pref_gesture_prevent_seekbar_tap_title),
       description = stringResource(R.string.pref_gesture_prevent_seekbar_tap_summary),
       checked = preventSeekbarTap,
@@ -676,10 +771,125 @@ fun InteractionTab() {
     )
 
     InteractionSwitch(
+      label = stringResource(R.string.pref_gesture_use_single_tap_for_center_title),
+      description = stringResource(R.string.pref_gesture_use_single_tap_for_center_summary),
+      checked = useSingleTapForCenter,
+      onCheckedChange = { gesturePreferences.useSingleTapForCenter.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_gesture_use_single_tap_for_left_right_title),
+      description = stringResource(R.string.pref_gesture_use_single_tap_for_left_right_summary),
+      checked = useSingleTapForLeftRight,
+      onCheckedChange = { gesturePreferences.useSingleTapForLeftRight.set(it) }
+    )
+
+    InteractionSwitch(
       label = stringResource(R.string.pref_player_gestures_swipe_to_subtitle_seek_title),
       description = stringResource(R.string.pref_player_gestures_swipe_to_subtitle_seek_summary),
       checked = swipeToSubtitleSeek,
       onCheckedChange = { playerPreferences.swipeToSubtitleSeek.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_gestures_move_subtitle_by_dragging_title),
+      description = stringResource(R.string.pref_player_gestures_move_subtitle_by_dragging_summary),
+      checked = moveSubtitleByDragging,
+      onCheckedChange = { playerPreferences.moveSubtitleByDragging.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_gestures_pan_and_zoom),
+      description = stringResource(R.string.pref_player_gestures_pan_and_zoom_summary),
+      checked = panAndZoomEnabled,
+      onCheckedChange = { playerPreferences.panAndZoomEnabled.set(it) }
+    )
+  }
+}
+
+@Composable
+fun InteractionTab() {
+  val playerPreferences = koinInject<PlayerPreferences>()
+
+  val playlistMode by playerPreferences.playlistMode.collectAsState()
+  val autoplayNextVideo by playerPreferences.autoplayNextVideo.collectAsState()
+  val showSeekBarWhenSeeking by playerPreferences.showSeekBarWhenSeeking.collectAsState()
+  val showDoubleTapOvals by playerPreferences.showDoubleTapOvals.collectAsState()
+  val showCircularDoubleTapSeek by playerPreferences.showCircularDoubleTapSeek.collectAsState()
+  val showSeekTimeWhileSeeking by playerPreferences.showSeekTimeWhileSeeking.collectAsState()
+  val usePreciseSeeking by playerPreferences.usePreciseSeeking.collectAsState()
+  val hideOsdText by playerPreferences.hideOsdText.collectAsState()
+  val keepScreenOnWhenPaused by playerPreferences.keepScreenOnWhenPaused.collectAsState()
+  val savePositionOnQuit by playerPreferences.savePositionOnQuit.collectAsState()
+  val autoPiPOnNavigation by playerPreferences.autoPiPOnNavigation.collectAsState()
+
+  Column(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(horizontal = MaterialTheme.spacing.medium)
+      .verticalScroll(rememberScrollState()),
+    verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.smaller),
+  ) {
+    Text(
+      text = stringResource(R.string.pref_player_interaction_header),
+      style = MaterialTheme.typography.titleLarge,
+      modifier = Modifier.padding(bottom = MaterialTheme.spacing.small)
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_autoplay_title),
+      description = stringResource(R.string.pref_autoplay_summary),
+      checked = playlistMode,
+      onCheckedChange = { playerPreferences.playlistMode.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_autoplay_next_video),
+      description = stringResource(if (autoplayNextVideo) R.string.pref_player_autoplay_next_video_summary_on else R.string.pref_player_autoplay_next_video_summary_off),
+      checked = autoplayNextVideo,
+      onCheckedChange = { playerPreferences.autoplayNextVideo.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_show_seekbar_when_seeking_title),
+      description = stringResource(R.string.pref_player_show_seekbar_when_seeking_summary),
+      checked = showSeekBarWhenSeeking,
+      onCheckedChange = { playerPreferences.showSeekBarWhenSeeking.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.show_splash_ovals_on_double_tap_to_seek),
+      description = stringResource(R.string.show_splash_ovals_on_double_tap_to_seek),
+      checked = showDoubleTapOvals,
+      onCheckedChange = { playerPreferences.showDoubleTapOvals.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_show_circular_double_tap_seek_title),
+      description = stringResource(R.string.pref_player_show_circular_double_tap_seek_summary),
+      checked = showCircularDoubleTapSeek,
+      onCheckedChange = { playerPreferences.showCircularDoubleTapSeek.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.show_time_on_double_tap_to_seek),
+      description = stringResource(R.string.show_time_on_double_tap_to_seek),
+      checked = showSeekTimeWhileSeeking,
+      onCheckedChange = { playerPreferences.showSeekTimeWhileSeeking.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_use_precise_seeking),
+      description = stringResource(R.string.pref_player_use_precise_seeking),
+      checked = usePreciseSeeking,
+      onCheckedChange = { playerPreferences.usePreciseSeeking.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_player_hide_osd_text_title),
+      description = stringResource(R.string.pref_player_hide_osd_text_summary),
+      checked = hideOsdText,
+      onCheckedChange = { playerPreferences.hideOsdText.set(it) }
     )
 
     InteractionSwitch(
@@ -730,6 +940,87 @@ private fun InteractionSwitch(
           style = MaterialTheme.typography.bodySmall,
           color = MaterialTheme.colorScheme.outline
         ) 
+      }
+    )
+  }
+}
+
+@Composable
+private fun OrientationPreferenceItem() {
+  val playerPreferences = koinInject<PlayerPreferences>()
+  val orientation by playerPreferences.orientation.collectAsState()
+  var showDialog by remember { mutableStateOf(false) }
+
+  Surface(
+    shape = MaterialTheme.shapes.medium,
+    color = MaterialTheme.colorScheme.surfaceContainerLow,
+    modifier = Modifier.fillMaxWidth()
+  ) {
+    ListItem(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clickable { showDialog = true },
+      headlineContent = {
+        Text(
+          text = stringResource(R.string.pref_player_orientation),
+          style = MaterialTheme.typography.bodyLarge
+        )
+      },
+      supportingContent = {
+        Text(
+          text = stringResource(orientation.titleRes),
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.outline
+        )
+      },
+      trailingContent = {
+        Icon(
+          imageVector = Icons.Default.ScreenRotation,
+          contentDescription = null,
+          tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+      }
+    )
+  }
+
+  if (showDialog) {
+    AlertDialog(
+      onDismissRequest = { showDialog = false },
+      title = { Text(stringResource(R.string.pref_player_orientation)) },
+      text = {
+        Column(
+          modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+        ) {
+          PlayerOrientation.entries.forEach { mode ->
+            Row(
+              modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                  playerPreferences.orientation.set(mode)
+                  showDialog = false
+                }
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+              verticalAlignment = Alignment.CenterVertically
+            ) {
+              RadioButton(
+                selected = orientation == mode,
+                onClick = null
+              )
+              Spacer(modifier = Modifier.width(12.dp))
+              Text(
+                text = stringResource(mode.titleRes),
+                style = MaterialTheme.typography.bodyLarge
+              )
+            }
+          }
+        }
+      },
+      confirmButton = {
+        TextButton(onClick = { showDialog = false }) {
+          Text(stringResource(R.string.generic_cancel))
+        }
       }
     )
   }

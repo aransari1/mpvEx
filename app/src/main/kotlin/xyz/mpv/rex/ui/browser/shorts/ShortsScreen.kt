@@ -188,7 +188,7 @@ data class ShortsScreen(
                 )
             } else if (shorts.isEmpty()) {
                 Text(
-                    text = if (blockedOnly) "No blocked videos found" else "No vertical videos found",
+                    text = if (blockedOnly) stringResource(R.string.shorts_no_blocked_videos_found) else stringResource(R.string.shorts_no_vertical_videos_found),
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
                 )
@@ -390,14 +390,14 @@ private fun FinishedPageItem(onBack: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "All videos finished",
+                text = stringResource(R.string.shorts_all_finished_title),
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "You've seen all vertical videos for now.",
+                text = stringResource(R.string.shorts_all_finished_message),
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 16.sp
             )
@@ -833,12 +833,12 @@ private fun ShortPageItem(
         if (showInfo) {
             AlertDialog(
                 onDismissRequest = { showInfo = false },
-                title = { Text(text = "Video Info") },
+                title = { Text(text = stringResource(R.string.shorts_video_info_title)) },
                 text = {
                     Column {
                         Text(text = stringResource(R.string.name) + ": ${video.displayName}", fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text(text = "Resolution: ${video.width}x${video.height}")
+                        Text(text = stringResource(R.string.shorts_video_info_resolution, video.width, video.height))
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(text = stringResource(R.string.path) + ": ${video.path}", fontSize = 12.sp)
                     }
@@ -1146,7 +1146,7 @@ private fun ActionColumn(
         Box(modifier = Modifier.alpha(0.8f)) {
             ActionButton(
                 icon = if (isLoved) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                label = if (isLoved) "Loved" else "Love",
+                label = if (isLoved) stringResource(R.string.shorts_action_loved) else stringResource(R.string.shorts_action_love),
                 iconColor = if (isLoved) Color.Red else Color.White,
                 onClick = onLove,
                 modifier = Modifier.onGloballyPositioned { coords ->
@@ -1165,7 +1165,7 @@ private fun ActionColumn(
         
         ActionButton(
             icon = Icons.Filled.Block, 
-            label = if (isBlocked) "Blocked" else "Block", 
+            label = if (isBlocked) stringResource(R.string.shorts_action_blocked) else stringResource(R.string.shorts_action_block), 
             iconColor = if (isBlocked) Color.Red else Color.White,
             onClick = onBlock
         )
@@ -1175,7 +1175,7 @@ private fun ActionColumn(
         // Free button (Clean UI Toggle)
         ActionButton(
             icon = if (isFreeModeEnabled) Icons.Filled.FullscreenExit else Icons.Filled.Fullscreen, 
-            label = "Free", 
+            label = stringResource(R.string.shorts_action_free), 
             iconColor = if (isFreeModeEnabled) MaterialTheme.colorScheme.primary else Color.White,
             onClick = onFreeModeToggle
         )
@@ -1186,14 +1186,14 @@ private fun ActionColumn(
             // Back Button (replaces speed button)
             ActionButton(
                 icon = Icons.AutoMirrored.Filled.ArrowBack, 
-                label = "Back", 
+                label = stringResource(R.string.shorts_action_back), 
                 onClick = onBack
             )
         }
         
         Spacer(modifier = Modifier.height(12.dp))
         
-        ActionButton(icon = Icons.Filled.MoreVert, label = "More", onClick = onMore)
+        ActionButton(icon = Icons.Filled.MoreVert, label = stringResource(R.string.shorts_action_more), onClick = onMore)
     }
 }
 

@@ -327,7 +327,12 @@ class PlayerViewModel(
     playerPreferences = playerPreferences,
     cacheDir = host.context.cacheDir,
     scope = viewModelScope,
-    onShowText = { text -> playerUpdate.value = PlayerUpdates.ShowText(text) }
+    onShowText = { isOn ->
+      val text = host.context.getString(
+        if (isOn) R.string.ambient_mode_on else R.string.ambient_mode_off
+      )
+      playerUpdate.value = PlayerUpdates.ShowText(text)
+    }
   )
 
   // Expose ambient mode state through the manager

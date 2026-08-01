@@ -75,6 +75,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import xyz.mpv.rex.preferences.AppearancePreferences
+import xyz.mpv.rex.preferences.PlayerPreferences
 import org.koin.compose.koinInject
 import xyz.mpv.rex.preferences.GesturePreferences
 import xyz.mpv.rex.preferences.preference.collectAsState
@@ -373,7 +374,9 @@ private fun SquigglySeekbar(
   loopEnd: Float? = null,
   modifier: Modifier = Modifier,
 ) {
-  val primaryColor = MaterialTheme.colorScheme.primary
+  val playerPreferences = koinInject<PlayerPreferences>()
+  val whiteSeekBar by playerPreferences.whiteSeekBar.collectAsState()
+  val primaryColor = if (whiteSeekBar) Color.White else MaterialTheme.colorScheme.primary
   val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
 
   val gesturePreferences = koinInject<GesturePreferences>()
@@ -794,7 +797,9 @@ fun StandardSeekbar(
     isCancelActive: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    val primaryColor = MaterialTheme.colorScheme.primary
+    val playerPreferences = koinInject<PlayerPreferences>()
+    val whiteSeekBar by playerPreferences.whiteSeekBar.collectAsState()
+    val primaryColor = if (whiteSeekBar) Color.White else MaterialTheme.colorScheme.primary
     val interactionSource = remember { MutableInteractionSource() }
     
     val isThick = seekbarStyle == SeekbarStyle.Thick

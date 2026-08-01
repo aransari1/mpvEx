@@ -593,6 +593,8 @@
     <string name="pref_player_use_precise_seeking">Use precise seeking</string>
     <string name="pref_player_show_seekbar_when_seeking_title">Show seekbar when seeking</string>
     <string name="pref_player_show_seekbar_when_seeking_summary">Display the video progress bar during gesture seeking</string>
+    <string name="pref_player_white_seekbar_title">White video progress bar</string>
+    <string name="pref_player_white_seekbar_summary">Make the video progress bar white in player screen</string>
     <string name="pref_player_hide_osd_text_title">Hide player OSD text</string>
     <string name="pref_player_hide_osd_text_summary">Hide the default mpv OSD text during seeking or subtitle seeking</string>
     <string name="pref_player_keep_screen_on_when_paused_title">Keep screen on when paused</string>
@@ -992,6 +994,8 @@
     <string name="slide_to_unlock">Slide to Unlock</string>
 
     <string name="player_sheets_tab_controls">Controls</string>
+    <string name="player_sheets_tab_aesthetics">Aesthetics</string>
+    <string name="player_sheets_tab_gestures">Gestures</string>
     <string name="player_sheets_tab_settings">Settings</string>
     <string name="player_sheets_tab_interaction">Interaction</string>
     <string name="anime4k_not_available_high_res">Not available for 4K/8K video</string>
@@ -1044,6 +1048,8 @@
     <string name="background_playback">Background</string>
     <string name="ambient">Ambient</string>
     <string name="ambience_mode">Ambience Mode</string>
+    <string name="ambient_mode_on">Ambience Mode: ON</string>
+    <string name="ambient_mode_off">Ambience Mode: OFF</string>
     <string name="sleep_timer">Sleep Timer</string>
 
     <!-- Preference section headers -->
@@ -1196,5 +1202,60 @@
     <string name="media_info_selection_title">Selection Info</string>
     <string name="media_info_selected_label">Selected</string>
     <string name="media_info_total_length">Total length</string>
+
+        <!-- Shorts Player Action Buttons -->
+    <string name="shorts_action_love">Love</string>
+    <string name="shorts_action_loved">Loved</string>
+    <string name="shorts_action_block">Block</string>
+    <string name="shorts_action_blocked">Blocked</string>
+    <string name="shorts_action_free">Free</string>
+    <string name="shorts_action_back">Back</string>
+    <string name="shorts_action_more">More</string>
+
+        <!-- Shorts Empty / Exhausted States -->
+    <string name="shorts_no_blocked_videos_found">No blocked videos found</string>
+    <string name="shorts_no_vertical_videos_found">No vertical videos found</string>
+    <string name="shorts_all_finished_title">All videos finished</string>
+    <string name="shorts_all_finished_message">You\'ve seen all vertical videos for now.</string>
+
+        <!-- Shorts Video Info Dialog -->
+    <string name="shorts_video_info_title">Video Info</string>
+    <string name="shorts_video_info_resolution">Resolution: %1$dx%2$d</string>
+
+    <string name="player_sheets_zoom_decrease">Decrease zoom</string>
+    <string name="player_sheets_zoom_increase">Increase zoom</string>
+
+    <string name="custom_buttons_title">Custom Buttons</string>
+    <string name="custom_buttons_subtitle">Drag to reorder • Tap any slot to expand &amp; edit</string>
+    <string name="custom_buttons_export_success">Buttons exported successfully</string>
+    <string name="custom_buttons_import_export_title">Import / Export</string>
+    <string name="custom_buttons_import_export_desc">Backup or share all your custom buttons with their Lua code as an XML file</string>
+    <string name="generic_import">Import</string>
+    <string name="generic_export">Export</string>
+    <string name="custom_button_empty_slot">Empty slot</string>
+    <string name="custom_button_drag_disabled">Drag disabled</string>
+    <string name="custom_button_field_label">Button</string>
+    <string name="custom_button_lua_scripts_label">Lua scripts</string>
+    <string name="custom_button_title_field">Button title *</string>
+    <string name="custom_button_tap_action">Tap action</string>
+    <string name="custom_button_tap_action_required">Tap action *</string>
+    <string name="custom_button_long_press_action">Long press action</string>
+    <string name="custom_button_on_startup">On startup</string>
+    <string name="custom_button_settings_label">Settings</string>
+    <string name="custom_button_enabled_label">Button enabled</string>
+    <string name="custom_button_enabled_desc">Button is active in the player</string>
+    <string name="custom_button_disabled_desc">Button is saved but hidden</string>
+    <string name="custom_button_add">Add button</string>
+    <string name="custom_button_lua_editor_hint">Tap to write Lua code…</string>
+    <string name="custom_button_select_import_title">Select Buttons to Import</string>
+    <string name="custom_button_select_import_subtitle">Choose which buttons to import</string>
+    <string name="custom_button_will_overwrite">Will overwrite existing button</string>
+    <string name="custom_button_read_failed">Failed to read file: %1$s</string>
+    <string name="custom_button_field_label_with_slot">%1$s  ·  %2$s</string>
+
+    <plurals name="custom_buttons_imported_count">
+        <item quantity="one">Imported %1$d button</item>
+        <item quantity="other">Imported %1$d buttons</item>
+    </plurals>
 
 </resources>

@@ -710,8 +710,8 @@
     <string name="remove_from_history_title">إزالة %1$d %2$s من السجل ؟</string>
     <string name="remove_from_history_msg">سيؤدي هذا إلى إزالة %1$s المحدد من قائمة المُشغَّل مؤخراً. لن يتم حذف ملفات الفيديو الأصلية.</string>
     <string name="delete_files_title">حذف %1$d %2$s ؟</string>
-    <string name="delete_files_msg">سيؤدي هذا إلى حذف ملف(ملفات) الفيديو الأصلية نهائياً من تخزين جهازك.\n\nلا يمكن التراجع عن هذا الإجراء.</string>
-    <string name="also_delete_files">حذف الملف(الملفات) الأصلية أيضاً</string>
+    <string name="delete_files_msg">سيؤدي هذا إلى الحذف نهائيا من جهازك.\n\nلا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="also_delete_files">حذف الملف الأصلي أيضا</string>
     <string name="no_video_folders_found">لم يتم العثور على أي مجلد فيديو</string>
     <string name="no_video_folders_found_desc">أضف فيديوهات إلى جهازك لتظهر المجلدات هنا</string>
     <string name="search_in_all_storage_volumes">البحث في جميع وحدات التخزين...</string>
@@ -931,8 +931,10 @@
     <string name="ab_loop_short">AB</string>
     <string name="loop">تكرار</string>
     <string name="background_playback">التشغيل في الخلفية</string>
-    <string name="ambient">الوضع المحيطي</string>
-    <string name="ambience_mode">وضع الإضاءة المحيطية</string>
+    <string name="ambient">الوضع السينيمـائي</string>
+    <string name="ambience_mode">الوضع السـينيمائي</string>
+    <string name="ambient_mode_on">الوضع السينيمائي: مفعّل</string>
+    <string name="ambient_mode_off">الوضع السينيمائي: معطّل</string>
     <string name="sleep_timer">مؤقت النوم</string>
 
     
@@ -1165,5 +1167,69 @@
     <string name="media_info_selection_title">معلومات التحديد</string>
     <string name="media_info_selected_label">المحدد</string>
     <string name="media_info_total_length">المدة الإجمالية</string>
+    
+    <string name="pref_player_white_seekbar_title">شريط تقدم الفيديو باللون الأبيض</string>
+    <string name="pref_player_white_seekbar_summary">عرض شريط تقدم الفيديو باللون الأبيض في شاشة المشغل</string>
+    <string name="player_sheets_tab_aesthetics">الجماليات</string>
+    <string name="player_sheets_tab_gestures">الإيماءات</string>
+
+        <!-- Shorts Player Action Buttons -->
+    <string name="shorts_action_love">إعجاب</string>
+    <string name="shorts_action_loved">أعجبني</string>
+    <string name="shorts_action_block">حظر</string>
+    <string name="shorts_action_blocked">محظور</string>
+    <string name="shorts_action_free">حـر</string>
+    <string name="shorts_action_back">رجوع</string>
+    <string name="shorts_action_more">المزيد</string>
+
+        <!-- Shorts Empty / Exhausted States -->
+    <string name="shorts_no_blocked_videos_found">لم يُعثر على فيديوهات محظورة</string>
+    <string name="shorts_no_vertical_videos_found">لم يُعثر على فيديوهات قصيرة</string>
+    <string name="shorts_all_finished_title">انتهت جميع الفيديوهات</string>
+    <string name="shorts_all_finished_message">شاهدت جميع الفيديوهات القصيرة المتاحة حالياً.</string>
+
+        <!-- Shorts Video Info Dialog -->
+    <string name="shorts_video_info_title">معلومات الفيديو</string>
+    <string name="shorts_video_info_resolution">الدقة: %1$dx%2$d</string>
+
+    <string name="player_sheets_zoom_decrease">تقليل التكبير</string>
+    <string name="player_sheets_zoom_increase">زيادة التكبير</string>
+
+    <string name="custom_buttons_title">الأزرار المخصصة</string>
+    <string name="custom_buttons_subtitle">اسحب لإعادة الترتيب • اضغط على أي مكان للتوسيع والتعديل</string>
+    <string name="custom_buttons_export_success">تم تصدير الأزرار بنجاح</string>
+    <string name="custom_buttons_import_export_title">استيراد / تصدير</string>
+    <string name="custom_buttons_import_export_desc">احفظ نسخة احتياطية أو شارك جميع أزرارك المخصصة مع أكواد Lua كملف XML</string>
+    <string name="generic_import">استيراد</string>
+    <string name="generic_export">تصدير</string>
+    <string name="custom_button_empty_slot">مكان فارغ</string>
+    <string name="custom_button_drag_disabled">السحب معطل</string>
+    <string name="custom_button_field_label">الزر</string>
+    <string name="custom_button_lua_scripts_label">أكواد Lua</string>
+    <string name="custom_button_title_field">اسم الزر *</string>
+    <string name="custom_button_tap_action">إجراء الضغط</string>
+    <string name="custom_button_tap_action_required">إجراء الضغط *</string>
+    <string name="custom_button_long_press_action">إجراء الضغط المطول</string>
+    <string name="custom_button_on_startup">عند بدء التشغيل</string>
+    <string name="custom_button_settings_label">الإعدادات</string>
+    <string name="custom_button_enabled_label">تفعيل الزر</string>
+    <string name="custom_button_enabled_desc">الزر مفعّل في المشغل</string>
+    <string name="custom_button_disabled_desc">الزر محفوظ لكنه مخفي</string>
+    <string name="custom_button_add">إضافة زر</string>
+    <string name="custom_button_lua_editor_hint">اضغط لكتابة كود Lua…</string>
+    <string name="custom_button_select_import_title">اختر الأزرار للاستيراد</string>
+    <string name="custom_button_select_import_subtitle">اختر الأزرار التي تريد استيرادها</string>
+    <string name="custom_button_will_overwrite">سيتم استبدال الزر الموجود</string>
+    <string name="custom_button_read_failed">فشل في قراءة الملف: %1$s</string>
+    <string name="custom_button_field_label_with_slot">%1$s  ·  %2$s</string>
+
+    <plurals name="custom_buttons_imported_count">
+        <item quantity="zero">لم يتم استيراد أي زر</item>
+        <item quantity="one">تم استيراد زر واحد</item>
+        <item quantity="two">تم استيراد زرين</item>
+        <item quantity="few">تم استيراد %1$d أزرار</item>
+        <item quantity="many">تم استيراد %1$d زرًا</item>
+        <item quantity="other">تم استيراد %1$d زر</item>
+    </plurals>
     
 </resources>

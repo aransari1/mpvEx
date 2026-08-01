@@ -17,8 +17,16 @@ sardineAndroid = "0.8"
 reorderable = "3.0.0"
 compose-markdown = "0.5.0"
 splashScreen = "1.0.1"
+junit = "4.13.2"
+mockk = "1.13.17"
+kotlinx-coroutines-test = "1.10.1"
+turbine = "1.2.0"
 
 [libraries]
+junit = { module = "junit:junit", version.ref = "junit" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 splashScreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -44,7 +52,7 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version = "1.1.0" }
 seeker = "com.github.abdallahmehiz:seeker:2.0.1"
 mediainfo-lib = "com.github.marlboro-advance:mediainfoAndroid:v1.0.0-fix"
-mpv-lib = "com.github.sfsakhawat999:mpvRex-libmpv:v0.0.7"
+mpv-lib = "com.github.sfsakhawat999:mpvRex-libmpv:v0.0.8"
 
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core" }

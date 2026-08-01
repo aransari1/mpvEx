@@ -1,0 +1,1173 @@
+<resources>
+
+    <string name="generic_reset">重置</string>
+    <string name="generic_share">分享</string>
+    <string name="generic_confirm">确认</string>
+    <string name="generic_cancel">取消</string>
+    <string name="generic_ok">确定</string>
+    <string name="generic_unit_ms">毫秒</string>
+    <string name="generic_disabled">已禁用</string>
+
+    <string name="pref_preferences">设置</string>
+
+    <string name="pref_appearance_title">外观</string>
+    <string name="pref_appearance_category_bottom_nav">底部导航标签</string>
+    <string name="pref_appearance_tab_home_title">首页/文件</string>
+    <string name="pref_appearance_tab_home_summary">显示本地文件夹与文件浏览器</string>
+    <string name="pref_appearance_tab_shorts_title">RexShorts</string>
+    <string name="pref_appearance_tab_shorts_summary">开启竖屏短视频信息流</string>
+    <string name="pref_appearance_tab_recents_title">最近播放</string>
+    <string name="pref_appearance_tab_recents_summary">快速继续上次播放的视频</string>
+    <string name="pref_appearance_tab_playlists_title">播放列表</string>
+    <string name="pref_appearance_tab_playlists_summary">显示本地自定义视频播放列表</string>
+    <string name="pref_appearance_tab_network_title">网络串流</string>
+    <string name="pref_appearance_tab_network_summary">访问 SMB、FTP 和 WebDAV 网络存储</string>
+    <string name="pref_appearance_summary">深色模式、Material You 动态色彩</string>
+    <string name="pref_appearance_category_theme">主题</string>
+    <string name="pref_appearance_darkmode_system">跟随系统</string>
+    <string name="pref_appearance_darkmode_light">浅色模式</string>
+    <string name="pref_appearance_darkmode_dark">深色模式</string>
+    <string name="pref_appearance_amoled_mode_title">AMOLED 纯黑模式</string>
+    <string name="pref_appearance_amoled_mode_summary">深色主题使用纯黑色背景</string>
+    <string name="pref_appearance_material_you_title">Material You 动态色彩</string>
+    <string name="pref_appearance_material_you_summary">启用系统取色动态配色</string>
+    <string name="pref_appearance_material_you_summary_disabled">仅支持 Android 12 及以上系统</string>
+    <string name="pref_appearance_unlimited_name_lines_title">显示完整名称</string>
+    <string name="pref_appearance_unlimited_name_lines_summary">完整展示文件夹与视频名称，不截断文字</string>
+    <string name="pref_appearance_enable_bounce_animation_title">开启弹性动画</string>
+    <string name="pref_appearance_enable_bounce_animation_summary">进度条、音量/亮度滑块启用回弹动效</string>
+    <string name="pref_appearance_hide_player_buttons_background_title">隐藏播放器按钮背景</string>
+    <string name="pref_appearance_hide_player_buttons_background_summary">移除所有播放器控制按钮的背景底色</string>
+    <string name="pref_appearance_enable_glass_player_controls_title">磨砂玻璃播放器控件</string>
+    <string name="pref_appearance_enable_glass_player_controls_summary">为播放器控制按钮应用毛玻璃样式</string>
+    <string name="pref_appearance_enable_glass_seekbar_title">磨砂玻璃进度条背景</string>
+    <string name="pref_appearance_enable_glass_seekbar_summary">视频进度条轨道使用毛玻璃效果</string>
+    <string name="pref_appearance_match_player_controls_to_theme_title">播放器控件跟随主题配色</string>
+    <string name="pref_appearance_match_player_controls_to_theme_summary">使用当前主题色彩渲染播放器按钮</string>
+    <string name="pref_appearance_player_always_dark_mode_title">播放器始终深色模式</string>
+    <string name="pref_appearance_player_always_dark_mode_summary">不受应用主题影响，播放器控件永久使用深色样式</string>
+    <string name="pref_appearance_use_system_font_title">使用系统字体</string>
+    <string name="pref_appearance_use_system_font_summary">使用设备默认字体，替代应用内置字体</string>
+    <string name="pref_appearance_category_file_browser">文件浏览器</string>
+    <string name="pref_appearance_show_hidden_files_title">显示隐藏文件</string>
+    <string name="pref_appearance_show_hidden_files_summary">显示以点(.)开头的隐藏目录，包括 android、data、system 文件夹与 .nomedia 文件</string>
+    <string name="pref_appearance_show_unplayed_old_video_label_title">新视频标识</string>
+    <string name="pref_appearance_show_unplayed_old_video_label_summary">对指定天数内新增、从未播放的视频展示“新的”标签</string>
+    <string name="pref_appearance_unplayed_old_video_days_title">新视频标签天数阈值</string>
+    <string name="pref_appearance_unplayed_old_video_days_summary">近 %d 天内添加且无播放记录的视频将标记为新视频</string>
+    <string name="pref_appearance_category_thumbnails">缩略图</string>
+    <string name="pref_appearance_show_network_thumbnails_title">加载网络缩略图（实验功能）</string>
+    <string name="pref_appearance_show_network_thumbnails_summary">为网络视频生成缩略图（移动网络下可能增加流量消耗）</string>
+    <string name="pref_appearance_thumbnail_strategy_title">缩略图生成方式</string>
+    <string name="pref_appearance_thumbnail_strategy_summary">选择从视频中提取缩略图的方案</string>
+    <string name="pref_appearance_thumbnail_strategy_first_frame_title">首帧截取</string>
+    <string name="pref_appearance_thumbnail_strategy_first_frame_summary">速度最快，截取视频第10秒画面</string>
+    <string name="pref_appearance_thumbnail_strategy_position_title">指定位置帧</string>
+    <string name="pref_appearance_thumbnail_strategy_position_summary">需要更多运算，截取视频靠后画面，避免空白片头</string>
+    <string name="pref_appearance_thumbnail_position_title">缩略图截取位置</string>
+    <string name="pref_appearance_thumbnail_position_summary">在视频时长 %d%% 位置截取缩略图</string>
+    <string name="pref_appearance_thumbnail_position_reset">将缩略图位置恢复默认</string>
+    <string name="pref_appearance_theme_picker_label">应用主题</string>
+    <string name="pref_appearance_auto_scroll_title">自动定位到上次播放</string>
+    <string name="pref_appearance_auto_scroll_summary">打开视频列表时自动滚动至上次播放视频</string>
+    <string name="pref_appearance_watched_threshold_title">已观看阈值</string>
+    <string name="pref_appearance_watched_threshold_summary">播放进度达到 %d%% 时标记视频为已观看</string>
+    <string name="video_label_new">新的</string>
+
+    <!-- Theme names -->
+    <string name="theme_default">默认</string>
+    <string name="theme_dynamic">动态</string>
+    <string name="theme_cloudflare">Cloudflare</string>
+    <string name="theme_cotton_candy">棉花糖</string>
+    <string name="theme_doom">毁灭战士</string>
+    <string name="theme_green_apple">青苹果</string>
+    <string name="theme_lavender">薰衣草</string>
+    <string name="theme_midnight">午夜</string>
+    <string name="theme_mocha">摩卡</string>
+    <string name="theme_strawberry">草莓</string>
+    <string name="theme_tidal">潮汐</string>
+    <string name="theme_nord">Nord</string>
+    <string name="theme_tako_green">Tako</string>
+    <string name="theme_yin_yang">阴阳</string>
+    <string name="theme_yotsuba">四叶</string>
+    <string name="theme_sapphire">蓝宝石</string>
+    <string name="theme_sunset">落日</string>
+    <string name="theme_ocean">海洋</string>
+    <string name="theme_forest">森林</string>
+    <string name="theme_rose_gold">玫瑰金</string>
+    <string name="theme_violet">紫罗兰</string>
+    <string name="theme_amber">琥珀</string>
+    <string name="theme_coral">珊瑚</string>
+    <string name="theme_slate">石板灰</string>
+    <string name="theme_dracula">德古拉</string>
+    <string name="theme_monochrome">单色</string>
+    <string name="theme_catppuccin">Catppuccin</string>
+    <string name="theme_gruvbox">Gruvbox</string>
+    <string name="theme_tokyo_night">东京之夜</string>
+    <string name="theme_kanagawa">神奈川</string>
+    <string name="theme_rose_pine">Rosé Pine</string>
+
+    <!-- Settings Search -->
+    <string name="settings_search_hint">搜索设置…</string>
+    <string name="settings_search_no_results">未找到相关设置</string>
+    <string name="settings_search_title">搜索</string>
+
+    <!-- Player Preferences -->
+    <string name="pref_autoplay_title">启用上一个/下一个切换按钮</string>
+    <string name="pref_autoplay_summary">为文件夹内所有视频显示上一个、下一个切换按钮</string>
+    <string name="pref_autoplay_next_video_title">自动播放下一个视频</string>
+    <string name="pref_autoplay_next_video_summary">当前视频播放结束后自动播放下一个</string>
+    <string name="pref_auto_pip_title">自动画中画</string>
+    <string name="pref_auto_pip_summary">按下主页键或返回键时自动进入画中画模式</string>
+    <string name="pref_player_resume_on_unlock_title">解锁后继续播放</string>
+    <string name="pref_player_resume_on_unlock_summary_on">锁屏前正在播放，解锁后自动恢复播放</string>
+    <string name="pref_player_resume_on_unlock_summary_off">屏幕解锁后保持暂停状态</string>
+    <string name="pref_dynamic_speed_overlay_title">变速悬浮面板</string>
+    <string name="pref_dynamic_speed_overlay_summary">长按滑动时弹出调速操作面板</string>
+    <string name="pref_show_navigation_bar_title">显示带有控制按钮的导航栏</string>
+
+    <!-- Gesture Preferences -->
+    <string name="pref_double_tap_seek_area_width_title">双击快进区域宽度</string>
+    <string name="pref_double_tap_seek_area_width_summary">当前：%d%%</string>
+
+    <!-- Advanced Preferences -->
+    <string name="pref_export_settings_title">导出设置</string>
+    <string name="pref_export_settings_summary">将设置导出为 XML 文件</string>
+    <string name="pref_import_settings_title">导入设置</string>
+    <string name="pref_import_settings_summary">从 XML 文件导入配置</string>
+    <string name="pref_enable_lua_scripts_title">启用 Lua 脚本</string>
+    <string name="pref_enable_lua_scripts_summary">从配置目录加载 Lua 脚本</string>
+    <string name="pref_manage_lua_scripts_title">管理 Lua 脚本</string>
+    <string name="pref_manage_lua_scripts_summary">管理已启用的 Lua 脚本</string>
+    <string name="pref_clear_config_cache_title">清除配置缓存</string>
+    <string name="pref_clear_config_cache_summary">清空缓存的 mpv.conf 配置</string>
+    <string name="pref_clear_thumbnail_cache_title">清除缩略图缓存</string>
+    <string name="pref_clear_thumbnail_cache_summary">删除所有视频缩略图缓存（浏览文件夹时会重新生成）</string>
+
+
+    <string name="pref_layout_title">播放器布局</string>
+    <string name="pref_layout_summary">自定义播放器按钮布局</string>
+    <string name="pref_layout_reset_default">恢复默认</string>
+    <string name="pref_layout_top_right_controls">右上角控件</string>
+    <string name="pref_layout_bottom_right_controls">右下角控件</string>
+    <string name="pref_layout_bottom_left_controls">左下角控件</string>
+    <string name="pref_layout_portrait_bottom_controls">竖屏底部控件</string>
+    <string name="pref_layout_preview">预览</string>
+    <string name="pref_layout_reset_title">重置布局？</string>
+    <string name="pref_layout_reset_summary">所有自定义播放器控件布局将恢复默认位置</string>
+
+    <string name="pref_player">播放器</string>
+    <string name="pref_player_summary">屏幕方向、手势与控制选项</string>
+    <string name="pref_player_orientation">屏幕方向</string>
+    <string name="pref_player_orientation_free">自由旋转</string>
+    <string name="pref_player_orientation_video">跟随视频</string>
+    <string name="pref_player_orientation_smart">智能模式</string>
+    <string name="pref_player_orientation_smart_summary">跟随视频方向，手动修改后保持当前状态</string>
+    <string name="pref_player_orientation_portrait">竖屏</string>
+    <string name="pref_player_orientation_reverse_portrait">反向竖屏</string>
+    <string name="pref_player_orientation_sensor_portrait">传感器竖屏</string>
+    <string name="pref_player_orientation_landscape">横屏</string>
+    <string name="pref_player_orientation_reverse_landscape">反向横屏</string>
+    <string name="pref_player_orientation_sensor_landscape">传感器横屏</string>
+    <string name="pref_player_save_position_on_quit">退出时保存播放位置</string>
+    <string name="pref_player_double_tap_seek_duration">双击跳转时长</string>
+    <string name="pref_player_custom_skip_duration_title">自定义跳转时长</string>
+    <string name="pref_player_custom_skip_duration_summary">自定义快进按钮的跳转秒数</string>
+    <string name="pref_player_seeking_title">拖动跳转</string>
+    <string name="pref_player_close_after_eof">播放结束后关闭播放器</string>
+    <string name="pref_player_remember_brightness">记住屏幕亮度</string>
+
+    <string name="pref_player_gestures">手势操作</string>
+    <string name="pref_player_gestures_brightness">亮度调节手势</string>
+    <string name="pref_player_gestures_volume">音量调节手势</string>
+    <string name="pref_player_gestures_pinch_to_zoom">双指缩放</string>
+    <string name="pref_player_gestures_pan_and_zoom">平移与缩放</string>
+    <string name="pref_player_gestures_pan_and_zoom_summary">缩放视频的同时允许拖动画面平移</string>
+    <string name="pref_player_gestures_horizontal_swipe_to_seek">左右滑动跳转进度</string>
+    <string name="pref_player_gestures_horizontal_swipe_to_seek_summary">在屏幕左右滑动进行快进、快退</string>
+    <string name="pref_player_gestures_swipe_to_subtitle_seek_title">滑动定位字幕</string>
+    <string name="pref_player_gestures_swipe_to_subtitle_seek_summary">在屏幕顶部或底部左右滑动切换字幕</string>
+    <string name="pref_player_gestures_move_subtitle_by_dragging_title">拖动调整字幕位置</string>
+    <string name="pref_player_gestures_move_subtitle_by_dragging_summary">按住字幕上下拖动移位；其余区域仍可调节亮度、音量</string>
+    <string name="pref_player_gestures_horizontal_swipe_sensitivity">横向滑动灵敏度</string>
+    <string name="pref_player_gestures_horizontal_swipe_sensitivity_summary">调整滑动距离对应的进度跳转幅度</string>
+    <string name="pref_player_gestures_hold_for_multiple_speed">长按倍速播放</string>
+
+    <string name="pref_player_controls">播放控件</string>
+    <string name="pref_player_controls_disable_media_buttons_title">屏蔽媒体按键</string>
+    <string name="pref_player_controls_disable_media_buttons_summary">忽略耳机、蓝牙设备发送的播放控制指令</string>
+    <string name="pref_player_controls_allow_gestures_in_panels">控制面板内允许手势操作</string>
+    <string name="pref_player_controls_display_volume_as_percentage">音量以百分比显示</string>
+    <string name="pref_player_controls_show_loading_circle">显示加载圆圈</string>
+    <string name="pref_player_display_show_status_bar">显示系统状态栏与控件</string>
+
+    <string name="pref_player_display">画面显示</string>
+    <string name="pref_player_display_panel_opacity">控制面板透明度</string>
+
+    <string name="pref_gesture">手势</string>
+    <string name="pref_gesture_summary">双击操作、媒体控制</string>
+    <string name="pref_gesture_double_tap_title">双击动作</string>
+    <string name="pref_gesture_double_tap_none">无</string>
+    <string name="pref_gesture_double_tap_seek">进度跳转</string>
+    <string name="pref_gesture_double_tap_subseek">字幕跳转</string>
+    <string name="pref_gesture_reverse_double_tap_title">反转左右手势</string>
+    <string name="pref_gesture_reverse_double_tap_summary">交换左右区域单击/双击功能</string>
+    <string name="pref_gesture_double_tap_play">播放/暂停</string>
+    <string name="pref_gesture_double_tap_custom">自定义</string>
+    <string name="pref_gesture_double_tap_left_title">双击（左侧）</string>
+    <string name="pref_gesture_double_tap_center_title">双击（中间）</string>
+    <string name="pref_gesture_single_tap_center_title">单击（中间）</string>
+    <string name="pref_gesture_double_tap_right_title">双击（右侧）</string>
+    <string name="pref_gesture_single_tap_right_title">单击（右侧）</string>
+    <string name="pref_gesture_single_tap_left_title">单击（左侧）</string>
+    <string name="pref_gesture_use_single_tap_for_center_title">中间区域使用单击手势</string>
+    <string name="pref_gesture_use_single_tap_for_center_summary">画面中间使用单击执行操作（如播放暂停），不再使用双击</string>
+    <string name="pref_gesture_use_single_tap_for_left_right_title">左右区域使用单击手势</string>
+    <string name="pref_gesture_use_single_tap_for_left_right_summary">画面左右区域使用单击执行操作，不再使用双击</string>
+    <string name="pref_gesture_prevent_seekbar_tap_title">防止进度条误触跳转</string>
+    <string name="pref_gesture_prevent_seekbar_tap_summary">仅支持拖动进度条跳转，点击进度条无效</string>
+    <string name="pref_gesture_use_relative_seeking_title">相对进度拖动</string>
+    <string name="pref_gesture_use_relative_seeking_summary">以拖动起始位置计算偏移，而非直接跳转到手指坐标</string>
+
+    <string name="pref_gesture_double_tap_custom_info">你可以在 input.conf 中使用下列按键代码绑定自定义动作：\n\n左侧: MBTN_LEFT_DBL\n中间: MBTN_MID_DBL\n右侧: MBTN_RIGHT_DBL</string>
+
+    <string name="pref_gesture_media_title">媒体控制</string>
+    <string name="pref_gesture_media_previous">上一个</string>
+    <string name="pref_gesture_media_play">播放/暂停</string>
+    <string name="pref_gesture_media_next">下一个</string>
+    <string name="pref_gesture_media_custom_info">你可以在 input.conf 中使用下列按键代码绑定媒体控制自定义动作：\n\n上一个: PREV\n播放/暂停: PLAYPAUSE\n下一个: NEXT</string>
+
+    <string name="pref_gesture_view_title">浏览视图</string>
+    <string name="pref_gesture_tap_thumbnail_to_select_title">点击缩略图进入多选模式</string>
+    <string name="pref_gesture_tap_thumbnail_to_select_summary">开启后，点击缩略图进入选择模式；关闭则直接播放视频。网格视图下不生效。</string>
+
+    <string name="pref_decoder">解码器</string>
+    <string name="pref_decoder_summary">硬件解码、像素格式、色带消除</string>
+    <string name="pref_decoder_profile_title">MPV 配置方案</string>
+    <string name="pref_decoder_try_hw_dec_title">尝试启用硬件解码</string>
+    <string name="pref_decoder_gpu_next_title">启用 gpu-next</string>
+    <string name="pref_decoder_gpu_next_summary">全新渲染后端</string>
+    <string name="pref_decoder_gpu_next_enable_title">启用 gpu-next？</string>
+    <string name="pref_decoder_gpu_next_warning">部分设备开启 gpu-next 播放时可能出现紫屏问题。</string>
+    <string name="pref_decoder_gpu_next_purple_screen_fix">如遇到紫屏，可在高级设置（mpv.conf）中尝试关闭 opengl-pbo：</string>
+    <string name="pref_decoder_gpu_next_enable_anyway">仍然启用</string>
+    <string name="pref_decoder_debanding_title">消除色带</string>
+    <string name="pref_decoder_yuv420p_title">使用 YUV420P 像素格式</string>
+    <string name="pref_decoder_yuv420p_summary">可修复部分编码黑屏问题，会牺牲画质换取性能</string>
+    <string name="pref_decoder_vulkan_title">启用 Vulkan</string>
+    <string name="pref_decoder_vulkan_summary">在支持设备上开启 Vulkan 渲染（可能提升性能）</string>
+    <string name="pref_decoder_vulkan_not_supported">不支持（需要 Android 13+ 且支持 Vulkan 1.3）</string>
+
+    <string name="pref_subtitles">字幕</string>
+    <string name="pref_subtitles_summary">首选语言、字体与字幕搜索</string>
+    <string name="pref_subtitle_search_title">在线字幕搜索</string>
+    <string name="pref_subtitle_search_summary">从在线源搜索并下载字幕</string>
+    <string name="pref_custom_lua_title">自定义 Lua 按钮</string>
+    <string name="pref_custom_lua_summary">使用Lua代码管理自定义播放器按钮</string>
+    <string name="pref_preferred_languages">首选语言</string>
+    <string name="pref_subtitles_fonts_dir">字体目录</string>
+    <string name="pref_subtitles_disable_by_default_title">默认关闭字幕</string>
+    <string name="pref_subtitles_disable_by_default_summary">播放时不会自动显示字幕，需要手动开启。</string>
+    <string name="pref_subtitles_autoload_title">自动加载字幕</string>
+    <string name="pref_subtitles_autoload_summary">自动加载与视频同名的外挂字幕文件。</string>
+    <string name="pref_subtitles_open_at_video_location_title">在视频所在目录打开</string>
+    <string name="pref_subtitles_open_at_video_location_summary">打开文件选择器时定位至当前视频所在文件夹</string>
+    <string name="pref_subtitles_custom_picker_folder_title">默认选择目录</string>
+    <string name="pref_subtitles_custom_picker_folder_summary">手动添加字幕时默认打开的文件夹</string>
+    <string name="pref_subtitles_save_location">字幕保存路径</string>
+    <string name="pref_subtitles_search_online">在线字幕搜索…</string>
+    <string name="pref_subtitles_subdl_languages">字幕语言</string>
+    <string name="all_languages">全部（筛选可用语言）</string>
+    <string name="pref_subtitles_clear_downloads">清除已下载字幕</string>
+    <string name="pref_subtitles_clear_downloads_summary">删除保存目录下所有字幕文件</string>
+    <string name="pref_subtitles_clear_downloads_confirmation">确定删除所有已下载字幕？此操作无法撤销。</string>
+    <string name="toast_subtitles_cleared">已清除下载的字幕</string>
+    <string name="pref_subtitles_searching">正在搜索…</string>
+    <string name="pref_subtitles_found">找到 %d 条字幕</string>
+    <string name="pref_subtitles_online_search_title">在线字幕搜索</string>
+    <string name="pref_subtitles_wyzie_api_key_title">Wyzie API 密钥</string>
+    <string name="pref_subtitles_wyzie_api_key_summary">字幕搜索必需。前往 sub.wyzie.io/redeem 获取密钥</string>
+    <string name="pref_subtitles_wyzie_api_key_hint">输入 API 密钥</string>
+    <string name="pref_subtitles_wyzie_api_key_not_set">未设置</string>
+    <string name="pref_subtitles_wyzie_api_key_masked">••••••••••••••••••••••</string>
+
+    <string name="pref_audio">音频</string>
+    <string name="pref_audio_summary">首选语言、音频声道、音调校正</string>
+    <string name="pref_audio_pitch_correction_title">启用音调校正</string>
+    <string name="pref_audio_pitch_correction_summary">变速播放时防止音频音调变尖（倍速）或低沉（慢放）</string>
+    <string name="pref_audio_volume_normalization_title">音量均衡</string>
+    <string name="pref_audio_volume_normalization_summary">自动调节音量，维持稳定响度</string>
+    <string name="pref_audio_channels">音频声道</string>
+    <string name="pref_audio_channels_auto">自动</string>
+    <string name="pref_audio_channels_auto_safe">安全自动</string>
+    <string name="pref_audio_channels_mono">单声道</string>
+    <string name="pref_audio_channels_stereo">立体声</string>
+    <string name="pref_audio_channels_stereo_reversed">反向立体声</string>
+    <string name="pref_audio_preferred_language">视频包含多条音轨时默认选中的音频语言，支持两位/三位语言代码。多个语言使用英文逗号分隔。</string>
+    <string name="pref_audio_volume_boost_cap">音量增强上限</string>
+
+    <string name="pref_advanced">高级设置</string>
+    <string name="pref_advanced_summary">配置文件路径、mpv.conf 配置</string>
+    <string name="pref_advanced_mpv_conf_storage_location">选择配置文件保存位置</string>
+    <string name="config_editor_unsaved_changes">存在未保存的修改</string>
+    <string name="config_editor_no_storage_location">未设置存储路径</string>
+    <string name="config_editor_create_failed">文件创建失败</string>
+    <string name="pref_advanced_mpv_conf">编辑 mpv.conf</string>
+    <string name="pref_advanced_input_conf">编辑 input.conf</string>
+    <string name="pref_advanced_dump_logs_title">导出日志</string>
+    <string name="pref_advanced_dump_logs_summary">导出并复制日志，方便提交给开发者排查问题</string>
+    <string name="pref_advanced_verbose_logging_title">详细日志模式</string>
+    <string name="pref_advanced_verbose_logging_summary">便于调试，但可能影响播放性能</string>
+    <string name="pref_advanced_clear_playback_history">清除播放历史</string>
+    <string name="pref_advanced_clear_playback_history_confirm_title">确定清除播放历史？</string>
+    <string name="pref_advanced_clear_playback_history_confirm_subtitle">将会清除所有媒体的播放进度、选中的音轨与字幕，以及对应的延迟、倍速设置</string>
+    <string name="pref_advanced_cleared_playback_history">播放历史已清除</string>
+    <string name="pref_advanced_clear_fonts_cache">清除字体缓存</string>
+    <string name="pref_advanced_cleared_fonts_cache">字体缓存已清除</string>
+    <string name="pref_advanced_enable_recently_played_title">最近播放</string>
+    <string name="pref_advanced_enable_recently_played_summary">记录并展示最近播放的视频与播放列表</string>
+
+    <string name="pref_advanced_features_tooltip">启用实验性/高级功能，例如性能统计面板、Anime4K 超分辨率</string>
+    <string name="pref_anime4k_title">Anime4K 超分辨率（实验功能）</string>
+    <string name="pref_anime4k_summary">开启 Anime4K 画质增强滤镜</string>
+    <string name="pref_anime4k_incompatibility">Anime4K 兼容性提示</string>
+    <string name="pref_anime4k_gpu_next_error">gpu-next 与 Anime4K 着色器不兼容。开启 Anime4K 后，程序将自动切换至传统「gpu」渲染后端以保证着色器正常工作。</string>
+    <string name="pref_anime4k_cannot_use_with_gpu_next">启用 gpu-next 时无法使用 Anime4K</string>
+    <string name="anime4k_mode_title">Anime4K 预设方案</string>
+    <string name="anime4k_quality_title">Anime4K 画质变体</string>
+    <string name="anime4k_mode_toast">Anime4K：预设 %1$s</string>
+    <string name="anime4k_quality_toast">Anime4K 画质变体：%1$s</string>
+
+    <!-- Anime4K Modes (Renamed to Presets in UI) -->
+    <string name="anime4k_mode_off">关闭</string>
+    <string name="anime4k_mode_a">A</string>
+    <string name="anime4k_mode_b">B</string>
+    <string name="anime4k_mode_c">C</string>
+    <string name="anime4k_mode_a_plus">A+</string>
+    <string name="anime4k_mode_b_plus">B+</string>
+    <string name="anime4k_mode_c_plus">C+</string>
+
+    <!-- Anime4K Qualities (Renamed to Mode in UI) -->
+    <string name="anime4k_quality_fast">快速</string>
+    <string name="anime4k_quality_balanced">均衡</string>
+    <string name="anime4k_quality_high">高质量</string>
+
+    <string name="pref_about_title">关于</string>
+    <string name="pref_about_summary">致谢、开源许可</string>
+    <string name="pref_about_oss_libraries">依赖库</string>
+    <string name="pref_about_device_info">设备信息</string>
+    <string name="pref_about_donate_title">赞助</string>
+    <string name="pref_about_donate_kofi">Ko-fi</string>
+    <string name="pref_about_donate_kofi_summary">在 Ko-fi 支持开发者</string>
+    <string name="pref_about_donate_paypal">PayPal</string>
+    <string name="pref_about_donate_paypal_summary">在 PayPal 支持开发者</string>
+    <string name="pref_about_donate_upi">UPI</string>
+
+    <string name="pref_about_telegram_title">Telegram</string>
+    <string name="pref_about_telegram_channel">Telegram 频道</string>
+    <string name="pref_about_telegram_channel_summary">加入频道获取更新资讯</string>
+    <string name="pref_about_telegram_group">Telegram 交流群</string>
+    <string name="pref_about_telegram_group_summary">与社区成员交流讨论</string>
+    <string name="pref_about_show_community_icon_title">社区快捷入口</string>
+    <string name="pref_about_show_community_icon_summary">在首页顶部显示社区链接快捷图标</string>
+
+    <string name="player_sheets_add_ext_sub">加载外挂字幕</string>
+    <string name="player_sheets_add_ext_audio">加载外挂音轨</string>
+    <string name="player_sheets_tracks_off">关闭</string>
+    <string name="player_sheets_subtitles_settings_title">字幕设置</string>
+    <string name="player_sheets_subtitles_color_text">文字</string>
+    <string name="player_sheets_subtitles_color_border">描边</string>
+    <string name="player_sheets_subtitles_color_background">背景</string>
+    <string name="player_sheets_subtitles_border_style">描边样式</string>
+    <string name="player_sheets_subtitles_border_style_outline_and_shadow">轮廓+阴影</string>
+    <string name="player_sheets_subtitles_border_style_opaque_box">不透明底色框</string>
+    <string name="player_sheets_subtitles_shadow_offset">阴影偏移</string>
+    <string name="player_sheets_sub_color_red">红色</string>
+    <string name="player_sheets_sub_color_green">绿色</string>
+    <string name="player_sheets_sub_color_blue">蓝色</string>
+    <string name="player_sheets_sub_color_alpha">透明度</string>
+    <string name="player_sheets_sub_override_ass">强制覆盖 ASS/SSA 字幕</string>
+    <string name="player_sheets_sub_override_ass_subtitle">强制覆盖 ASS/SSA 字幕自带样式</string>
+    <string name="player_sheets_sub_scale_by_window">按窗口缩放</string>
+    <string name="player_sheets_sub_scale_by_window_summary">根据窗口尺寸缩放字幕，并使用视频边距</string>
+    <string name="player_sheets_sub_scale">缩放比例</string>
+    <string name="player_sheets_sub_position">位置</string>
+    <string name="player_sheets_sub_typography_card_title">文字样式</string>
+    <string name="player_sheets_sub_typography_font">字体</string>
+    <string name="player_sheets_sub_typography_font_size">字号</string>
+    <string name="player_sheets_sub_typography_border_size">描边粗细</string>
+    <string name="player_sheets_sub_colors_card_title">颜色设置</string>
+    <string name="player_sheets_sub_misc_card_title">其他选项</string>
+    <string name="player_sheets_sub_delay_card_title">字幕延迟</string>
+    <string name="player_sheets_sub_delay_card_delay">延迟值</string>
+    <string name="player_sheets_sub_delay_card_speed">速度</string>
+    <string name="player_sheets_sub_delay_subtitle_type_primary">主字幕</string>
+    <string name="player_sheets_sub_delay_subtitle_type_secondary">次字幕</string>
+    <string name="player_sheets_sub_delay_subtitle_type_primary_and_secondary">全部字幕</string>
+    <string name="player_sheets_sub_delay_subtitle_voice_heard">人声响起</string>
+    <string name="player_sheets_sub_delay_subtitle_text_seen">字幕出现</string>
+    <string name="player_sheets_delay_set_as_default">设为默认</string>
+    <string name="player_sheets_audio_delay_card_title">音频延迟</string>
+    <string name="player_sheets_sub_delay_audio_sound_heard">声音响起</string>
+    <string name="player_sheets_sub_delay_sound_sound_spotted">声音定位点</string>
+
+    <string name="player_sheets_video_settings_title">画面设置</string>
+    <string name="player_sheets_deband_title">消除色带</string>
+    <string name="player_sheets_deband_none">关闭</string>
+    <string name="player_sheets_deband_cpu">CPU 运算</string>
+    <string name="player_sheets_deband_gpu">GPU 运算</string>
+    <string name="player_sheets_deband_iterations">迭代次数</string>
+    <string name="player_sheets_deband_threshold">阈值</string>
+    <string name="player_sheets_deband_range">范围</string>
+    <string name="player_sheets_deband_grain">噪点</string>
+    <string name="player_sheets_filters_title">图像滤镜</string>
+    <string name="player_sheets_filters_brightness">亮度</string>
+    <string name="player_sheets_filters_contrast">对比度</string>
+    <string name="player_sheets_filters_gamma">伽马值</string>
+    <string name="player_sheets_filters_Saturation">饱和度</string>
+    <string name="player_sheets_filters_hue">色相</string>
+    <string name="player_sheets_filters_sharpness">锐度</string>
+    <string name="player_sheets_filters_warning">部分滤镜可能无法在当前显卡驱动下生效</string>
+    <string name="player_sheets_speed_slider_label">播放速度</string>
+    <string name="player_sheets_speed_make_default">设为默认倍速</string>
+    <string name="player_sheets_decoder_formatted" formatted="false">%s (%s)</string>
+    <string name="numeric_chooser_value_too_big">数值过大</string>
+    <string name="numeric_chooser_value_too_small">数值过小</string>
+    <string name="player_sheets_more_title">更多选项</string>
+    <string name="player_sheets_stats_page_title">默认信息统计页面</string>
+    <string name="player_sheets_stats_page_chip">页面 %d</string>
+    <string name="player_sheets_stats_page_0_desc">禁用，不显示信息悬浮面板。</string>
+    <string name="player_sheets_stats_page_1_desc">总览：CPU/GPU 占用、音画同步、丢帧、时钟频率。</string>
+    <string name="player_sheets_stats_page_2_desc">帧时序：解码/渲染耗时、缩放器信息。</string>
+    <string name="player_sheets_stats_page_3_desc">缓存状态：缓冲区负载、分离器缓存、可跳转区间。</string>
+    <string name="player_sheets_stats_page_4_desc">快捷键列表：已绑定的按键映射。</string>
+    <string name="player_sheets_stats_page_5_desc">轨道信息：视频、音频、字幕轨道详情。</string>
+
+    <string name="playlist_now_playing">正在播放</string>
+    <string name="playlist_playing">播放中</string>
+    <string name="playlist_reorder">调整播放列表顺序</string>
+    <string name="playlist_search_placeholder">搜索…</string>
+    <string name="playlist_no_items">未找到条目</string>
+    <string name="playlist_items_count">%1$d / %2$d 项</string>
+    <string name="playlist_selected_count">已选择 %1$d 项</string>
+
+    <string name="player_aspect_fit">适应屏幕</string>
+    <string name="player_aspect_crop">裁剪</string>
+    <string name="player_aspect_stretch">拉伸</string>
+
+    <string name="crash_screen_title">出错啦</string>
+    <string name="crash_screen_subtitle">%s 发生意外崩溃。你可以将崩溃日志提交至 GitHub 反馈问题。</string>
+    <string name="crash_screen_logs_title">崩溃日志：</string>
+    <string name="crash_screen_share">分享崩溃日志</string>
+    <string name="crash_screen_restart">重启应用</string>
+    <string name="crash_screen_fix_crash">修复崩溃（删除数据库）</string>
+    <string name="crash_screen_database_deleted">数据库删除成功，请重启应用。</string>
+    <string name="crash_screen_database_hint">本次崩溃疑似数据库异常，尝试删除数据库进行修复。</string>
+
+    <string name="timer_picker_enter_timer">输入时长</string>
+    <string name="timer_picker_pick_time">选择时长</string>
+    <string name="timer_title">睡眠定时</string>
+    <string name="timer_remaining">剩余 %s</string>
+    <string name="toast_sleep_timer_ended">睡眠定时已结束</string>
+
+    <string name="swap_the_volume_and_brightness_slider">交换音量与亮度滑动手势区域</string>
+    <string name="pref_player_display_reduce_player_animation">减少播放器动画效果</string>
+    <string name="pref_player_display_hide_player_control_time">隐藏控制栏时间</string>
+    <string name="show_splash_ovals_on_double_tap_to_seek">双击跳转时显示波纹动画</string>
+    <string name="pref_player_show_circular_double_tap_seek_title">圆形双击跳转指示器</string>
+    <string name="pref_player_show_circular_double_tap_seek_summary">显示圆形跳转悬浮层并附带时间</string>
+    <string name="show_time_on_double_tap_to_seek">显示跳转时长</string>
+
+    <string name="pref_audio_channels_auto_safe_desc">默认，安全自动选择</string>
+    <string name="pref_audio_channels_auto_desc">自动选择</string>
+    <string name="pref_audio_channels_mono_desc">混合为单声道</string>
+    <string name="pref_audio_channels_stereo_desc">混合为立体声</string>
+    <string name="pref_audio_channels_reverse_stereo_desc">交换左右声道</string>
+
+    <string name="player_sheets_aspect_ratio_title">画面比例</string>
+    <string name="player_sheets_aspect_ratio_presets">预设比例</string>
+    <string name="player_sheets_aspect_ratio_preset_default">默认</string>
+    <string name="player_sheets_aspect_ratio_custom_toggle">自定义…</string>
+    <string name="player_sheets_aspect_ratio_custom_section">自定义比例</string>
+    <string name="player_sheets_aspect_ratio_manual_zoom_pan_title">手动缩放与平移（画面偏移）</string>
+    <string name="player_sheets_aspect_ratio_zoom_value">缩放：%1$.2fx</string>
+    <string name="player_sheets_aspect_ratio_reset_zoom">重置缩放</string>
+    <string name="player_sheets_aspect_ratio_horizontal_offset_value">水平偏移：%1$.3f</string>
+    <string name="player_sheets_aspect_ratio_vertical_offset_value">垂直偏移：%1$.3f</string>
+    <string name="player_sheets_aspect_ratio_reset_pan">重置平移</string>
+    <string name="player_sheets_aspect_ratio_add_custom_title">添加自定义比例（例如 16:9）</string>
+    <string name="player_sheets_aspect_ratio_width">宽度</string>
+    <string name="player_sheets_aspect_ratio_height">高度</string>
+    <string name="player_sheets_aspect_ratio_invalid">格式无效</string>
+    <string name="player_sheets_aspect_ratio_add">添加</string>
+    <string name="player_sheets_aspect_ratio_advanced_zoom_toggle">高级缩放</string>
+    <string name="player_sheets_aspect_ratio_advanced_zoom_description">独立拉伸或裁切水平、垂直方向，适合去除黑边</string>
+    <string name="player_sheets_aspect_ratio_horizontal_zoom_value">水平缩放：%1$.2fx</string>
+    <string name="player_sheets_aspect_ratio_vertical_zoom_value">垂直缩放：%1$.2fx</string>
+    <string name="player_sheets_aspect_ratio_reset_horizontal_zoom">重置水平缩放</string>
+    <string name="player_sheets_aspect_ratio_reset_vertical_zoom">重置垂直缩放</string>
+    <string name="player_sheets_aspect_ratio_decrease_horizontal_zoom">减小水平缩放</string>
+    <string name="player_sheets_aspect_ratio_increase_horizontal_zoom">增大水平缩放</string>
+    <string name="player_sheets_aspect_ratio_decrease_vertical_zoom">减小垂直缩放</string>
+    <string name="player_sheets_aspect_ratio_increase_vertical_zoom">增大垂直缩放</string>
+    <string name="player_sheets_aspect_ratio_reset_advanced_zoom">重置高级缩放</string>
+
+    <string name="player_sheets_frame_navigation_title">逐帧控制</string>
+    <string name="player_sheets_frame_navigation_frame_label">帧：\u0020</string>
+    <string name="player_sheets_frame_navigation_timestamp_label">时间戳：\u0020</string>
+    <string name="player_sheets_frame_navigation_screenshot_create_failed">截图创建失败</string>
+    <string name="player_sheets_frame_navigation_mediastore_entry_failed">媒体库条目创建失败</string>
+    <string name="player_sheets_frame_navigation_snapshot_dir_failed">无法创建 mpvSnaps 文件夹</string>
+    <string name="player_sheets_frame_navigation_snapshot_save_failed">截图保存失败：%1$s</string>
+    <string name="player_sheets_frame_navigation_include_subtitles">截图包含字幕</string>
+
+    <string name="player_sheets_zoom_slider_label">画面缩放</string>
+
+    <plurals name="seconds">
+        <item quantity="one">%1$d 秒</item>
+        <item quantity="other">%1$d 秒</item>
+    </plurals>
+
+    <!-- Background Playback -->
+    <string name="background_playback_title">后台播放</string>
+    <string name="deselect_all">取消全选</string>
+    <string name="select_all">全选</string>
+    <string name="invert_selection">反选</string>
+    <string name="selected_items">已选中 %1$d / %2$d 项</string>
+    <string name="selection_options">选择操作</string>
+    <string name="back">返回</string>
+    <string name="sort">排序</string>
+    <string name="settings">设置</string>
+    <string name="rename">重命名</string>
+    <string name="info">信息</string>
+    <string name="delete">删除</string>
+    <string name="got_it">知道了</string>
+    <string name="general">常规</string>
+    <string name="not_set_video_default">未设置（使用视频默认值）</string>
+    <string name="enter_language_codes">输入语言代码，英文逗号分隔（示例：eng,jpn,spa）</string>
+    <string name="language_codes_placeholder">eng,jpn,spa</string>
+    <string name="not_set_system_fonts">未设置（使用系统字体）</string>
+    <string name="fonts_loaded">已加载 %1$d 款字体</string>
+    <string name="reload_fonts">重新加载字体</string>
+    <string name="clear_font_directory">清空字体目录</string>
+    <string name="reset_to_default_font">恢复默认字体</string>
+    <string name="set_as_default">设为默认</string>
+
+    <!-- Notification strings -->
+    <string name="notification_channel_name">媒体播放</string>
+    <string name="notification_channel_description">播放控制通知</string>
+    <string name="notification_playing">正在播放</string>
+
+    <!-- Media Info Activity -->
+    <string name="pref_player_use_precise_seeking">启用精准跳转</string>
+    <string name="pref_player_show_seekbar_when_seeking_title">滑动跳转时显示进度条</string>
+    <string name="pref_player_show_seekbar_when_seeking_summary">手势拖动跳转时展示视频进度条</string>
+    <string name="pref_player_white_seekbar_title">白色进度条</string>
+    <string name="pref_player_white_seekbar_summary">播放器内视频进度条使用白色样式</string>
+    <string name="pref_player_hide_osd_text_title">隐藏播放器 OSD 文字</string>
+    <string name="pref_player_hide_osd_text_summary">跳转或调整字幕时，隐藏 mpv 默认 OSD 提示文字</string>
+    <string name="pref_player_keep_screen_on_when_paused_title">暂停时保持屏幕常亮</string>
+    <string name="pref_player_keep_screen_on_when_paused_summary">暂停播放期间防止屏幕自动休眠</string>
+    <string name="pref_player_save_position_on_quit_summary">记住播放进度</string>
+    <string name="pref_player_interaction_header">播放器交互</string>
+
+    <!-- Folders Preferences -->
+    <string name="pref_folders_title">文件夹</string>
+    <string name="pref_folders_summary">管理文件夹黑名单</string>
+    <string name="pref_folders_empty_title">暂无黑名单文件夹</string>
+    <string name="pref_folders_empty_message">点击下方按钮添加需要在列表中隐藏的文件夹</string>
+    <string name="pref_folders_add_folder">添加文件夹至黑名单</string>
+    <string name="pref_folders_select_folders">选择文件夹</string>
+    <string name="pref_folders_loading">加载文件夹…</string>
+    <string name="pref_folders_no_folders">未找到文件夹</string>
+    <string name="pref_folders_clear_all">清空黑名单</string>
+    <string name="pref_folders_clear_all_confirm_title">确定清空所有黑名单文件夹？</string>
+    <string name="pref_folders_clear_all_confirm_message">此操作将移除全部黑名单记录，后续可重新添加。</string>
+    <string name="pref_folders_blacklist">黑名单</string>
+    <string name="pref_folders_blacklisted">文件夹已加入黑名单</string>
+
+    <!-- M3U Playlist Strings -->
+    <string name="playlist_add_m3u_title">添加 M3U 播放列表</string>
+    <string name="playlist_add_m3u_description">输入 M3U 播放列表文件地址</string>
+    <string name="playlist_url_label">播放列表链接</string>
+    <string name="playlist_url_placeholder">https://example.com/playlist.m3u</string>
+    <string name="playlist_url_hint">支持 .m3u 与 .m3u8 格式</string>
+    <string name="playlist_add_success">M3U 播放列表添加成功</string>
+    <string name="playlist_add_error">添加 M3U 播放列表失败：%s</string>
+    <string name="playlist_create_empty">新建空白播放列表</string>
+    <string name="playlist_add_from_url">通过 M3U/M3U8 链接添加</string>
+    <string name="playlist_refresh_m3u">刷新 M3U 播放列表</string>
+    <string name="playlist_refresh_success">播放列表刷新完成</string>
+    <string name="playlist_refresh_error">播放列表刷新失败：%s</string>
+    <string name="playlist_m3u_badge">M3U</string>
+
+    <string name="open_file">打开文件</string>
+    <string name="recently_played">最近播放</string>
+    <string name="open_link">打开链接</string>
+    <string name="install">安装</string>
+    <string name="download">下载</string>
+    <string name="failed_load_audio_invalid_uri">音频文件加载失败：无效地址</string>
+    <string name="audio_track_added">音轨已添加</string>
+    <string name="failed_load_audio">音频加载失败：%s</string>
+    <string name="invalid_subtitle_format">字幕文件格式无效</string>
+    <string name="subtitle_added">%s 已添加</string>
+    <string name="failed_load_subtitle">字幕加载失败</string>
+    <string name="remove_from_playlist">确定从播放列表移除 %1$d 个%2$s？</string>
+    <string name="remove_playlist_items_confirm">选中的 %2$s 将从本播放列表移除，原始 %3$s 不会被删除。</string>
+    <string name="search_videos">搜索视频…</string>
+    <string name="search_folders_and_videos">搜索文件夹与视频…</string>
+    <string name="search_playlists">搜索播放列表…</string>
+    <string name="search_no_results_title">未找到结果</string>
+    <string name="search_no_results_message">没有匹配搜索条件的文件或文件夹</string>
+    <string name="search_empty_title">搜索</string>
+    <string name="search_empty_message">输入内容搜索文件与文件夹</string>
+    <string name="play_recently_played_or_first">播放最近播放项或首个视频</string>
+    <string name="toggle_menu">展开/收起菜单</string>
+    <string name="close">关闭</string>
+    <string name="copy">复制</string>
+    <string name="done">完成</string>
+    <string name="create">新建</string>
+    <string name="select">选择</string>
+    <string name="browse">浏览</string>
+    <string name="disconnect">断开连接</string>
+    <string name="connect">连接</string>
+    <string name="remove">移除</string>
+    <string name="add">添加</string>
+    <string name="ignore">忽略</string>
+    <string name="check_for_updates_now">立即检查更新</string>
+    <string name="loading_detailed_information">正在加载详细信息…</string>
+    <string name="stream_url">流媒体地址</string>
+    <string name="export_complete">导出完成</string>
+    <string name="import_complete">导入完成</string>
+    <string name="auto_picture_in_picture">自动画中画</string>
+    <string name="dynamic_speed_overlay">动态倍速悬浮显示</string>
+    <string name="show_navigation_bar_with_controls">显示导航栏与控制组件</string>
+    <string name="enable_lua_scripts">启用 Lua 脚本</string>
+    <string name="manage_lua_scripts">管理 Lua 脚本</string>
+    <string name="rename_playlist">重命名播放列表</string>
+    <string name="create_playlist">新建播放列表</string>
+    <string name="add_connection">新增连接</string>
+    <string name="playlist_name">播放列表名称</string>
+    <string name="playlist_url">播放列表地址</string>
+    <string name="enter_url">输入地址</string>
+    <string name="new_name">新名称</string>
+    <string name="folder_name">文件夹名称</string>
+    <string name="video_url">视频地址</string>
+    <string name="choose_local_m3u_file">选择本地 M3U 文件</string>
+    <string name="add_from_url">通过链接添加</string>
+    <string name="home">首页</string>
+    <string name="shorts">短视频</string>
+    <string name="recents">最近</string>
+    <string name="playlists">播放列表</string>
+    <string name="network">网络</string>
+    <string name="unit_seconds">秒</string>
+    <string name="milliseconds">毫秒</string>
+    <string name="name">名称</string>
+    <string name="protocol">协议</string>
+    <string name="host_ip_address">主机/IP 地址</string>
+    <string name="port">端口</string>
+    <string name="path">路径</string>
+    <string name="anonymous_guest_access">匿名/访客访问</string>
+    <string name="use_https_secure_connection">使用 HTTPS（安全连接）</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="selected_long_press_to_reorder">已选中（长按调整顺序）</string>
+    <string name="available">可用</string>
+    <string name="width">宽度</string>
+    <string name="height">高度</string>
+    <string name="filter_presets">滤镜预设</string>
+    <string name="no_storage_devices_found">未检测到存储设备</string>
+    <string name="no_folders_or_supported_files">暂无文件夹或支持的文件</string>
+    <string name="hello_world">Hello world</string>
+
+    <!-- Browser Preferences -->
+    <string name="pref_show_audio_files_title">显示音频文件</string>
+    <string name="pref_show_audio_files_summary">在文件浏览与播放列表中检索并显示音频文件</string>
+    <string name="pref_show_tree_view_path_title">显示路径导航</string>
+    <string name="pref_show_tree_view_path_summary">在树形视图顶部显示文件夹路径导航栏</string>
+
+    <string name="copy_path">复制路径</string>
+    <string name="copy_video_path">复制视频文件路径</string>
+    <string name="copy_folder_path">复制文件夹路径</string>
+    <string name="copied_to_clipboard">已复制到剪贴板</string>
+    
+    <!-- Media Info Screen -->
+    <string name="media_info_title">媒体信息</string>
+    <string name="media_info_back">返回</string>
+    <string name="media_info_copy">复制</string>
+    <string name="media_info_share">分享</string>
+    <string name="media_info_no_file_provided">未选择媒体文件</string>
+    <string name="media_info_unknown_file_name">未知名称</string>
+    <string name="media_info_failed_to_load">媒体信息加载失败</string>
+    <string name="media_info_unknown_error">未知错误</string>
+    <string name="media_info_analyzing">正在分析媒体文件…</string>
+    <string name="media_info_error_prefix">错误：%1$s</string>
+    <string name="media_info_loading_details">正在加载详细信息…</string>
+    <string name="media_info_clipboard_label">媒体信息 - %1$s</string>
+    <string name="media_info_share_subject">媒体信息 - %1$s</string>
+    <string name="media_info_share_text">媒体文件信息：%1$s</string>
+    <string name="media_info_share_chooser_title">分享媒体信息</string>
+    <string name="media_info_share_failed">分享失败：%1$s</string>
+    <string name="media_info_default_file_name">媒体文件</string>
+
+    <!-- Network Connection Card -->
+    <string name="network_connection_protocol_host">%1$s • %2$s:%3$s</string>
+    <string name="network_connection_edit">编辑</string>
+    <string name="network_connection_delete">删除</string>
+    <string name="network_connection_path_prefix">路径：%1$s</string>
+    <string name="network_connection_user_prefix">用户：%1$s</string>
+    <string name="network_connection_error_prefix">错误：%1$s</string>
+    <string name="network_connection_auto_connect">应用启动时自动连接</string>
+    <string name="network_connection_connecting">正在连接</string>
+    <string name="network_connection_browse">浏览</string>
+    <string name="network_connection_disconnect">断开连接</string>
+    <string name="network_connection_connect">连接</string>
+
+    <!-- Playlist Screen Empty and Search States -->
+    <string name="no_playlists_found">未找到播放列表</string>
+    <string name="try_different_search_term">尝试其他搜索关键词</string>
+    <string name="no_playlists_yet">暂无播放列表</string>
+    <string name="no_playlists_yet_desc">新建播放列表或通过M3U链接添加</string>
+    <string name="empty_playlists_desc">创建播放列表后将在此处展示</string>
+
+    <!-- Recently Played Screen -->
+    <string name="recently_played_disabled_title">最近播放功能已关闭</string>
+    <string name="recently_played_disabled_message">前往高级设置开启，以记录播放历史</string>
+    <string name="no_recently_played_videos">暂无最近播放视频</string>
+    <string name="no_recently_played_videos_message">你播放过的视频将会显示在这里</string>
+    <string name="no_recently_played_items">暂无最近播放记录</string>
+    <string name="no_recently_played_items_message">播放过的视频与播放列表将展示在此处</string>
+    <string name="remove_from_history_title">确定从历史记录移除 %1$d 个 %2$s？</string>
+    <string name="remove_from_history_msg">所选 %1$s 将从最近播放列表移除，原始视频文件不会被删除。</string>
+    <string name="delete_files_title">确定删除 %1$d 个 %2$s？</string>
+    <string name="delete_files_msg">此操作将从设备存储中永久删除原始视频文件。\n\n删除后无法恢复。</string>
+    <string name="also_delete_files">同时删除原始文件</string>
+
+    <!-- Folder List Screen Empty States -->
+    <string name="no_video_folders_found">未找到视频文件夹</string>
+    <string name="no_video_folders_found_desc">向设备存入视频后，文件夹将显示在此处</string>
+
+    <!-- File System Browser Screen Strings -->
+    <string name="search_in_all_storage_volumes">在全部存储分区搜索…</string>
+    <string name="search_in_folder_placeholder">在 %1$s 内搜索…</string>
+    <string name="search_default_folder_name">文件夹</string>
+    <string name="empty_folder_title">空文件夹</string>
+    <string name="empty_folder_message">该文件夹内没有视频或子文件夹</string>
+
+    <!-- Media Library Content Screen Strings -->
+    <string name="search_all_videos">搜索全部视频…</string>
+
+    <!-- Network Streaming Screen Strings -->
+    <string name="stream_link">流媒体链接</string>
+    <string name="video_url_placeholder">https://example.com/video.mp4</string>
+    <string name="paste">粘贴</string>
+    <string name="play">播放</string>
+
+    <!-- Playlist Detail Screen Strings -->
+    <string name="no_videos_in_playlist">此播放列表暂无视频</string>
+    <string name="no_videos_in_playlist_desc">从文件浏览器添加视频来创建播放列表</string>
+    <string name="done_reordering">调整顺序完成</string>
+    <string name="reorder_playlist">调整播放列表顺序</string>
+    <string name="remove_from_playlist_confirm">选中的 %1$s 将从本播放列表移除，原始 %2$s 不会被删除。</string>
+    <string name="remove_from_playlist_action">从播放列表移除</string>
+
+    <!-- Shorts Screen Strings -->
+    <string name="go_back">返回</string>
+    <string name="auto_swipe_to_next_short">自动切换下一条短视频</string>
+    <string name="auto_swipe_to_next_short_desc">视频播放结束后自动滑动切换</string>
+    <string name="long_press_speed">长按倍速</string>
+    <string name="video_information">视频信息</string>
+    <string name="blocked_videos_manager">黑名单视频管理</string>
+    <string name="delete_short">删除短视频</string>
+    <string name="delete_short_desc">从设备永久删除该文件</string>
+    <string name="long_press_speed_desc">长按锁定倍速，单击切换倍速</string>
+    <string name="delete_short_confirm_message">确定永久删除这条短视频吗？此操作无法撤销。</string>
+
+    <!-- Private Space Strings -->
+    <string name="moving_to_private_space">正在移至私密空间…</string>
+    <string name="moved_to_private_space">已移至私密空间</string>
+    <string name="moved_to_private_space_desc">成功将 %1$d 个视频移入私密空间。\n\n访问私密空间：在主页顶部长按应用名称。</string>
+    <string name="save">保存</string>
+    <string name="add_network_connection">新增网络连接</string>
+    <string name="edit_network_connection">编辑网络连接</string>
+
+    <!-- Add To Playlist Dialog Strings -->
+    <string name="add_to_playlist">添加到播放列表</string>
+    <string name="adding_one_video_to_playlist">正在向播放列表添加1个视频</string>
+    <string name="adding_n_videos_to_playlist">正在向播放列表添加 %1$d 个视频</string>
+    <string name="create_new_playlist">新建播放列表</string>
+    <string name="existing_playlists">已有播放列表</string>
+    <string name="video_added_to">视频已添加至「%1$s」</string>
+    <string name="n_videos_added_to">%1$d 个视频已添加至「%2$s」</string>
+    <string name="playlist_videos_count">%1$d 个视频 • %2$s</string>
+    <string name="create_first_playlist_above">在上方创建你的第一个播放列表</string>
+
+    <!-- Copy Paste Dialog Strings -->
+    <string name="copying_files">正在复制文件</string>
+    <string name="moving_files">正在移动文件</string>
+    <string name="operation_completed_successfully">操作成功完成！</string>
+    <string name="operation_cancelled">操作已取消</string>
+    <string name="file_index_of_total">文件 %1$d / %2$d</string>
+    <string name="current_file">当前文件</string>
+    <string name="overall_progress">总进度</string>
+    <string name="file_bytes_progress">%1$s / %2$s</string>
+    <string name="files_processed">已处理文件</string>
+    <string name="total_size">总大小</string>
+
+    <!-- File Picker Dialog Strings -->
+    <string name="select_storage_location">选择存储位置</string>
+
+    <!-- Folder Picker Dialog Strings -->
+    <string name="go_to_internal_storage">进入内部存储</string>
+    <string name="create_folder">新建文件夹</string>
+    <string name="select_folder">选择文件夹</string>
+    <string name="cannot_select_same_folder">无法选择当前文件夹</string>
+    <string name="create_new_folder">新建文件夹</string>
+    <string name="folder_name_empty">文件夹名称不能为空</string>
+    <string name="folder_already_exists">文件夹已存在</string>
+    <string name="failed_create_folder">文件夹创建失败</string>
+
+    <!-- Rename Dialog Strings -->
+    <string name="rename_item">重命名 %1$s</string>
+    <string name="name_cannot_be_empty">名称不能为空</string>
+    <string name="name_cannot_contain_invalid_chars">名称不能包含 / 或 \\</string>
+
+    <!-- Sheets Strings -->
+    <string name="play_link">播放链接</string>
+    <string name="invalid_url_protocol">无效的链接协议</string>
+    <string name="valid_url">链接有效</string>
+    <string name="invalid_url">链接无效</string>
+    <string name="playlist_created_successfully">播放列表创建成功</string>
+    <string name="failed_create_playlist">播放列表创建失败</string>
+    <string name="m3u_playlist_added_successfully">M3U 播放列表添加成功</string>
+    <string name="failed_add_m3u_playlist">M3U 播放列表添加失败</string>
+    <string name="add_m3u_playlist">添加 M3U 播放列表</string>
+    <string name="or">或</string>
+    <string name="playlist_options">播放列表选项</string>
+    <string name="create_empty_playlist">创建空白播放列表</string>
+    <string name="create_blank_playlist_desc">新建一个空白播放列表</string>
+    <string name="add_m3u_playlist_from_url">通过链接添加 M3U 播放列表</string>
+    <string name="import_playlist_url_desc">从网络地址导入播放列表</string>
+
+    <!-- Component Strings -->
+    <string name="more_options">更多选项</string>
+    <string name="move">移动</string>
+    <string name="mark_as">标记为</string>
+    <string name="mark_as_last_played">最近播放</string>
+    <string name="mark_as_last_played_desc">移至最近播放列表顶部</string>
+    <string name="mark_as_finished">已看完</string>
+    <string name="mark_as_finished_desc">标记为完整观看</string>
+    <string name="mark_as_none">无标记</string>
+    <string name="mark_as_none_desc">清除所有标记与观看记录</string>
+    <string name="mark_as_new">新视频</string>
+    <string name="mark_as_new_desc">清除旧标记，标记为新视频</string>
+    <string name="folders_count">文件夹（%1$d）</string>
+    <string name="media_count">媒体（%1$d）</string>
+    <string name="drag_to_reorder">拖动调整顺序</string>
+    <string name="community_links">社区链接</string>
+    <string name="community_hub">社区中心</string>
+    <string name="connect_social_media">前往社交平台关注我们</string>
+
+    <!-- Sort Dialog Strings -->
+    <string name="sort_and_view_options">排序与视图设置</string>
+    <string name="view_options">视图选项</string>
+
+    <!-- Preference Category Strings -->
+    <string name="pref_category_ui_appearance">界面与外观</string>
+    <string name="pref_category_playback_controls">播放与控制</string>
+    <string name="pref_category_file_management">文件管理</string>
+    <string name="pref_category_media_settings">媒体设置</string>
+    <string name="pref_category_rexshorts">RexShorts</string>
+    <string name="pref_category_rexshorts_settings">RexShorts 设置</string>
+    <string name="pref_category_rexshorts_settings_desc">开关功能、随机播放与黑名单内容管理</string>
+    <string name="pref_category_advanced_about">高级设置与关于</string>
+
+    <!-- Shorts preference screen -->
+    <string name="pref_enable_rexshorts">启用 RexShorts</string>
+    <string name="pref_enable_rexshorts_summary">在底部导航栏显示短视频标签页</string>
+    <string name="pref_auto_swipe_shorts">自动切换下一条短视频</string>
+    <string name="pref_auto_swipe_shorts_summary">当前视频播放完毕后自动滑动切换下一条</string>
+    <string name="pref_enable_glass_shorts_controls">磨砂玻璃短视频控制栏</string>
+    <string name="pref_enable_glass_shorts_controls_summary">为短视频操作按钮启用毛玻璃拟态样式</string>
+    <string name="pref_show_shorts_back_button">显示返回按钮</string>
+    <string name="pref_show_shorts_back_button_summary">在短视频侧边控制面板展示返回按钮</string>
+    <string name="pref_category_discovery">内容发现</string>
+    <string name="pref_include_short_horizontal_videos">纳入横向短视频</string>
+    <string name="pref_include_short_horizontal_videos_summary">短视频信息流中展示时长较短的横版视频</string>
+    <string name="pref_max_horizontal_video_duration">横版视频最大时长</string>
+    <plurals name="pref_max_horizontal_video_duration_desc">
+        <item quantity="one">横版视频时长上限：%d 分钟</item>
+        <item quantity="other">横版视频时长上限：%d 分钟</item>
+    </plurals>
+    <string name="pref_sourced_folders">素材来源文件夹</string>
+    <string name="pref_sourced_folders_all">素材取自全部扫描目录</string>
+    <string name="pref_sourced_folders_count">素材取自 %1$d 个文件夹</string>
+    <string name="pref_sourced_folders_list">来源目录：%1$s</string>
+    <string name="pref_category_content_management">内容管理</string>
+    <string name="pref_blocked_videos">黑名单视频</string>
+    <string name="pref_blocked_videos_summary">查看与管理屏蔽的短视频</string>
+    <string name="pref_select_sourced_folders">选择素材来源文件夹</string>
+    <string name="pref_select_sourced_folders_desc">选取用于扫描短视频的目录。若未选择，将扫描全部文件夹。</string>
+
+    <!-- Update features -->
+    <string name="pref_category_updates">更新</string>
+    <string name="pref_about_auto_check_updates">自动检查更新</string>
+    <string name="pref_about_auto_check_updates_summary">应用启动时检测新版本</string>
+    <string name="pref_about_check_updates">检查更新</string>
+    <string name="pref_about_checking">正在检查…</string>
+    <string name="pref_about_check_updates_summary">手动前往 GitHub 检测新版本</string>
+    <string name="pref_about_up_to_date">当前已是最新版本！</string>
+    <string name="pref_about_check_updates_failed">更新检查失败</string>
+    <string name="update_ready_to_install">准备安装</string>
+    <string name="update_available_title">发现新版本</string>
+    <string name="update_current_version">当前版本</string>
+    <string name="update_latest_version">最新版本</string>
+    <string name="update_release_date">发布日期</string>
+    <string name="update_size">安装包大小</string>
+    <string name="update_release_notes">更新日志</string>
+    <string name="update_downloading">正在下载…</string>
+    <string name="update_install">安装</string>
+    <string name="update_download">下载</string>
+    <string name="update_ignore">忽略</string>
+    <string name="update_cancel">取消</string>
+
+    <!-- Player Button Labels -->
+    <string name="btn_label_back">返回箭头</string>
+    <string name="btn_label_title">视频标题</string>
+    <string name="btn_label_bookmarks">章节/书签</string>
+    <string name="btn_label_speed">播放倍速</string>
+    <string name="btn_label_decoder">解码器</string>
+    <string name="btn_label_rotation">画面旋转</string>
+    <string name="btn_label_frame_nav">逐帧控制</string>
+    <string name="btn_label_zoom">画面缩放</string>
+    <string name="btn_label_pip">画中画</string>
+    <string name="btn_label_aspect">画面比例</string>
+    <string name="btn_label_lock">锁定控制界面</string>
+    <string name="btn_label_audio">音轨</string>
+    <string name="btn_label_subtitles">字幕</string>
+    <string name="btn_label_more">更多选项</string>
+    <string name="btn_label_chapter">当前章节</string>
+    <string name="btn_label_repeat_mode">循环模式</string>
+    <string name="btn_label_shuffle">随机播放</string>
+    <string name="btn_label_mirror">水平镜像</string>
+    <string name="btn_label_vertical_flip">垂直翻转</string>
+    <string name="btn_label_ab_loop">A-B 循环</string>
+    <string name="btn_label_custom_skip">自定义跳转</string>
+    <string name="btn_label_background_playback">后台播放</string>
+    <string name="btn_label_ambient_mode">环境模式</string>
+    <string name="btn_label_sleep_timer">睡眠定时</string>
+    <string name="btn_label_none">无</string>
+
+
+    <string name="timer_start">启动定时</string>
+    <string name="slide_to_unlock">滑动解锁</string>
+
+    <string name="player_sheets_tab_controls">控制</string>
+    <string name="player_sheets_tab_aesthetics">外观</string>
+    <string name="player_sheets_tab_gestures">手势</string>
+    <string name="player_sheets_tab_settings">设置</string>
+    <string name="player_sheets_tab_interaction">交互</string>
+    <string name="anime4k_not_available_high_res">4K/8K 视频无法启用Anime4K</string>
+    <string name="player_sheets_extended_controls_title">扩展控制面板</string>
+    
+    <string name="storage_access_required">需要存储权限</string>
+    <string name="allow_access">允许访问</string>
+    <string name="why_do_i_see_this">为什么弹出此提示？</string>
+    <string name="why_this_permission_is_needed">权限用途说明</string>
+    <string name="permission_explanation_playstore_intro">mpvRex 需要访问视频文件，以此实现媒体播放器核心功能。</string>
+    <string name="permission_used_exclusively_for">该权限仅用于：</string>
+    <string name="permission_usage_bullet_list">• 检索并展示本地视频文件\n• 播放媒体内容\n• 加载字幕文件</string>
+    <string name="permission_explanation_standard_intro">mpvRex 一直需要存储权限，以便检索设备内所有媒体与字幕文件，包含系统无法识别的格式。</string>
+    <string name="permission_security_policy_change">受系统安全策略变更影响，面向 Android 11 及以上编译的应用，需要额外权限才能正常读取文件。</string>
+    <string name="permission_privacy_assurance_standard">该权限仅用于自动扫描媒体与字幕文件，不会读取其他应用的私有数据。</string>
+    <string name="opensource_github_notice">mpvRex 是开源项目，你可以前往 GitHub 仓库查看源代码，验证权限调用逻辑：</string>
+    <string name="privacy_assurance_final">我们高度重视你的隐私。应用不会将你的文件用于其他用途，不上传、不存储文件至服务器，所有文件仅保存在本机。</string>
+    
+    <string name="permission_required_photos_videos">mpvRex 需要「照片和视频」权限，用于访问并播放设备内的视频文件。</string>
+    <string name="permission_required_storage">mpvRex 需要「存储」权限，用于访问并播放设备内的媒体文件。</string>
+    <string name="permission_required_all_files">Android 11 及以上系统策略变更，mpvRex 需要「所有文件访问权限」以扫描媒体与字幕文件。</string>
+    <string name="permission_explanation_tiramisu_plus">Android 13及以上，该权限允许应用读取下载、影片、DCIM 等目录下的视频文件。</string>
+    <string name="permission_explanation_pre_tiramisu">该权限允许读取设备媒体文件，用于播放音视频。</string>
+
+    <!-- Player controls shared -->
+    <string name="playlist_separator">• %1$s</string>
+    <string name="chapters">章节</string>
+    <string name="skip_seconds">跳转 %1$d 秒</string>
+    <string name="playback_speed">播放倍速</string>
+    <string name="screen_rotation">旋转</string>
+    <string name="frame_nav">逐帧</string>
+    <string name="frame_navigation">逐帧控制</string>
+    <string name="pip">画中画</string>
+    <string name="video_zoom">画面缩放</string>
+    <string name="lock">锁定</string>
+    <string name="audio">音轨</string>
+    <string name="subtitles">字幕</string>
+    <string name="repeat_off">关闭循环</string>
+    <string name="repeat_one">单曲循环</string>
+    <string name="repeat_all">全部循环</string>
+    <string name="shuffle_on">随机播放开启</string>
+    <string name="shuffle_off">随机播放关闭</string>
+    <string name="mirrored">已镜像</string>
+    <string name="mirror">镜像</string>
+    <string name="flipped">已翻转</string>
+    <string name="flip_vertical">垂直翻转</string>
+    <string name="flip_vertical_desc">垂直翻转画面</string>
+    <string name="ab_loop_short">AB循环</string>
+    <string name="loop">循环</string>
+    <string name="background_playback">后台</string>
+    <string name="ambient">环境</string>
+    <string name="ambience_mode">环境模式</string>
+    <string name="sleep_timer">睡眠定时</string>
+
+    <!-- Preference section headers -->
+    <string name="pref_layout_landscape_controls_header">横屏控制界面</string>
+    <string name="pref_layout_portrait_controls_header">竖屏控制界面</string>
+    <string name="pref_layout_more_sheet_controls_header">更多面板控件</string>
+    <string name="pref_layout_more_sheet_controls_title">「控制」选项卡按钮</string>
+    <string name="pref_seekbar_style_header">进度条样式</string>
+    <string name="pref_controls_layout_header">控制栏布局</string>
+    <string name="pref_player_appearance_header">外观</string>
+
+    <!-- Controls Layout: below/above seekbar -->
+    <string name="pref_controls_layout_below_seekbar_title">控制按钮置于进度条下方</string>
+    <string name="pref_controls_layout_below_seekbar_summary_true">控制按钮显示在进度条下方</string>
+    <string name="pref_controls_layout_below_seekbar_summary_false">控制按钮显示在进度条上方</string>
+
+    <!-- Appearance section -->
+    <string name="pref_appearance_show_controls_on_play_title">开始播放时显示控制栏</string>
+    <string name="pref_appearance_show_controls_on_play_summary">视频开始播放时弹出播放器控制界面</string>
+    <string name="pref_appearance_player_gradient_opacity_title">控制栏渐变透明度</string>
+    <string name="pref_appearance_player_gradient_opacity_current">当前：%1$d%%</string>
+
+    <!-- Custom hide-time dialog -->
+    <string name="pref_player_display_custom_hide_time_dialog_message">输入自定义隐藏时长（单位：毫秒）</string>
+    <string name="pref_player_display_time_ms_format">%1$d 毫秒</string>
+    <string name="pref_player_display_custom_time_summary">自定义（%1$d 毫秒）</string>
+
+    <!-- Generic reusable strings -->
+    <string name="generic_none">无</string>
+    <string name="generic_custom">自定义</string>
+    <string name="generic_edit_content_description">编辑 %1$s</string>
+
+    <!-- Network Streaming Screen -->
+    <string name="network_recent_links">最近链接</string>
+    <string name="network_local_network">局域网</string>
+    <string name="network_empty_title">暂无网络连接</string>
+    <string name="network_empty_description">添加 SMB、FTP 或 WebDAV 连接以浏览网络文件</string>
+    <string name="network_remove_link_action">移除链接</string>
+
+    <!-- Appearance Preferences Screen -->
+    <string name="pref_appearance_network_thumbnails_dialog_title">启用网络缩略图？</string>
+    <string name="pref_appearance_network_thumbnails_dialog_message">为流媒体（M3U/HTTP）生成缩略图会大幅增加流量消耗与加载时间，是否继续？</string>
+    <string name="pref_appearance_thumbnail_strategy_dialog_title">更改缩略图生成策略？</string>
+    <string name="pref_appearance_thumbnail_strategy_dialog_message">切换提取策略将清空现有缩略图缓存，浏览时自动重新生成缩略图。</string>
+    <string name="pref_appearance_thumbnail_position_dialog_title">修改缩略图截取位置？</string>
+    <string name="pref_appearance_thumbnail_position_reset_confirm">将缩略图截取位置重置至视频 %1$d%% 处。</string>
+    <string name="pref_appearance_thumbnail_position_dialog_message">修改截取位置将清空现有缩略图缓存，浏览时自动重新生成缩略图。</string>
+
+    <!-- Control Layout Editor Screen -->
+    <string name="control_layout_edit_title_top_right">编辑右上角区域</string>
+    <string name="control_layout_edit_title_bottom_right">编辑右下角区域</string>
+    <string name="control_layout_edit_title_bottom_left">编辑左下角区域</string>
+    <string name="control_layout_edit_title_portrait_bottom">编辑竖屏底部区域</string>
+    <string name="control_layout_edit_title_more_sheet">编辑更多面板按钮</string>
+    <string name="control_layout_back">返回</string>
+    <string name="control_layout_reset_to_default">恢复默认布局</string>
+    <string name="control_layout_reset_dialog_title">重置布局</string>
+    <string name="control_layout_reset_dialog_message">确定将该区域恢复为默认布局吗？</string>
+    <string name="control_layout_reorder_hint">长按拖动调整顺序，点击「-」移除按钮。</string>
+    <string name="control_layout_drop_zone_empty">放置区域为空</string>
+    <string name="control_layout_drop_zone_hint">从下方「可用按钮区」点击添加按钮</string>
+    <string name="control_layout_all_buttons_in_use">所有按钮已全部启用。</string>
+    <string name="control_layout_icons_legend_title">图标说明</string>
+
+    <!-- Gesture Preferences Screen -->
+    <string name="pref_gesture_custom_value">自定义</string>
+    <string name="pref_gesture_double_tap_seek_area_width_title">双击跳转区域宽度</string>
+    <string name="pref_gesture_custom_seek_dialog_hint">输入自定义跳转秒数（范围 1-120）</string>
+
+    <string name="item_type_video">视频</string>
+    <string name="item_type_folder">文件夹</string>
+    <string name="item_type_file">文件</string>
+    <string name="item_type_playlist">播放列表</string>
+    <string name="item_type_item">项目</string>
+
+    <string name="no_videos_in_folder">该文件夹内暂无视频</string>
+    <string name="no_videos_in_folder_desc">向此文件夹放入视频后将显示在这里</string>
+    <string name="tree_view">树形视图</string>
+
+    <string name="pref_player_general">常规</string>
+    <string name="pref_player_autoplay_next_video">自动播放下一个视频</string>
+    <string name="pref_player_autoplay_next_video_summary_on">当前视频播放结束后自动播放下一个</string>
+    <string name="pref_player_autoplay_next_video_summary_off">视频播放结束后停留在当前画面</string>
+    <string name="pref_player_playlist_mode_summary_on">为本文件夹所有视频显示上/下一曲按钮</string>
+    <string name="pref_player_playlist_mode_summary_off">独立播放视频（多选文件可创建临时播放列表）</string>
+    <string name="pref_player_keep_screen_on_when_paused_summary_on">暂停播放时保持屏幕常亮</string>
+    <string name="pref_player_keep_screen_on_when_paused_summary_off">暂停播放时屏幕可以自动熄灭</string>
+    <string name="pref_player_auto_pip">自动画中画</string>
+    <string name="pref_player_auto_pip_summary">按下主页键或返回键时自动进入画中画模式</string>
+    <string name="pref_player_dynamic_speed_overlay">动态倍速悬浮窗</string>
+    <string name="pref_player_dynamic_speed_overlay_summary">长按、滑动调节倍速时展示进阶悬浮控件</string>
+    <string name="pref_player_display_show_navigation_bar">随控制栏一并显示导航栏</string>
+
+    <plurals name="item_type_video_plural">
+        <item quantity="one">视频</item>
+        <item quantity="other">视频</item>
+    </plurals>
+    <plurals name="item_type_folder_plural">
+        <item quantity="one">文件夹</item>
+        <item quantity="other">文件夹</item>
+    </plurals>
+    <plurals name="item_type_file_plural">
+        <item quantity="one">文件</item>
+        <item quantity="other">文件</item>
+    </plurals>
+    <plurals name="item_type_playlist_plural">
+        <item quantity="one">播放列表</item>
+        <item quantity="other">播放列表</item>
+    </plurals>
+    <plurals name="item_type_item_plural">
+        <item quantity="one">项目</item>
+        <item quantity="other">项目</item>
+    </plurals>
+    <string name="rename_failed">重命名失败</string>
+
+    <plurals name="delete_items_warning">
+        <item quantity="one">此操作无法撤销，选中项目将被永久删除。</item>
+        <item quantity="other">此操作无法撤销，选中项目将被永久删除。</item>
+    </plurals>
+
+    <string name="export_failed">导出失败：%1$s</string>
+    <string name="import_failed">导入失败：%1$s</string>
+    <string name="clear_failed">清除失败：%1$s</string>
+    <string name="export_complete_details">成功导出 %1$d 项内容！\n\n</string>
+    <string name="import_complete_details">导入成功：%1$d 项\n导入失败：%2$d 项\n配置版本：%3$s\n\n请重启应用使全部更改生效。</string>
+    <string name="pref_advanced_section_backup_restore">备份与恢复</string>
+    <string name="pref_advanced_section_mpv_configuration">MPV 参数配置</string>
+    <string name="pref_advanced_section_scripts">脚本</string>
+    <string name="pref_advanced_section_history">播放历史</string>
+    <string name="pref_advanced_section_cache">缓存</string>
+    <string name="pref_advanced_section_system_integration">系统集成</string>
+    <string name="pref_advanced_section_logging">日志记录</string>
+    <string name="pref_advanced_tap_to_edit_configuration">点击编辑配置文件</string>
+    <string name="pref_advanced_mpv_directory_ready">MPV 目录就绪 ✓</string>
+    <string name="pref_advanced_lua_set_storage_first">请先设置存储路径并启用 Lua 脚本</string>
+    <string name="pref_advanced_no_scripts_enabled">暂无启用的脚本</string>
+    <string name="pref_advanced_custom_lua_summary">创建并管理自定义 Lua 功能按钮</string>
+    <string name="pref_advanced_config_cache_cleared">配置缓存已清除</string>
+    <string name="pref_advanced_delete_thumbnails_summary">删除全部视频缩略图缓存（浏览文件夹时将重新生成）</string>
+    <string name="pref_advanced_clear_thumbnail_cache_confirm_title">清除缩略图缓存？</string>
+    <string name="pref_advanced_clear_thumbnail_cache_confirm_subtitle">将从存储与内存中删除所有本地及网络缩略图缓存。</string>
+    <string name="pref_advanced_thumbnail_cache_cleared">缩略图缓存已清空</string>
+    <string name="pref_advanced_remove_cached_fonts_summary">清除所有缓存字幕字体</string>
+    <string name="pref_advanced_enable_media_info_title">启用媒体信息页面</string>
+    <string name="pref_advanced_enable_media_info_summary">在系统「打开方式」菜单中显示「媒体信息」选项</string>
+
+    <string name="blocked_shorts_empty_state">暂无屏蔽视频</string>
+    <string name="blocked_shorts_unblock_button">已屏蔽</string>
+    
+    <string name="media_info_selection_title">选中文件信息</string>
+    <string name="media_info_selected_label">已选中</string>
+    <string name="media_info_total_length">总时长</string>
+
+</resources>

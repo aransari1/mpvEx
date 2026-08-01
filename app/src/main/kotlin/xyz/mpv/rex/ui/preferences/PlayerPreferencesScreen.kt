@@ -263,6 +263,16 @@ object PlayerPreferencesScreen : Screen {
 
               PreferenceDivider()
 
+              val whiteSeekBar by preferences.whiteSeekBar.collectAsState()
+              SwitchPreference(
+                value = whiteSeekBar,
+                onValueChange = preferences.whiteSeekBar::set,
+                title = { Text(stringResource(R.string.pref_player_white_seekbar_title)) },
+                summary = { Text(stringResource(R.string.pref_player_white_seekbar_summary)) },
+              )
+
+              PreferenceDivider()
+
               val hideOsdText by preferences.hideOsdText.collectAsState()
               SwitchPreference(
                 value = hideOsdText,

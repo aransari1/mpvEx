@@ -20,7 +20,7 @@ class AmbientModeManager(
   private val playerPreferences: PlayerPreferences,
   private val cacheDir: File,
   private val scope: CoroutineScope,
-  private val onShowText: (String) -> Unit
+  private val onShowText: (Boolean) -> Unit
 ) {
   companion object {
     private const val TAG = "AmbientModeManager"
@@ -50,10 +50,10 @@ class AmbientModeManager(
     if (_isAmbientEnabled.value) {
       lastAmbientScaleX = -1.0 // Force rewrite
       updateAmbientStretch()
-      onShowText("Ambience Mode: ON")
+      onShowText(true)
     } else {
       disableAmbientShader()
-      onShowText("Ambience Mode: OFF")
+      onShowText(false)
     }
   }
 

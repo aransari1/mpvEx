@@ -211,6 +211,13 @@ object SearchablePreferences {
                  category = "Player",
                  screen = PlayerPreferencesScreen,
              ))
+             add(SearchablePreference(
+                 titleRes = R.string.pref_player_white_seekbar_title,
+                 summaryRes = R.string.pref_player_white_seekbar_summary,
+                 keywords = listOf("white", "seekbar", "progress", "bar", "color", "player"),
+                 category = "Player",
+                 screen = PlayerPreferencesScreen,
+             ))
             add(SearchablePreference(
                 titleRes = R.string.pref_player_gestures_brightness,
                 keywords = listOf("brightness", "gesture", "swipe", "display", "control"),

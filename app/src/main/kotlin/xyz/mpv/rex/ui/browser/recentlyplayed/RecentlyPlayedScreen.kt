@@ -41,6 +41,7 @@ import androidx.compose.material3.animateFloatingActionButton
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import xyz.mpv.rex.R
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -294,7 +295,7 @@ object RecentlyPlayedScreen : Screen {
       if (deleteDialogOpen.value && selectionManager.isInSelectionMode) {
         // Remove selected items from history
         val itemCount = selectionManager.selectedCount
-        val itemText = if (itemCount == 1) "item" else "items"
+        val itemText = pluralStringResource(R.plurals.item_type_item_plural, itemCount)
         val deleteFiles = deleteFilesCheckbox.value
 
         val title = if (deleteFiles) {

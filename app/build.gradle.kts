@@ -90,6 +90,12 @@ android {
     targetCompatibility = JavaVersion.VERSION_17
   }
 
+  testOptions {
+    unitTests {
+      isReturnDefaultValues = true
+    }
+  }
+
   buildFeatures {
     compose = true
     viewBinding = true
@@ -211,6 +217,12 @@ dependencies {
   implementation(libs.lazycolumnscrollbar)
   implementation(libs.reorderable)
   implementation(libs.compose.markdown)
+
+  // Unit Testing
+  testImplementation(libs.junit)
+  testImplementation(libs.mockk)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.turbine)
 }
 
 /* ---------------- Git helpers ---------------- */

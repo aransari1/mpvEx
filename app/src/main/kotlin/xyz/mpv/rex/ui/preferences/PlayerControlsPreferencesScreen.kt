@@ -222,6 +222,7 @@ object PlayerControlsPreferencesScreen : Screen {
                     }
                     item {
                         val currentSeekbarStyle by appearancePrefs.seekbarStyle.collectAsState()
+                        val whiteSeekBar by playerPrefs.whiteSeekBar.collectAsState()
                         PreferenceCard {
                             SeekbarStyle.entries.forEachIndexed { index, style ->
                                 ListItem(
@@ -244,10 +245,19 @@ object PlayerControlsPreferencesScreen : Screen {
                                     modifier = Modifier
                                         .clickable { appearancePrefs.seekbarStyle.set(style) }
                                 )
-                                if (index < SeekbarStyle.entries.size - 1) {
-                                    PreferenceDivider()
-                                }
+                                PreferenceDivider()
                             }
+
+                            SwitchPreference(
+                                value = whiteSeekBar,
+                                onValueChange = { playerPrefs.whiteSeekBar.set(it) },
+                                title = {
+                                    Text(text = stringResource(R.string.pref_player_white_seekbar_title))
+                                },
+                                summary = {
+                                    Text(text = stringResource(R.string.pref_player_white_seekbar_summary))
+                                },
+                            )
                         }
                     }
 
