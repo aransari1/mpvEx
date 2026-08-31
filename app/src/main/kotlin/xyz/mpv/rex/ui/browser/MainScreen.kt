@@ -38,6 +38,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -46,15 +47,20 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import xyz.mpv.rex.R
+import xyz.mpv.rex.preferences.AppearancePreferences
 import xyz.mpv.rex.preferences.BrowserPreferences
 import xyz.mpv.rex.preferences.preference.collectAsState
 import xyz.mpv.rex.presentation.Screen
+import xyz.mpv.rex.ui.browser.dialogs.CommunityLinksDialog
 import xyz.mpv.rex.ui.browser.folderlist.FolderListScreen
 import xyz.mpv.rex.ui.browser.networkstreaming.NetworkStreamingScreen
 import xyz.mpv.rex.ui.browser.playlist.PlaylistScreen
 import xyz.mpv.rex.ui.browser.recentlyplayed.RecentlyPlayedScreen
 import xyz.mpv.rex.ui.browser.shorts.ShortsScreen
 import xyz.mpv.rex.ui.browser.selection.SelectionManager
+import xyz.mpv.rex.ui.browser.miniplayer.MiniPlayer
+import xyz.mpv.rex.ui.browser.miniplayer.MiniPlayerStateManager
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.collectAsState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -156,6 +162,8 @@ object MainScreen : Screen {
     val context = LocalContext.current
     val density = LocalDensity.current
     val browserPreferences = koinInject<BrowserPreferences>()
+    val miniPlayerStateManager = koinInject<MiniPlayerStateManager>()
+    val miniPlayerState by miniPlayerStateManager.state.collectAsState()
     val isShortsEnabled by browserPreferences.enableShorts.collectAsState()
     val enableTabRecents by browserPreferences.enableTabRecents.collectAsState()
     val enableTabPlaylists by browserPreferences.enableTabPlaylists.collectAsState()
@@ -244,6 +252,57 @@ object MainScreen : Screen {
       }
     }
 
+    // Community Hub auto-popup: Phase 1 (initial 1 min test threshold) / Phase 2 (15 days after "Already joined")
+    val appearancePreferences = koinInject<AppearancePreferences>()
+    val isCommunityPromptPermanentlyDismissed by appearancePreferences.communityPromptDismissedPermanently.collectAsState()
+    val firstOpenTimestamp by appearancePreferences.communityFirstAppOpenTimestamp.collectAsState()
+    val alreadyJoinedTimestamp by appearancePreferences.communityAlreadyJoinedTimestamp.collectAsState()
+    var showCommunityAutoPopup by remember { mutableStateOf(false) }
+    var isFollowupPrompt by remember { mutableStateOf(false) }
+    var hasDismissedThisSession by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+      if (firstOpenTimestamp == 0L) {
+        appearancePreferences.communityFirstAppOpenTimestamp.set(System.currentTimeMillis())
+      }
+    }
+
+    val isHomeTabActive = selectedTab in visibleTabs.indices && visibleTabs[selectedTab].id == "home"
+
+    LaunchedEffect(
+      isHomeTabActive,
+      isCommunityPromptPermanentlyDismissed,
+      hasDismissedThisSession,
+      firstOpenTimestamp,
+      alreadyJoinedTimestamp
+    ) {
+      if (isHomeTabActive && !isCommunityPromptPermanentlyDismissed && !hasDismissedThisSession) {
+        val (remainingDelay, isFollowup) = if (alreadyJoinedTimestamp > 0L) {
+          // Phase 2: User clicked "Already joined" in the past -> wait 10 days before follow-up
+          val followupCooldownMs = 10L * 24 * 60 * 60 * 1000L // 10 days
+          val elapsed = System.currentTimeMillis() - alreadyJoinedTimestamp
+          val remaining = (followupCooldownMs - elapsed).coerceAtLeast(0L)
+          remaining to true
+        } else {
+          // Phase 1: User hasn't clicked "Already joined" yet -> wait initial threshold (20 minutes)
+          val initialDelayMs = 20 * 60 * 1000L // 20 minutes
+          val currentFirstOpen = if (firstOpenTimestamp == 0L) System.currentTimeMillis() else firstOpenTimestamp
+          val elapsed = System.currentTimeMillis() - currentFirstOpen
+          val remaining = (initialDelayMs - elapsed).coerceAtLeast(0L)
+          remaining to false
+        }
+
+        if (remainingDelay > 0L) {
+          kotlinx.coroutines.delay(remainingDelay)
+        }
+
+        if (isHomeTabActive && !isCommunityPromptPermanentlyDismissed && !hasDismissedThisSession) {
+          isFollowupPrompt = isFollowup
+          showCommunityAutoPopup = true
+        }
+      }
+    }
+
     // Scaffold with bottom navigation bar
     Scaffold(
       modifier = Modifier.fillMaxSize(),
@@ -254,59 +313,59 @@ object MainScreen : Screen {
         val isShortsTabActive = isShortsEnabled && shortsIdx != -1 && selectedTab == shortsIdx
         
         AnimatedVisibility(
-          visible = !hideNavigationBar && !isShortsTabActive && visibleTabs.size > 1,
-          enter = slideInVertically(
-            animationSpec = tween(durationMillis = 300),
-            initialOffsetY = { fullHeight -> fullHeight }
-          ),
-          exit = slideOutVertically(
-            animationSpec = tween(durationMillis = 300),
-            targetOffsetY = { fullHeight -> fullHeight }
-          )
-        ) {
-          NavigationBar(
-            modifier = Modifier
-              .clip(
-                RoundedCornerShape(
-                  topStart = 28.dp,
-                  topEnd = 28.dp,
-                  bottomStart = 0.dp,
-                  bottomEnd = 0.dp
-                )
-              ),
-            containerColor = if (isShortsTabActive) Color.Transparent else NavigationBarDefaults.containerColor,
-            contentColor = if (isShortsTabActive) Color.White else MaterialTheme.colorScheme.onSurface,
+            visible = !hideNavigationBar && !isShortsTabActive && visibleTabs.size > 1,
+            enter = slideInVertically(
+              animationSpec = tween(durationMillis = 300),
+              initialOffsetY = { fullHeight -> fullHeight }
+            ),
+            exit = slideOutVertically(
+              animationSpec = tween(durationMillis = 300),
+              targetOffsetY = { fullHeight -> fullHeight }
+            )
           ) {
-            val itemColors = if (isShortsTabActive) {
-              NavigationBarItemDefaults.colors(
-                selectedIconColor = Color.White,
-                selectedTextColor = Color.White,
-                unselectedIconColor = Color.White.copy(alpha = 0.7f),
-                unselectedTextColor = Color.White.copy(alpha = 0.7f),
-                indicatorColor = Color.White.copy(alpha = 0.2f)
-              )
-            } else {
-              NavigationBarItemDefaults.colors()
-            }
+            NavigationBar(
+              modifier = Modifier
+                .clip(
+                  RoundedCornerShape(
+                    topStart = 28.dp,
+                    topEnd = 28.dp,
+                    bottomStart = 0.dp,
+                    bottomEnd = 0.dp
+                  )
+                ),
+              containerColor = if (isShortsTabActive) Color.Transparent else NavigationBarDefaults.containerColor,
+              contentColor = if (isShortsTabActive) Color.White else MaterialTheme.colorScheme.onSurface,
+            ) {
+              val itemColors = if (isShortsTabActive) {
+                NavigationBarItemDefaults.colors(
+                  selectedIconColor = Color.White,
+                  selectedTextColor = Color.White,
+                  unselectedIconColor = Color.White.copy(alpha = 0.7f),
+                  unselectedTextColor = Color.White.copy(alpha = 0.7f),
+                  indicatorColor = Color.White.copy(alpha = 0.2f)
+                )
+              } else {
+                NavigationBarItemDefaults.colors()
+              }
 
-            visibleTabs.forEachIndexed { index, tab ->
-              NavigationBarItem(
-                icon = { Icon(tab.icon, contentDescription = tab.label) },
-                label = { Text(tab.label) },
-                selected = selectedTab == index,
-                onClick = {
-                  if (selectedTab == index) {
-                    _scrollToTopRequest.tryEmit(tab.id)
-                  } else {
-                    selectedTab = index
-                  }
-                },
-                colors = itemColors
-              )
+              visibleTabs.forEachIndexed { index, tab ->
+                NavigationBarItem(
+                  icon = { Icon(tab.icon, contentDescription = tab.label) },
+                  label = { Text(tab.label) },
+                  selected = selectedTab == index,
+                  onClick = {
+                    if (selectedTab == index) {
+                      _scrollToTopRequest.tryEmit(tab.id)
+                    } else {
+                      selectedTab = index
+                    }
+                  },
+                  colors = itemColors
+                )
+              }
             }
           }
         }
-      }
     ) { paddingValues ->
       Box(modifier = Modifier.fillMaxSize()) {
         val fabBottomPadding = 80.dp
@@ -373,8 +432,12 @@ object MainScreen : Screen {
           val isShortsTabActive = isShortsEnabled && shortsIdx != -1 && selectedTab == shortsIdx
           val isNavBarVisible = !hideNavigationBar && !isShortsTabActive && visibleTabs.size > 1
           
+          val navBarHeight = if (isNavBarVisible) paddingValues.calculateBottomPadding().coerceAtLeast(80.dp) else 0.dp
+          val miniPlayerHeight = if (miniPlayerState.isPlaybackActive) 72.dp else 0.dp
+          val totalBottomPadding = navBarHeight + miniPlayerHeight
+          
           CompositionLocalProvider(
-            LocalNavigationBarHeight provides if (isNavBarVisible) fabBottomPadding else 0.dp
+            LocalNavigationBarHeight provides totalBottomPadding
           ) {
             if (targetTab in visibleTabs.indices) {
               visibleTabs[targetTab].content()
@@ -384,6 +447,16 @@ object MainScreen : Screen {
           }
         }
       }
+    }
+
+    if (showCommunityAutoPopup && !isCommunityPromptPermanentlyDismissed) {
+      CommunityLinksDialog(
+        isFollowupPrompt = isFollowupPrompt,
+        onDismissRequest = {
+          hasDismissedThisSession = true
+          showCommunityAutoPopup = false
+        }
+      )
     }
   }
 }

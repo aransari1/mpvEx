@@ -63,8 +63,13 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.ui.draw.scale
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import xyz.mpv.rex.R
+import xyz.mpv.rex.database.repository.HybridMediaIndexRepository
+import xyz.mpv.rex.utils.media.MediaLibraryEvents
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -824,8 +829,10 @@ fun FolderSortDialog(
   onSortOrderChange: (SortOrder) -> Unit,
 ) {
   val backstack = LocalBackStack.current
+  val scope = rememberCoroutineScope()
   val browserPreferences = koinInject<BrowserPreferences>()
   val appearancePreferences = koinInject<AppearancePreferences>()
+  val hybridMediaIndex = koinInject<HybridMediaIndexRepository>()
   val showTotalVideosChip by browserPreferences.showTotalVideosChip.collectAsState()
   val showTotalDurationChip by browserPreferences.showTotalDurationChip.collectAsState()
   val showTotalSizeChip by browserPreferences.showTotalSizeChip.collectAsState()
@@ -834,6 +841,7 @@ fun FolderSortDialog(
   val showProgressBar by browserPreferences.showProgressBar.collectAsState()
   val showSubtitleIndicator by browserPreferences.showSubtitleIndicator.collectAsState()
   val showAudioFiles by browserPreferences.showAudioFiles.collectAsState()
+  val includeNoMediaContent by browserPreferences.includeNoMediaContent.collectAsState()
   val unlimitedNameLines by appearancePreferences.unlimitedNameLines.collectAsState()
   val showVideoThumbnails by browserPreferences.showVideoThumbnails.collectAsState()
   val showSizeChip by browserPreferences.showSizeChip.collectAsState()
@@ -973,6 +981,11 @@ fun FolderSortDialog(
         checked = showAudioFiles,
         onCheckedChange = { browserPreferences.showAudioFiles.set(it) },
       ),
+      ContentToggle(
+        label = "Show .nomedia Folders",
+        checked = includeNoMediaContent,
+        onCheckedChange = { browserPreferences.includeNoMediaContent.set(it) },
+      ),
     ),
     visibilityToggles = listOf(
       VisibilityToggle(
@@ -1051,7 +1064,9 @@ fun VideoSortDialog(
   onSortOrderChange: (SortOrder) -> Unit,
 ) {
   val backstack = LocalBackStack.current
+  val scope = rememberCoroutineScope()
   val browserPreferences = koinInject<BrowserPreferences>()
+  val hybridMediaIndex = koinInject<HybridMediaIndexRepository>()
   val videoGridColumnsPortrait by browserPreferences.videoGridColumnsPortrait.collectAsState()
   val videoGridColumnsLandscape by browserPreferences.videoGridColumnsLandscape.collectAsState()
   val folderGridColumnsPortrait by browserPreferences.folderGridColumnsPortrait.collectAsState()
@@ -1064,6 +1079,7 @@ fun VideoSortDialog(
   val folderGridColumns = if (isLandscape) folderGridColumnsLandscape else folderGridColumnsPortrait
   val appearancePreferences = koinInject<AppearancePreferences>()
   val showAudioFiles by browserPreferences.showAudioFiles.collectAsState()
+  val includeNoMediaContent by browserPreferences.includeNoMediaContent.collectAsState()
   val showVideoThumbnails by browserPreferences.showVideoThumbnails.collectAsState()
   val showSizeChip by browserPreferences.showSizeChip.collectAsState()
   val showResolutionChip by browserPreferences.showResolutionChip.collectAsState()
@@ -1197,6 +1213,11 @@ fun VideoSortDialog(
         checked = showAudioFiles,
         onCheckedChange = { browserPreferences.showAudioFiles.set(it) },
       ),
+      ContentToggle(
+        label = "Show .nomedia Folders",
+        checked = includeNoMediaContent,
+        onCheckedChange = { browserPreferences.includeNoMediaContent.set(it) },
+      ),
     ),
     visibilityToggles =
       listOf(
@@ -1273,8 +1294,10 @@ fun FileSystemSortDialog(
   isAtRoot: Boolean = true,
 ) {
   val backstack = LocalBackStack.current
+  val scope = rememberCoroutineScope()
   val browserPreferences = koinInject<BrowserPreferences>()
   val appearancePreferences = koinInject<AppearancePreferences>()
+  val hybridMediaIndex = koinInject<HybridMediaIndexRepository>()
   val folderViewMode by browserPreferences.folderViewMode.collectAsState()
   val folderSortType by browserPreferences.folderSortType.collectAsState()
   val folderSortOrder by browserPreferences.folderSortOrder.collectAsState()
@@ -1289,6 +1312,7 @@ fun FileSystemSortDialog(
   val showSubtitleIndicator by browserPreferences.showSubtitleIndicator.collectAsState()
   val unlimitedNameLines by appearancePreferences.unlimitedNameLines.collectAsState()
   val showAudioFiles by browserPreferences.showAudioFiles.collectAsState()
+  val includeNoMediaContent by browserPreferences.includeNoMediaContent.collectAsState()
   val showTotalDurationChip by browserPreferences.showTotalDurationChip.collectAsState()
   val showDateChip by browserPreferences.showDateChip.collectAsState()
   val mediaLayoutMode by browserPreferences.mediaLayoutMode.collectAsState()
@@ -1427,6 +1451,11 @@ fun FileSystemSortDialog(
         label = "Audio Files",
         checked = showAudioFiles,
         onCheckedChange = { browserPreferences.showAudioFiles.set(it) },
+      ),
+      ContentToggle(
+        label = "Show .nomedia Folders",
+        checked = includeNoMediaContent,
+        onCheckedChange = { browserPreferences.includeNoMediaContent.set(it) },
       ),
     ),
     visibilityToggles = listOf(

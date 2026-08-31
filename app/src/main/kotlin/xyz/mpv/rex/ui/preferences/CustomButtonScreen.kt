@@ -258,9 +258,13 @@ object CustomButtonScreen : Screen {
                 )
             },
         ) { padding ->
+            val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
             LazyColumn(
                 state = lazyListState,
-                contentPadding = padding,
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                    top = padding.calculateTopPadding(),
+                    bottom = padding.calculateBottomPadding() + navBarHeight + 16.dp
+                ),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 16.dp),

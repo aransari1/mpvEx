@@ -182,6 +182,16 @@ class SelectionManager<T, ID>(
     // Clear selection after starting playback
     clear()
   }
+
+  /** Plays selected video/audio files in selection order using the bottom mini player. */
+  fun playSelectedInMiniPlayer() {
+    val selected = getSelectedItems()
+    if (selected.isEmpty() || selected.first() !is Video) return
+
+    @Suppress("UNCHECKED_CAST")
+    MediaUtils.playInMiniPlayer(selected as List<Video>)
+    clear()
+  }
 }
 
 /**

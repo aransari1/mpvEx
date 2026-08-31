@@ -89,11 +89,13 @@ object BlockedShortsScreen : Screen {
                     )
                 }
             } else {
+                val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding)
                         .padding(horizontal = 16.dp),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
                 ) {
                     items(filteredBlocked, key = { it.path }) { media ->
                         val fileName = File(media.path).name

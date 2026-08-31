@@ -9,6 +9,8 @@ import androidx.core.net.toUri
 import xyz.mpv.rex.BuildConfig
 import xyz.mpv.rex.domain.media.model.Video
 import xyz.mpv.rex.ui.player.PlayerActivity
+import xyz.mpv.rex.ui.player.HeadlessPlaybackController
+import xyz.mpv.rex.preferences.PlayerPreferences
 import xyz.mpv.rex.utils.history.RecentlyPlayedOps
 import xyz.mpv.rex.database.repository.VideoMetadataCacheRepository
 import xyz.mpv.rex.domain.playbackstate.repository.PlaybackStateRepository
@@ -43,6 +45,8 @@ import org.koin.core.component.inject
 object MediaUtils : KoinComponent {
   private val metadataCache: VideoMetadataCacheRepository by inject()
   private val playbackStateRepository: PlaybackStateRepository by inject()
+  private val playerPreferences: PlayerPreferences by inject()
+  private val headlessPlaybackController: HeadlessPlaybackController by inject()
 
   /**
    * Play video content from any source.
@@ -120,7 +124,26 @@ object MediaUtils : KoinComponent {
       }
 
       is Uri -> {
-        Intent(Intent.ACTION_VIEW, source)
+        val it = Intent(Intent.ACTION_VIEW, source)
+        if (source.scheme == "file") {
+          val file = File(source.path ?: "")
+          if (file.exists() && !xyz.mpv.rex.utils.storage.FileTypeUtils.isAudioFile(file)) {
+            val fileName = file.name
+            kotlinx.coroutines.runBlocking {
+              val state = playbackStateRepository.getVideoDataByTitle(fileName)
+              if (state?.savedOrientation != null) {
+                it.putExtra("saved_orientation", state.savedOrientation)
+              }
+              val metadata = metadataCache.getOrExtractMetadata(file, source, fileName)
+              if (metadata != null) {
+                it.putExtra("width", metadata.width)
+                it.putExtra("height", metadata.height)
+                it.putExtra("rotation", metadata.rotation)
+              }
+            }
+          }
+        }
+        it
       }
 
       else -> {
@@ -130,7 +153,7 @@ object MediaUtils : KoinComponent {
     }
 
     intent.setClass(context, PlayerActivity::class.java)
-    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     intent.putExtra("internal_launch", true) // Enables subtitle autoload
     launchSource?.let { intent.putExtra("launch_source", it) }
@@ -138,6 +161,46 @@ object MediaUtils : KoinComponent {
     // For playlist items, pass the title so it shows correctly in the player
     if (source is Video && launchSource != null && (launchSource.contains("playlist") || launchSource == "m3u_playlist" || launchSource == "media_library_list")) {
       intent.putExtra("title", source.displayName)
+    }
+
+    val isAudio = when (source) {
+      is Video -> source.isAudio
+      is String -> {
+        val path = if (source.startsWith("file://")) source.removePrefix("file://") else source
+        xyz.mpv.rex.utils.storage.FileTypeUtils.isAudioFile(File(path))
+      }
+      is Uri -> {
+        val path = source.path ?: ""
+        xyz.mpv.rex.utils.storage.FileTypeUtils.isAudioFile(File(path))
+      }
+      else -> false
+    }
+
+    // Direct mini player mode: start headless playback in the bottom bar for audio files
+    if (playerPreferences.playInMiniPlayerDirectly.get() && isAudio) {
+      intent.data?.let { uri ->
+        val title = intent.getStringExtra("title") ?: deriveTitle(uri, source)
+        val path = if (uri.scheme == "file") uri.path else (source as? Video)?.path
+        var uris = listOf(uri)
+        var startIndex = 0
+
+        if (path != null && playerPreferences.playlistMode.get()) {
+          val playlistResult = kotlinx.coroutines.runBlocking {
+            if (launchSource == "media_library_list") {
+              FolderPlaylistOps.generateMediaLibraryPlaylist(context, path)
+            } else {
+              FolderPlaylistOps.generateFolderPlaylist(context, path, launchSource)
+            }
+          }
+          if (playlistResult != null) {
+            uris = playlistResult.first
+            startIndex = playlistResult.second
+          }
+        }
+
+        startHeadless(uris, startIndex, title, launchSource = launchSource)
+        return
+      }
     }
 
     context.startActivity(
@@ -178,7 +241,7 @@ object MediaUtils : KoinComponent {
 
     val intent = Intent(Intent.ACTION_VIEW, videoUri)
     intent.setClass(context, PlayerActivity::class.java)
-    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     intent.putExtra("internal_launch", true)
     
@@ -197,10 +260,87 @@ object MediaUtils : KoinComponent {
     // Pass title for the first video
     intent.putExtra("title", firstVideo.displayName)
 
+    // Direct mini player mode: start headless playback with the full playlist for audio files.
+    if (playerPreferences.playInMiniPlayerDirectly.get() && firstVideo.isAudio) {
+      val uris = videos.map { video ->
+        if (video.uri.scheme == null &&
+          (video.path.startsWith("/") || video.path.startsWith("file://"))
+        ) {
+          val path = if (video.path.startsWith("file://")) video.path.removePrefix("file://") else video.path
+          Uri.fromFile(File(path))
+        } else {
+          video.uri
+        }
+      }
+      startHeadless(uris, startIndex, firstVideo.displayName, launchSource = launchSource, playlistId = playlistId)
+      return
+    }
+
     context.startActivity(
       intent,
       ActivityOptions.makeCustomAnimation(context, android.R.anim.fade_in, 0).toBundle()
     )
+  }
+
+  /**
+   * Explicitly plays the supplied files in the bottom mini player, regardless of media type or
+   * the automatic direct-mini-player preference. The list order is preserved as the playlist.
+   */
+  fun playInMiniPlayer(
+    videos: List<Video>,
+    startIndex: Int = 0,
+    launchSource: String? = "mini_player_action",
+    playlistId: Int? = null,
+  ) {
+    if (videos.isEmpty() || startIndex !in videos.indices) return
+
+    val uris = videos.map { video ->
+      if (video.uri.scheme == null &&
+        (video.path.startsWith("/") || video.path.startsWith("file://"))
+      ) {
+        val path = video.path.removePrefix("file://")
+        Uri.fromFile(File(path))
+      } else {
+        video.uri
+      }
+    }
+    startHeadless(uris, startIndex, videos[startIndex].displayName, launchSource = launchSource, playlistId = playlistId)
+  }
+
+  /**
+   * Starts headless playback in the mini player, resolving the resume position (if any)
+   * for the item at [startIndex] from the saved playback state.
+   */
+  private fun startHeadless(
+    uris: List<Uri>,
+    startIndex: Int,
+    title: String,
+    launchSource: String? = null,
+    playlistId: Int? = null,
+  ) {
+    val resumeSec = kotlinx.coroutines.runBlocking {
+      runCatching {
+        playbackStateRepository.getVideoDataByTitle(title)?.lastPosition ?: 0
+      }.getOrDefault(0)
+    }
+    headlessPlaybackController.startHeadless(
+      uris = uris,
+      startIndex = startIndex,
+      title = title,
+      artist = "",
+      resumePositionSec = resumeSec,
+      launchSource = launchSource ?: "direct_mini_player",
+      playlistId = playlistId,
+    )
+  }
+
+  private fun deriveTitle(uri: Uri, source: Any): String = when (source) {
+    is Video -> source.displayName
+    else -> if (uri.scheme == "file") {
+      File(uri.path ?: "").name.ifBlank { uri.lastPathSegment ?: "Unknown Video" }
+    } else {
+      uri.lastPathSegment ?: "Unknown Video"
+    }
   }
 
   /**

@@ -12,6 +12,7 @@ import xyz.mpv.rex.utils.media.OpenDocumentTreeContract
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -247,10 +248,12 @@ object AdvancedPreferencesScreen : Screen {
             }
           }
         val mpvConfStorageLocation by preferences.mpvConfStorageUri.collectAsState()
+        val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
         LazyColumn(
           modifier = Modifier
             .fillMaxSize()
             .padding(padding),
+          contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
         ) {
           // Backup & Restore Section
           item {

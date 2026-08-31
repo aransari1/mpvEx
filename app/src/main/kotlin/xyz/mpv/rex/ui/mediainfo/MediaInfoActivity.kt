@@ -52,11 +52,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import xyz.mpv.rex.preferences.AppearancePreferences
@@ -424,7 +428,7 @@ class MediaInfoActivity : ComponentActivity() {
         // Section title
         Text(
           text = section.name,
-          style = MaterialTheme.typography.titleMedium,
+          style = MaterialTheme.typography.titleMedium.copy(textDirection = TextDirection.Ltr),
           fontWeight = FontWeight.Bold,
           color = MaterialTheme.colorScheme.primary,
           modifier = Modifier.padding(bottom = 12.dp),
@@ -452,7 +456,7 @@ class MediaInfoActivity : ComponentActivity() {
     ) {
       Text(
         text = label,
-        style = MaterialTheme.typography.bodyMedium,
+        style = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Ltr),
         fontWeight = FontWeight.SemiBold,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier
@@ -460,13 +464,15 @@ class MediaInfoActivity : ComponentActivity() {
           .padding(end = 16.dp),
       )
 
-      Text(
-        text = value,
-        style = MaterialTheme.typography.bodyMedium,
-        fontFamily = FontFamily.Monospace,
-        color = MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.weight(1.5f),
-      )
+      CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Text(
+          text = value,
+          style = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Ltr),
+          fontFamily = FontFamily.Monospace,
+          color = MaterialTheme.colorScheme.onSurface,
+          modifier = Modifier.weight(1.5f),
+        )
+      }
     }
   }
 

@@ -27,6 +27,7 @@ import androidx.compose.material.icons.Icons
 
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Memory
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -90,7 +91,6 @@ object AboutScreen : Screen {
     val updateViewModel = LocalUpdateViewModel.current
     val updateState by (updateViewModel?.updateState ?: MutableStateFlow(UpdateViewModel.UpdateState.Idle)).collectAsState()
     val preferences = koinInject<AppearancePreferences>()
-    val showCommunityIcon by preferences.showCommunityIcon.collectAsState()
     
     val packageManager: PackageManager = context.packageManager
     val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
@@ -205,7 +205,7 @@ object AboutScreen : Screen {
 
                 Column(modifier = Modifier.weight(1f)) {
                   Text(
-                    text = "mpvNext",
+                    text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = cs.onPrimaryContainer,
@@ -315,6 +315,29 @@ object AboutScreen : Screen {
 
         Spacer(Modifier.height(8.dp))
 
+        PreferenceSectionHeader(title = stringResource(R.string.pref_decoder_codec_info_title))
+        PreferenceCard {
+          Preference(
+            title = { Text(text = stringResource(R.string.pref_decoder_codec_info_title)) },
+            summary = {
+              Text(
+                text = stringResource(R.string.pref_decoder_codec_info_summary),
+                color = MaterialTheme.colorScheme.outline,
+              )
+            },
+            icon = {
+              Icon(
+                imageVector = Icons.Default.Memory,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+              )
+            },
+            onClick = { backstack.add(CodecInformationScreen) },
+          )
+        }
+
+        Spacer(Modifier.height(8.dp))
+
         PreferenceSectionHeader(title = stringResource(id = R.string.pref_about_telegram_title))
         PreferenceCard {
           Preference(
@@ -365,29 +388,6 @@ object AboutScreen : Screen {
                   Intent.ACTION_VIEW,
                   context.getString(R.string.pref_about_telegram_chat_url).toUri(),
                 ),
-              )
-            },
-          )
-
-          PreferenceDivider()
-
-          SwitchPreference(
-            value = showCommunityIcon,
-            onValueChange = { newValue ->
-              preferences.showCommunityIcon.set(newValue)
-            },
-            title = { Text(text = stringResource(id = R.string.pref_about_show_community_icon_title)) },
-            summary = {
-              Text(
-                text = stringResource(id = R.string.pref_about_show_community_icon_summary),
-                color = MaterialTheme.colorScheme.outline,
-              )
-            },
-            icon = {
-              Icon(
-                imageVector = CommunityIcon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
               )
             },
           )
@@ -446,7 +446,7 @@ object AboutScreen : Screen {
           }
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current + 16.dp))
         }
       }
     }

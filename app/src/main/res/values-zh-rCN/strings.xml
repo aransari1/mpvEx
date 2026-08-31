@@ -8,7 +8,7 @@
     <string name="generic_unit_ms">毫秒</string>
     <string name="generic_disabled">已禁用</string>
 
-    <string name="pref_preferences">设置</string>
+    <string name="pref_preferences">首选项</string>
 
     <string name="pref_appearance_title">外观</string>
     <string name="pref_appearance_category_bottom_nav">底部导航标签</string>
@@ -52,7 +52,7 @@
     <string name="pref_appearance_show_hidden_files_title">显示隐藏文件</string>
     <string name="pref_appearance_show_hidden_files_summary">显示以点(.)开头的隐藏目录，包括 android、data、system 文件夹与 .nomedia 文件</string>
     <string name="pref_appearance_show_unplayed_old_video_label_title">新视频标识</string>
-    <string name="pref_appearance_show_unplayed_old_video_label_summary">对指定天数内新增、从未播放的视频展示“新的”标签</string>
+    <string name="pref_appearance_show_unplayed_old_video_label_summary">对指定天数内添加、从未播放的视频展示“新的”标签</string>
     <string name="pref_appearance_unplayed_old_video_days_title">新视频标签天数阈值</string>
     <string name="pref_appearance_unplayed_old_video_days_summary">近 %d 天内添加且无播放记录的视频将标记为新视频</string>
     <string name="pref_appearance_category_thumbnails">缩略图</string>
@@ -353,33 +353,31 @@
     <string name="anime4k_quality_high">高质量</string>
 
     <string name="pref_about_title">关于</string>
-    <string name="pref_about_summary">致谢、开源许可</string>
-    <string name="pref_about_oss_libraries">依赖库</string>
+    <string name="pref_about_summary">致谢、开源许可协议</string>
+    <string name="pref_about_oss_libraries">开源依赖库</string>
     <string name="pref_about_device_info">设备信息</string>
-    <string name="pref_about_donate_title">赞助</string>
+    <string name="pref_about_donate_title">赞助开发者</string>
     <string name="pref_about_donate_kofi">Ko-fi</string>
-    <string name="pref_about_donate_kofi_summary">在 Ko-fi 支持开发者</string>
+    <string name="pref_about_donate_kofi_summary">前往 Ko-fi 支持开发者</string>
     <string name="pref_about_donate_paypal">PayPal</string>
-    <string name="pref_about_donate_paypal_summary">在 PayPal 支持开发者</string>
+    <string name="pref_about_donate_paypal_summary">通过 PayPal 支持开发者</string>
     <string name="pref_about_donate_upi">UPI</string>
 
-    <string name="pref_about_telegram_title">Telegram</string>
-    <string name="pref_about_telegram_channel">Telegram 频道</string>
-    <string name="pref_about_telegram_channel_summary">加入频道获取更新资讯</string>
-    <string name="pref_about_telegram_group">Telegram 交流群</string>
-    <string name="pref_about_telegram_group_summary">与社区成员交流讨论</string>
-    <string name="pref_about_show_community_icon_title">社区快捷入口</string>
-    <string name="pref_about_show_community_icon_summary">在首页顶部显示社区链接快捷图标</string>
+    <string name="pref_about_telegram_title">电报社群</string>
+    <string name="pref_about_telegram_channel">电报通知频道</string>
+    <string name="pref_about_telegram_channel_summary">加入频道获取版本更新与资讯</string>
+    <string name="pref_about_telegram_group">电报交流群</string>
+    <string name="pref_about_telegram_group_summary">和其他用户交流讨论</string>
 
-    <string name="player_sheets_add_ext_sub">加载外挂字幕</string>
-    <string name="player_sheets_add_ext_audio">加载外挂音轨</string>
+    <string name="player_sheets_add_ext_sub">加载外部字幕</string>
+    <string name="player_sheets_add_ext_audio">加载外置音轨</string>
     <string name="player_sheets_tracks_off">关闭</string>
     <string name="player_sheets_subtitles_settings_title">字幕设置</string>
-    <string name="player_sheets_subtitles_color_text">文字</string>
-    <string name="player_sheets_subtitles_color_border">描边</string>
-    <string name="player_sheets_subtitles_color_background">背景</string>
+    <string name="player_sheets_subtitles_color_text">文字颜色</string>
+    <string name="player_sheets_subtitles_color_border">描边颜色</string>
+    <string name="player_sheets_subtitles_color_background">背景颜色</string>
     <string name="player_sheets_subtitles_border_style">描边样式</string>
-    <string name="player_sheets_subtitles_border_style_outline_and_shadow">轮廓+阴影</string>
+    <string name="player_sheets_subtitles_border_style_outline_and_shadow">描边+阴影</string>
     <string name="player_sheets_subtitles_border_style_opaque_box">不透明底色框</string>
     <string name="player_sheets_subtitles_shadow_offset">阴影偏移</string>
     <string name="player_sheets_sub_color_red">红色</string>
@@ -387,29 +385,29 @@
     <string name="player_sheets_sub_color_blue">蓝色</string>
     <string name="player_sheets_sub_color_alpha">透明度</string>
     <string name="player_sheets_sub_override_ass">强制覆盖 ASS/SSA 字幕</string>
-    <string name="player_sheets_sub_override_ass_subtitle">强制覆盖 ASS/SSA 字幕自带样式</string>
-    <string name="player_sheets_sub_scale_by_window">按窗口缩放</string>
-    <string name="player_sheets_sub_scale_by_window_summary">根据窗口尺寸缩放字幕，并使用视频边距</string>
+    <string name="player_sheets_sub_override_ass_subtitle">强制替换 ASS/SSA 字幕自带样式</string>
+    <string name="player_sheets_sub_scale_by_window">按窗口缩放字幕</string>
+    <string name="player_sheets_sub_scale_by_window_summary">根据播放器窗口大小缩放字幕，并适配画面边距</string>
     <string name="player_sheets_sub_scale">缩放比例</string>
-    <string name="player_sheets_sub_position">位置</string>
+    <string name="player_sheets_sub_position">字幕位置</string>
     <string name="player_sheets_sub_typography_card_title">文字样式</string>
     <string name="player_sheets_sub_typography_font">字体</string>
     <string name="player_sheets_sub_typography_font_size">字号</string>
     <string name="player_sheets_sub_typography_border_size">描边粗细</string>
-    <string name="player_sheets_sub_colors_card_title">颜色设置</string>
-    <string name="player_sheets_sub_misc_card_title">其他选项</string>
-    <string name="player_sheets_sub_delay_card_title">字幕延迟</string>
-    <string name="player_sheets_sub_delay_card_delay">延迟值</string>
-    <string name="player_sheets_sub_delay_card_speed">速度</string>
+    <string name="player_sheets_sub_colors_card_title">色彩设置</string>
+    <string name="player_sheets_sub_misc_card_title">其他设置</string>
+    <string name="player_sheets_sub_delay_card_title">字幕延时</string>
+    <string name="player_sheets_sub_delay_card_delay">延时值</string>
+    <string name="player_sheets_sub_delay_card_speed">播放速度</string>
     <string name="player_sheets_sub_delay_subtitle_type_primary">主字幕</string>
-    <string name="player_sheets_sub_delay_subtitle_type_secondary">次字幕</string>
+    <string name="player_sheets_sub_delay_subtitle_type_secondary">副字幕</string>
     <string name="player_sheets_sub_delay_subtitle_type_primary_and_secondary">全部字幕</string>
-    <string name="player_sheets_sub_delay_subtitle_voice_heard">人声响起</string>
-    <string name="player_sheets_sub_delay_subtitle_text_seen">字幕出现</string>
-    <string name="player_sheets_delay_set_as_default">设为默认</string>
-    <string name="player_sheets_audio_delay_card_title">音频延迟</string>
-    <string name="player_sheets_sub_delay_audio_sound_heard">声音响起</string>
-    <string name="player_sheets_sub_delay_sound_sound_spotted">声音定位点</string>
+    <string name="player_sheets_sub_delay_subtitle_voice_heard">人声出现</string>
+    <string name="player_sheets_sub_delay_subtitle_text_seen">字幕显示</string>
+    <string name="player_sheets_delay_set_as_default">设为默认值</string>
+    <string name="player_sheets_audio_delay_card_title">音频延时</string>
+    <string name="player_sheets_sub_delay_audio_sound_heard">声音出现</string>
+    <string name="player_sheets_sub_delay_sound_sound_spotted">音效同步点</string>
 
     <string name="player_sheets_video_settings_title">画面设置</string>
     <string name="player_sheets_deband_title">消除色带</string>
@@ -487,7 +485,7 @@
     <string name="player_sheets_aspect_ratio_title">画面比例</string>
     <string name="player_sheets_aspect_ratio_presets">预设比例</string>
     <string name="player_sheets_aspect_ratio_preset_default">默认</string>
-    <string name="player_sheets_aspect_ratio_custom_toggle">自定义…</string>
+    <string name="player_sheets_aspect_ratio_custom_toggle">自定义……</string>
     <string name="player_sheets_aspect_ratio_custom_section">自定义比例</string>
     <string name="player_sheets_aspect_ratio_manual_zoom_pan_title">手动缩放与平移（画面偏移）</string>
     <string name="player_sheets_aspect_ratio_zoom_value">缩放：%1$.2fx</string>
@@ -495,29 +493,29 @@
     <string name="player_sheets_aspect_ratio_horizontal_offset_value">水平偏移：%1$.3f</string>
     <string name="player_sheets_aspect_ratio_vertical_offset_value">垂直偏移：%1$.3f</string>
     <string name="player_sheets_aspect_ratio_reset_pan">重置平移</string>
-    <string name="player_sheets_aspect_ratio_add_custom_title">添加自定义比例（例如 16:9）</string>
+    <string name="player_sheets_aspect_ratio_add_custom_title">添加自定义比例（例：16:9）</string>
     <string name="player_sheets_aspect_ratio_width">宽度</string>
     <string name="player_sheets_aspect_ratio_height">高度</string>
     <string name="player_sheets_aspect_ratio_invalid">格式无效</string>
     <string name="player_sheets_aspect_ratio_add">添加</string>
     <string name="player_sheets_aspect_ratio_advanced_zoom_toggle">高级缩放</string>
-    <string name="player_sheets_aspect_ratio_advanced_zoom_description">独立拉伸或裁切水平、垂直方向，适合去除黑边</string>
-    <string name="player_sheets_aspect_ratio_horizontal_zoom_value">水平缩放：%1$.2fx</string>
-    <string name="player_sheets_aspect_ratio_vertical_zoom_value">垂直缩放：%1$.2fx</string>
-    <string name="player_sheets_aspect_ratio_reset_horizontal_zoom">重置水平缩放</string>
-    <string name="player_sheets_aspect_ratio_reset_vertical_zoom">重置垂直缩放</string>
-    <string name="player_sheets_aspect_ratio_decrease_horizontal_zoom">减小水平缩放</string>
-    <string name="player_sheets_aspect_ratio_increase_horizontal_zoom">增大水平缩放</string>
-    <string name="player_sheets_aspect_ratio_decrease_vertical_zoom">减小垂直缩放</string>
-    <string name="player_sheets_aspect_ratio_increase_vertical_zoom">增大垂直缩放</string>
+    <string name="player_sheets_aspect_ratio_advanced_zoom_description">可单独拉伸或裁剪横、纵向画面，适合去除黑边</string>
+    <string name="player_sheets_aspect_ratio_horizontal_zoom_value">横向缩放：%1$.2fx</string>
+    <string name="player_sheets_aspect_ratio_vertical_zoom_value">纵向缩放：%1$.2fx</string>
+    <string name="player_sheets_aspect_ratio_reset_horizontal_zoom">重置横向缩放</string>
+    <string name="player_sheets_aspect_ratio_reset_vertical_zoom">重置纵向缩放</string>
+    <string name="player_sheets_aspect_ratio_decrease_horizontal_zoom">缩小横向画面</string>
+    <string name="player_sheets_aspect_ratio_increase_horizontal_zoom">放大横向画面</string>
+    <string name="player_sheets_aspect_ratio_decrease_vertical_zoom">缩小纵向画面</string>
+    <string name="player_sheets_aspect_ratio_increase_vertical_zoom">放大纵向画面</string>
     <string name="player_sheets_aspect_ratio_reset_advanced_zoom">重置高级缩放</string>
 
     <string name="player_sheets_frame_navigation_title">逐帧控制</string>
-    <string name="player_sheets_frame_navigation_frame_label">帧：\u0020</string>
-    <string name="player_sheets_frame_navigation_timestamp_label">时间戳：\u0020</string>
+    <string name="player_sheets_frame_navigation_frame_label">帧： </string>
+    <string name="player_sheets_frame_navigation_timestamp_label">时间戳： </string>
     <string name="player_sheets_frame_navigation_screenshot_create_failed">截图创建失败</string>
     <string name="player_sheets_frame_navigation_mediastore_entry_failed">媒体库条目创建失败</string>
-    <string name="player_sheets_frame_navigation_snapshot_dir_failed">无法创建 mpvSnaps 文件夹</string>
+    <string name="player_sheets_frame_navigation_snapshot_dir_failed">无法创建 mpvSnaps 截图文件夹</string>
     <string name="player_sheets_frame_navigation_snapshot_save_failed">截图保存失败：%1$s</string>
     <string name="player_sheets_frame_navigation_include_subtitles">截图包含字幕</string>
 
@@ -559,17 +557,21 @@
     <string name="notification_playing">正在播放</string>
 
     <!-- Media Info Activity -->
-    <string name="pref_player_use_precise_seeking">启用精准跳转</string>
-    <string name="pref_player_show_seekbar_when_seeking_title">滑动跳转时显示进度条</string>
+    <string name="pref_player_use_precise_seeking">精准定位跳转</string>
+    <string name="pref_player_show_seekbar_when_seeking_title">拖动进度时显示进度条</string>
     <string name="pref_player_show_seekbar_when_seeking_summary">手势拖动跳转时展示视频进度条</string>
     <string name="pref_player_white_seekbar_title">白色进度条</string>
-    <string name="pref_player_white_seekbar_summary">播放器内视频进度条使用白色样式</string>
-    <string name="pref_player_hide_osd_text_title">隐藏播放器 OSD 文字</string>
-    <string name="pref_player_hide_osd_text_summary">跳转或调整字幕时，隐藏 mpv 默认 OSD 提示文字</string>
+    <string name="pref_player_white_seekbar_summary">播放器内进度条改为白色样式</string>
+    <string name="pref_player_show_seekbar_chapters_title">显示章节标记</string>
+    <string name="pref_player_show_seekbar_chapters_summary">在进度条上显示章节节点</string>
+    <string name="pref_player_show_seekbar_read_ahead_title">显示缓冲区域</string>
+    <string name="pref_player_show_seekbar_read_ahead_summary">进度条可视化展示已缓冲的视频片段</string>
+    <string name="pref_player_hide_osd_text_title">隐藏播放器 OSD 提示文字</string>
+    <string name="pref_player_hide_osd_text_summary">拖动进度、调整字幕时不显示 mpv 默认 OSD 文字</string>
     <string name="pref_player_keep_screen_on_when_paused_title">暂停时保持屏幕常亮</string>
-    <string name="pref_player_keep_screen_on_when_paused_summary">暂停播放期间防止屏幕自动休眠</string>
-    <string name="pref_player_save_position_on_quit_summary">记住播放进度</string>
-    <string name="pref_player_interaction_header">播放器交互</string>
+    <string name="pref_player_keep_screen_on_when_paused_summary">视频暂停期间防止屏幕自动熄屏</string>
+    <string name="pref_player_save_position_on_quit_summary">记录播放进度，下次接续观看</string>
+    <string name="pref_player_interaction_header">播放器交互设置</string>
 
     <!-- Folders Preferences -->
     <string name="pref_folders_title">文件夹</string>
@@ -646,7 +648,7 @@
     <string name="manage_lua_scripts">管理 Lua 脚本</string>
     <string name="rename_playlist">重命名播放列表</string>
     <string name="create_playlist">新建播放列表</string>
-    <string name="add_connection">新增连接</string>
+    <string name="add_connection">添加连接</string>
     <string name="playlist_name">播放列表名称</string>
     <string name="playlist_url">播放列表地址</string>
     <string name="enter_url">输入地址</string>
@@ -788,7 +790,7 @@
     <string name="moved_to_private_space">已移至私密空间</string>
     <string name="moved_to_private_space_desc">成功将 %1$d 个视频移入私密空间。\n\n访问私密空间：在主页顶部长按应用名称。</string>
     <string name="save">保存</string>
-    <string name="add_network_connection">新增网络连接</string>
+    <string name="add_network_connection">添加网络连接</string>
     <string name="edit_network_connection">编辑网络连接</string>
 
     <!-- Add To Playlist Dialog Strings -->
@@ -1017,6 +1019,8 @@
     <string name="background_playback">后台</string>
     <string name="ambient">环境</string>
     <string name="ambience_mode">环境模式</string>
+    <string name="ambient_mode_on">环境模式：开启</string>
+    <string name="ambient_mode_off">环境模式：关闭</string>
     <string name="sleep_timer">睡眠定时</string>
 
     <!-- Preference section headers -->
@@ -1169,5 +1173,87 @@
     <string name="media_info_selection_title">选中文件信息</string>
     <string name="media_info_selected_label">已选中</string>
     <string name="media_info_total_length">总时长</string>
+
+        <!-- Shorts Player Action Buttons -->
+    <string name="shorts_action_love">点赞</string>
+    <string name="shorts_action_loved">已点赞</string>
+    <string name="shorts_action_block">屏蔽</string>
+    <string name="shorts_action_blocked">已屏蔽</string>
+    <string name="shorts_action_free">解除</string>
+    <string name="shorts_action_back">返回</string>
+    <string name="shorts_action_more">更多</string>
+
+        <!-- Shorts Empty / Exhausted States -->
+    <string name="shorts_no_blocked_videos_found">暂无屏蔽的视频</string>
+    <string name="shorts_no_vertical_videos_found">未找到竖版视频</string>
+    <string name="shorts_all_finished_title">全部视频已看完</string>
+    <string name="shorts_all_finished_message">当前所有竖版视频您都已浏览完毕。</string>
+
+        <!-- Shorts Video Info Dialog -->
+    <string name="shorts_video_info_title">视频信息</string>
+    <string name="shorts_video_info_resolution">分辨率：%1$d×%2$d</string>
+
+    <string name="player_sheets_zoom_decrease">缩小画面</string>
+    <string name="player_sheets_zoom_increase">放大画面</string>
+
+    <string name="custom_buttons_title">自定义按钮</string>
+    <string name="custom_buttons_subtitle">拖动调整顺序 · 点击空位展开编辑</string>
+    <string name="custom_buttons_export_success">按钮导出成功</string>
+    <string name="custom_buttons_import_export_title">导入/导出</string>
+    <string name="custom_buttons_import_export_desc">将全部自定义按钮及其 Lua 脚本保存为 XML 文件备份或分享</string>
+    <string name="generic_import">导入</string>
+    <string name="generic_export">导出</string>
+    <string name="custom_button_empty_slot">空白位</string>
+    <string name="custom_button_drag_disabled">已禁止拖动</string>
+    <string name="custom_button_field_label">按钮</string>
+    <string name="custom_button_lua_scripts_label">Lua脚本</string>
+    <string name="custom_button_title_field">按钮名称 *</string>
+    <string name="custom_button_tap_action">点击执行动作</string>
+    <string name="custom_button_tap_action_required">点击执行动作 *</string>
+    <string name="custom_button_long_press_action">长按执行动作</string>
+    <string name="custom_button_on_startup">启动时运行</string>
+    <string name="custom_button_settings_label">设置</string>
+    <string name="custom_button_enabled_label">启用按钮</string>
+    <string name="custom_button_enabled_desc">播放器内可正常使用该按钮</string>
+    <string name="custom_button_disabled_desc">按钮已保存，但不会显示</string>
+    <string name="custom_button_add">添加按钮</string>
+    <string name="custom_button_lua_editor_hint">点击此处编写 Lua 代码...</string>
+    <string name="custom_button_select_import_title">选择要导入的按钮</string>
+    <string name="custom_button_select_import_subtitle">勾选需要导入的按钮</string>
+    <string name="custom_button_will_overwrite">将会覆盖现有同名按钮</string>
+    <string name="custom_button_read_failed">文件读取失败：%1$s</string>
+    <string name="custom_button_field_label_with_slot">%1$s · %2$s</string>
+
+    <plurals name="custom_buttons_imported_count">
+        <item quantity="one">成功导入 %1$d 个按钮</item>
+        <item quantity="other">成功导入 %1$d 个按钮</item>
+    </plurals>
+
+        <!-- Video Settings Filter Presets Card -->
+    <string name="video_settings_filter_presets_title">滤镜预设</string>
+    <string name="filter_preset_none">无滤镜</string>
+    <string name="filter_preset_none_desc">默认原始画面，无任何色彩调整</string>
+    <string name="filter_preset_vivid">鲜艳</string>
+    <string name="filter_preset_vivid_desc">提升色彩饱和度，画面细节更锐利</string>
+    <string name="filter_preset_warm_tone">暖色调</string>
+    <string name="filter_preset_warm_tone_desc">整体偏暖，带有金黄质感</string>
+    <string name="filter_preset_cool_tone">冷色调</string>
+    <string name="filter_preset_cool_tone_desc">清冷画质，自带蓝色滤镜</string>
+    <string name="filter_preset_soft_pastel">柔和马卡龙</string>
+    <string name="filter_preset_soft_pastel_desc">低饱和柔和色彩，观感温润</string>
+    <string name="filter_preset_cinematic">电影质感</string>
+    <string name="filter_preset_cinematic_desc">胶片级调色，画面富有层次感</string>
+    <string name="filter_preset_dramatic">高对比戏剧风</string>
+    <string name="filter_preset_dramatic_desc">高对比度，氛围感强烈</string>
+    <string name="filter_preset_night_mode">夜间模式</string>
+    <string name="filter_preset_night_mode_desc">降低画面亮度，适合暗光环境观看</string>
+    <string name="filter_preset_nostalgic">复古怀旧</string>
+    <string name="filter_preset_nostalgic_desc">老式胶片质感，轻微柔焦效果</string>
+    <string name="filter_preset_ghibli_style">吉卜力动画风</string>
+    <string name="filter_preset_ghibli_style_desc">柔和梦幻的动漫配色</string>
+    <string name="filter_preset_neon_pop">霓虹潮流</string>
+    <string name="filter_preset_neon_pop_desc">高饱和霓虹亮色，视觉冲击力强</string>
+    <string name="filter_preset_deep_black">深邃黑场</string>
+    <string name="filter_preset_deep_black_desc">加深黑色画面，适配 OLED 屏幕</string>
 
 </resources>

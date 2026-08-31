@@ -104,6 +104,55 @@ object MetadataRetrieval {
     }
 
     /**
+     * Pre-enriches videos with metadata ALREADY stored in DB cache
+     * Enables instant rendering of cached metadata (FPS, subtitles) on the first frame
+     */
+    suspend fun applyCachedMetadata(
+        videos: List<Video>,
+        browserPreferences: BrowserPreferences,
+        metadataCache: VideoMetadataCacheRepository
+    ): List<Video> = withContext(Dispatchers.IO) {
+        if (videos.isEmpty()) {
+            return@withContext videos
+        }
+        val isMetadataNeeded = isVideoMetadataNeeded(browserPreferences)
+        val hasMissingDurations = videos.any { it.duration <= 0L }
+        if (!isMetadataNeeded && !hasMissingDurations) {
+            return@withContext videos
+        }
+
+        val paths = videos.map { it.path }
+        val cachedMap = metadataCache.getCachedMetadataBatch(paths)
+        if (cachedMap.isEmpty()) {
+            return@withContext videos
+        }
+
+        videos.map { video ->
+            val cached = cachedMap[video.path]
+            if (cached != null) {
+                video.copy(
+                    duration = if (cached.durationMs > 0) cached.durationMs else video.duration,
+                    durationFormatted = if (cached.durationMs > 0) MediaFormatter.formatDuration(cached.durationMs) else video.durationFormatted,
+                    width = if (cached.width > 0) cached.width else video.width,
+                    height = if (cached.height > 0) cached.height else video.height,
+                    fps = cached.fps,
+                    resolution = MediaFormatter.formatResolutionWithFps(
+                        if (cached.width > 0) cached.width else video.width,
+                        if (cached.height > 0) cached.height else video.height,
+                        cached.fps
+                    ),
+                    hasEmbeddedSubtitles = cached.hasEmbeddedSubtitles,
+                    subtitleCodec = cached.subtitleCodec,
+                    artist = if (cached.artist.isNotEmpty()) cached.artist else video.artist,
+                    album = if (cached.album.isNotEmpty()) cached.album else video.album,
+                )
+            } else {
+                video
+            }
+        }
+    }
+
+    /**
      * Enriches a list of videos with metadata only if needed
      * Processes in batches for better performance
      */
@@ -113,17 +162,12 @@ object MetadataRetrieval {
         browserPreferences: BrowserPreferences,
         metadataCache: VideoMetadataCacheRepository
     ): List<Video> = withContext(Dispatchers.IO) {
-        // If metadata chips are disabled, return videos as-is
-        if (!isVideoMetadataNeeded(browserPreferences)) {
-            return@withContext videos
-        }
-
-        // Filter videos that need metadata extraction
-        // MediaStore provides width, height, duration but NOT FPS or subtitle info
-        // So we need to extract metadata if FPS or subtitle info is missing
+        val isMetadataNeeded = isVideoMetadataNeeded(browserPreferences)
+        
+        // Filter videos that need metadata extraction:
+        // Always extract if duration is 0, or if chips are enabled and missing width/height/fps/subtitles
         val videosNeedingMetadata = videos.filter { video ->
-            video.width == 0 || video.height == 0 || video.duration == 0L || 
-            video.fps == 0f || video.subtitleCodec.isEmpty()
+            video.duration <= 0L || (isMetadataNeeded && (video.width == 0 || video.height == 0 || video.fps == 0f || video.subtitleCodec.isEmpty()))
         }
 
         if (videosNeedingMetadata.isEmpty()) {
@@ -150,14 +194,16 @@ object MetadataRetrieval {
             val metadata = metadataMap[video.path]
             if (metadata != null) {
                 video.copy(
-                    duration = metadata.durationMs,
-                    durationFormatted = MediaFormatter.formatDuration(metadata.durationMs),
-                    width = metadata.width,
-                    height = metadata.height,
+                    duration = if (metadata.durationMs > 0) metadata.durationMs else video.duration,
+                    durationFormatted = if (metadata.durationMs > 0) MediaFormatter.formatDuration(metadata.durationMs) else video.durationFormatted,
+                    width = if (metadata.width > 0) metadata.width else video.width,
+                    height = if (metadata.height > 0) metadata.height else video.height,
                     fps = metadata.fps,
                     resolution = MediaFormatter.formatResolutionWithFps(metadata.width, metadata.height, metadata.fps),
                     hasEmbeddedSubtitles = metadata.hasEmbeddedSubtitles,
-                    subtitleCodec = metadata.subtitleCodec
+                    subtitleCodec = metadata.subtitleCodec,
+                    artist = if (metadata.artist.isNotEmpty()) metadata.artist else video.artist,
+                    album = if (metadata.album.isNotEmpty()) metadata.album else video.album,
                 )
             } else {
                 video

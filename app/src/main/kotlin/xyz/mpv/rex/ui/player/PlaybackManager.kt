@@ -18,14 +18,18 @@ class PlaybackManager(
         private const val TAG = "PlaybackManager"
     }
 
+    private var seekJob: Job? = null
+    private var resyncJob: Job? = null
+
     /**
      * Performs an absolute seek to the specified position.
      * Clamps the position between 0 and duration, and optionally within AB loop.
+     * Handles streams with undetermined duration gracefully and cancels prior in-flight seeks.
      */
     fun seekTo(scope: CoroutineScope, position: Int, abLoopA: Double?, abLoopB: Double?) {
-        scope.launch(Dispatchers.IO) {
+        seekJob?.cancel()
+        seekJob = scope.launch(Dispatchers.IO) {
             val maxDuration = MPVLib.getPropertyInt("duration") ?: 0
-            if (maxDuration <= 0) return@launch
 
             var clampedPosition = position
             if (abLoopA != null && abLoopB != null) {
@@ -34,22 +38,27 @@ class PlaybackManager(
                 clampedPosition = clampedPosition.coerceIn(min, max)
             }
 
-            if (clampedPosition !in 0..maxDuration) return@launch
+            if (maxDuration > 0) {
+                if (clampedPosition !in 0..maxDuration) return@launch
+            } else {
+                if (clampedPosition < 0) return@launch
+            }
 
-            // Use precise seeking for short videos or if preference is enabled
-            val shouldUsePreciseSeeking = playerPreferences.usePreciseSeeking.get() || maxDuration < 120
+            // Use precise seeking only if preference is explicitly enabled or for short finite videos (1..119s)
+            val shouldUsePreciseSeeking = playerPreferences.usePreciseSeeking.get() || (maxDuration in 1..119)
             val seekMode = if (shouldUsePreciseSeeking) "absolute+exact" else "absolute+keyframes"
             MPVLib.command("seek", clampedPosition.toString(), seekMode)
         }
     }
 
     /**
-     * Performs a relative seek immediately.
+     * Performs a relative seek immediately with concurrency protection and stream-safe seek modes.
      */
     fun seekBy(scope: CoroutineScope, offset: Int) {
         if (offset == 0) return
         
-        scope.launch(Dispatchers.IO) {
+        seekJob?.cancel()
+        seekJob = scope.launch(Dispatchers.IO) {
             val duration = MPVLib.getPropertyInt("duration") ?: 0
             val currentPos = MPVLib.getPropertyInt("time-pos") ?: 0
 
@@ -57,9 +66,27 @@ class PlaybackManager(
                 // Force seek to 100% to ensure EOF is triggered
                 MPVLib.command("seek", "100", "absolute-percent+exact")
             } else {
-                val shouldUsePreciseSeeking = playerPreferences.usePreciseSeeking.get() || duration < 120
+                val shouldUsePreciseSeeking = playerPreferences.usePreciseSeeking.get() || (duration in 1..119)
                 val seekMode = if (shouldUsePreciseSeeking) "relative+exact" else "relative+keyframes"
                 MPVLib.command("seek", offset.toString(), seekMode)
+            }
+        }
+    }
+
+    /**
+     * Resynchronizes audio and video demuxer streams after an audio track change.
+     * Prevents audio muting and buffer starvation on network streams by flushing the demuxer queues
+     * and aligning the audio presentation timestamp (PTS) with the master clock.
+     */
+    fun resyncAudioOnTrackChange(scope: CoroutineScope) {
+        resyncJob?.cancel()
+        resyncJob = scope.launch(Dispatchers.IO) {
+            delay(50)
+            val timePos = MPVLib.getPropertyDouble("time-pos")
+            if (timePos != null && timePos > 0.0) {
+                MPVLib.command("seek", timePos.toString(), "absolute+keyframes")
+            } else {
+                MPVLib.command("seek", "0", "relative+keyframes")
             }
         }
     }

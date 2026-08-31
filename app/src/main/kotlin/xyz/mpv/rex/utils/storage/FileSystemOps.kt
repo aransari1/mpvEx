@@ -6,6 +6,8 @@ import xyz.mpv.rex.domain.browser.FileSystemItem
 import xyz.mpv.rex.domain.browser.PathComponent
 import xyz.mpv.rex.domain.playbackstate.repository.PlaybackStateRepository
 import xyz.mpv.rex.preferences.AppearancePreferences
+import xyz.mpv.rex.preferences.BrowserPreferences
+import xyz.mpv.rex.database.repository.HybridMediaIndexRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.context.GlobalContext
@@ -43,11 +45,15 @@ object FileSystemOps {
             try {
                 val koin = GlobalContext.get()
                 val appearancePreferences = koin.get<AppearancePreferences>()
+                val browserPreferences = koin.get<BrowserPreferences>()
                 val playbackStateRepository = koin.get<PlaybackStateRepository>()
+                val hybridIndex = koin.get<HybridMediaIndexRepository>()
                 
                 val playbackStates = playbackStateRepository.getAllPlaybackStates()
                 val thresholdDays = appearancePreferences.unplayedOldVideoDays.get()
-                
+                val useHybridIndex = browserPreferences.includeNoMediaContent.get()
+                if (useHybridIndex) hybridIndex.ensureFreshIfEmpty()
+
                 val foldersPreferences = koin.get<xyz.mpv.rex.preferences.FoldersPreferences>()
                 val blacklistedFolders = foldersPreferences.blacklistedFolders.get()
 
@@ -55,7 +61,16 @@ object FileSystemOps {
                 val primaryStorage = Environment.getExternalStorageDirectory()
                 if (primaryStorage.exists() && primaryStorage.canRead()) {
                     val primaryPath = primaryStorage.absolutePath
-                    val folderData = CoreMediaScanner.getFolderRecursiveData(context, primaryPath, playbackStates, thresholdDays, blacklistedFolders)
+                    val folderData = if (useHybridIndex) {
+                        hybridIndex.getRecursiveFolder(
+                            path = primaryPath,
+                            playbackStates = playbackStates,
+                            thresholdDays = thresholdDays,
+                            watchedThreshold = browserPreferences.watchedThreshold.get(),
+                        )
+                    } else {
+                        CoreMediaScanner.getFolderRecursiveData(context, primaryPath, playbackStates, thresholdDays, blacklistedFolders)
+                    }
                     if (folderData != null) {
                         roots.add(
                             FileSystemItem.Folder(
@@ -80,7 +95,16 @@ object FileSystemOps {
                     val volumePath = StorageVolumeUtils.getVolumePath(volume) ?: continue
                     val volumeDir = File(volumePath)
                     if (volumeDir.exists() && volumeDir.canRead()) {
-                        val folderData = CoreMediaScanner.getFolderRecursiveData(context, volumePath, playbackStates, thresholdDays, blacklistedFolders)
+                        val folderData = if (useHybridIndex) {
+                            hybridIndex.getRecursiveFolder(
+                                path = volumePath,
+                                playbackStates = playbackStates,
+                                thresholdDays = thresholdDays,
+                                watchedThreshold = browserPreferences.watchedThreshold.get(),
+                            )
+                        } else {
+                            CoreMediaScanner.getFolderRecursiveData(context, volumePath, playbackStates, thresholdDays, blacklistedFolders)
+                        }
                         if (folderData != null) {
                             roots.add(
                                 FileSystemItem.Folder(

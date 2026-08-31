@@ -80,34 +80,34 @@ jobs:
       - name: Upload arm64-v8a APK
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-arm64-v8a-release-signed-${{ env.SHORT_SHA }}
+          name: mpvNext-arm64-v8a-release-${{ env.SHORT_SHA }}
           path: app/build/outputs/apk/**/*arm64-v8a*.apk
           if-no-files-found: warn
 
       - name: Upload armeabi-v7a APK
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-armeabi-v7a-release-signed-${{ env.SHORT_SHA }}
+          name: mpvNext-armeabi-v7a-release-${{ env.SHORT_SHA }}
           path: app/build/outputs/apk/**/*armeabi-v7a*.apk
           if-no-files-found: warn
 
       - name: Upload Universal APK
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-universal-release-signed-${{ env.SHORT_SHA }}
+          name: mpvNext-universal-release-${{ env.SHORT_SHA }}
           path: app/build/outputs/apk/**/*universal*.apk
           if-no-files-found: warn
 
       - name: Upload x86 APK
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-x86-release-signed-${{ env.SHORT_SHA }}
+          name: mpvNext-x86-release-${{ env.SHORT_SHA }}
           path: app/build/outputs/apk/**/*x86-release*.apk
           if-no-files-found: warn
 
       - name: Upload x86_64 APK
         uses: actions/upload-artifact@v4
         with:
-          name: mpvNext-x86_64-release-signed-${{ env.SHORT_SHA }}
+          name: mpvNext-x86_64-release-${{ env.SHORT_SHA }}
           path: app/build/outputs/apk/**/*x86_64*.apk
           if-no-files-found: warn

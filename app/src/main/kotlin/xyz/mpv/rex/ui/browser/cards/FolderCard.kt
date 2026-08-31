@@ -71,7 +71,8 @@ fun FolderCard(
 ) {
   val browserPreferences = koinInject<BrowserPreferences>()
   val showFolderPath by browserPreferences.showFolderPath.collectAsState()
-  val totalCount = folder.videoCount + folder.audioCount
+  val showAudioFiles by browserPreferences.showAudioFiles.collectAsState()
+  val totalCount = if (showAudioFiles) folder.videoCount + folder.audioCount else folder.videoCount
   val countLabel = if (totalCount == 1) "1 Item" else "$totalCount Items"
   val maxLines = if (uiSettings.unlimitedNameLines) Int.MAX_VALUE else 2
   val parentPath = folder.path.substringBeforeLast("/", folder.path)

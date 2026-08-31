@@ -28,6 +28,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.ScreenRotation
 import androidx.compose.material.icons.filled.Settings
@@ -43,10 +44,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -85,6 +89,7 @@ import xyz.mpv.rex.preferences.DecoderPreferences
 import xyz.mpv.rex.preferences.GesturePreferences
 import xyz.mpv.rex.preferences.PlayerButton
 import xyz.mpv.rex.preferences.PlayerPreferences
+import xyz.mpv.rex.ui.player.ResumePlaybackMode
 import xyz.mpv.rex.preferences.getPlayerButtonLabel
 import xyz.mpv.rex.preferences.preference.collectAsState
 import xyz.mpv.rex.presentation.components.PlayerSheet
@@ -622,6 +627,10 @@ fun ControlsTab(
         checked = showControlsOnPlay,
         onCheckedChange = { playerPreferences.showControlsOnPlay.set(it) }
       )
+
+      Spacer(modifier = Modifier.height(MaterialTheme.spacing.smaller))
+
+      PlayerTimeToDisappearPreferenceItem()
   }
 }
 
@@ -715,6 +724,7 @@ fun GesturesTab() {
   val preventSeekbarTap by gesturePreferences.preventSeekbarTap.collectAsState()
   val useSingleTapForCenter by gesturePreferences.useSingleTapForCenter.collectAsState()
   val useSingleTapForLeftRight by gesturePreferences.useSingleTapForLeftRight.collectAsState()
+  val reverseDoubleTap by gesturePreferences.reverseDoubleTap.collectAsState()
   val swipeToSubtitleSeek by playerPreferences.swipeToSubtitleSeek.collectAsState()
   val moveSubtitleByDragging by playerPreferences.moveSubtitleByDragging.collectAsState()
   val panAndZoomEnabled by playerPreferences.panAndZoomEnabled.collectAsState()
@@ -761,6 +771,13 @@ fun GesturesTab() {
       description = stringResource(R.string.pref_player_gestures_horizontal_swipe_to_seek),
       checked = horizontalSwipeToSeek,
       onCheckedChange = { playerPreferences.horizontalSwipeToSeek.set(it) }
+    )
+
+    InteractionSwitch(
+      label = stringResource(R.string.pref_gesture_reverse_double_tap_title),
+      description = stringResource(R.string.pref_gesture_reverse_double_tap_summary),
+      checked = reverseDoubleTap,
+      onCheckedChange = { gesturePreferences.reverseDoubleTap.set(it) }
     )
 
     InteractionSwitch(
@@ -906,6 +923,8 @@ fun InteractionTab() {
       onCheckedChange = { playerPreferences.savePositionOnQuit.set(it) }
     )
 
+    ResumePlaybackModePreferenceItem()
+
     InteractionSwitch(
       label = stringResource(R.string.pref_auto_pip_title),
       description = stringResource(R.string.pref_auto_pip_summary),
@@ -1025,3 +1044,248 @@ private fun OrientationPreferenceItem() {
     )
   }
 }
+
+@Composable
+private fun ResumePlaybackModePreferenceItem() {
+  val playerPreferences = koinInject<PlayerPreferences>()
+  val resumePlaybackMode by playerPreferences.resumePlaybackMode.collectAsState()
+  var showDialog by remember { mutableStateOf(false) }
+
+  Surface(
+    shape = MaterialTheme.shapes.medium,
+    color = MaterialTheme.colorScheme.surfaceContainerLow,
+    modifier = Modifier.fillMaxWidth()
+  ) {
+    ListItem(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clickable { showDialog = true },
+      headlineContent = {
+        Text(
+          text = stringResource(R.string.pref_player_resume_playback_title),
+          style = MaterialTheme.typography.bodyLarge
+        )
+      },
+      supportingContent = {
+        Text(
+          text = stringResource(resumePlaybackMode.titleRes),
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.outline
+        )
+      },
+      trailingContent = {
+        Icon(
+          imageVector = Icons.Default.History,
+          contentDescription = null,
+          tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+      }
+    )
+  }
+
+  if (showDialog) {
+    AlertDialog(
+      onDismissRequest = { showDialog = false },
+      title = { Text(stringResource(R.string.pref_player_resume_playback_title)) },
+      text = {
+        Column(
+          modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+        ) {
+          ResumePlaybackMode.entries.forEach { mode ->
+            Row(
+              modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                  playerPreferences.resumePlaybackMode.set(mode)
+                  showDialog = false
+                }
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+              verticalAlignment = Alignment.CenterVertically
+            ) {
+              RadioButton(
+                selected = resumePlaybackMode == mode,
+                onClick = null
+              )
+              Spacer(modifier = Modifier.width(12.dp))
+              Column {
+                Text(
+                  text = stringResource(mode.titleRes),
+                  style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
+                  text = stringResource(mode.summaryRes),
+                  style = MaterialTheme.typography.bodySmall,
+                  color = MaterialTheme.colorScheme.outline
+                )
+              }
+            }
+          }
+        }
+      },
+      confirmButton = {
+        TextButton(onClick = { showDialog = false }) {
+          Text(stringResource(R.string.generic_cancel))
+        }
+      }
+    )
+  }
+}
+
+@Composable
+private fun PlayerTimeToDisappearPreferenceItem() {
+  val playerPreferences = koinInject<PlayerPreferences>()
+  val playerTimeToDisappear by playerPreferences.playerTimeToDisappear.collectAsState()
+  val predefinedTimeValues = listOf(0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000)
+  val isCustomTimeValue = !predefinedTimeValues.contains(playerTimeToDisappear)
+  val offLabel = stringResource(R.string.generic_off)
+  val customLabel = stringResource(R.string.generic_custom)
+  var showDialog by remember { mutableStateOf(false) }
+  var showCustomDialog by remember { mutableStateOf(false) }
+  var customTimeValue by remember { mutableStateOf("") }
+
+  Surface(
+    shape = MaterialTheme.shapes.medium,
+    color = MaterialTheme.colorScheme.surfaceContainerLow,
+    modifier = Modifier.fillMaxWidth()
+  ) {
+    ListItem(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clickable { showDialog = true },
+      headlineContent = {
+        Text(
+          text = stringResource(R.string.pref_player_display_hide_player_control_time),
+          style = MaterialTheme.typography.bodyLarge
+        )
+      },
+      supportingContent = {
+        Text(
+          text = when {
+            playerTimeToDisappear == 0 -> offLabel
+            isCustomTimeValue -> stringResource(
+              R.string.pref_player_display_custom_time_summary,
+              playerTimeToDisappear
+            )
+            else -> stringResource(
+              R.string.pref_player_display_time_ms_format,
+              playerTimeToDisappear
+            )
+          },
+          style = MaterialTheme.typography.bodySmall,
+          color = MaterialTheme.colorScheme.outline
+        )
+      },
+      trailingContent = {
+        Icon(
+          imageVector = Icons.Outlined.Timer,
+          contentDescription = null,
+          tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+      }
+    )
+  }
+
+  if (showDialog) {
+    AlertDialog(
+      onDismissRequest = { showDialog = false },
+      title = { Text(stringResource(R.string.pref_player_display_hide_player_control_time)) },
+      text = {
+        Column(
+          modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+        ) {
+          (predefinedTimeValues + listOf(-1)).forEach { value ->
+            val isSelected = if (value == -1) isCustomTimeValue else playerTimeToDisappear == value
+            val labelText = when (value) {
+              0 -> offLabel
+              -1 -> customLabel
+              else -> "$value ms"
+            }
+            Row(
+              modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                  if (value == -1) {
+                    customTimeValue = playerTimeToDisappear.toString()
+                    showDialog = false
+                    showCustomDialog = true
+                  } else {
+                    playerPreferences.playerTimeToDisappear.set(value)
+                    showDialog = false
+                  }
+                }
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+              verticalAlignment = Alignment.CenterVertically
+            ) {
+              RadioButton(
+                selected = isSelected,
+                onClick = null
+              )
+              Spacer(modifier = Modifier.width(12.dp))
+              Text(
+                text = labelText,
+                style = MaterialTheme.typography.bodyLarge
+              )
+            }
+          }
+        }
+      },
+      confirmButton = {
+        TextButton(onClick = { showDialog = false }) {
+          Text(stringResource(R.string.generic_cancel))
+        }
+      }
+    )
+  }
+
+  if (showCustomDialog) {
+    AlertDialog(
+      onDismissRequest = { showCustomDialog = false },
+      title = { Text(text = stringResource(R.string.pref_player_display_hide_player_control_time)) },
+      text = {
+        Column(
+          modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+        ) {
+          Text(
+            text = stringResource(R.string.pref_player_display_custom_hide_time_dialog_message),
+            modifier = Modifier.padding(bottom = 8.dp)
+          )
+          OutlinedTextField(
+            value = customTimeValue,
+            onValueChange = { customTimeValue = it },
+            label = { Text(stringResource(id = R.string.milliseconds)) },
+            keyboardOptions = KeyboardOptions(
+              keyboardType = KeyboardType.Number
+            ),
+            modifier = Modifier.fillMaxWidth(),
+            singleLine = true
+          )
+        }
+      },
+      confirmButton = {
+        TextButton(
+          onClick = {
+            val value = customTimeValue.toIntOrNull()
+            if (value != null && value in 0..1000000000) {
+              playerPreferences.playerTimeToDisappear.set(value)
+              showCustomDialog = false
+            }
+          }
+        ) {
+          Text(stringResource(R.string.generic_ok))
+        }
+      },
+      dismissButton = {
+        TextButton(onClick = { showCustomDialog = false }) {
+          Text(stringResource(R.string.generic_cancel))
+        }
+      }
+    )
+  }
+}
+

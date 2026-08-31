@@ -49,8 +49,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import xyz.mpv.rex.R
+import xyz.mpv.rex.database.repository.HybridMediaIndexRepository
 import xyz.mpv.rex.domain.media.model.VideoFolder
-import xyz.mpv.rex.preferences.AppearancePreferences
 import xyz.mpv.rex.preferences.FoldersPreferences
 import xyz.mpv.rex.preferences.preference.collectAsState
 import xyz.mpv.rex.presentation.Screen
@@ -58,6 +58,7 @@ import xyz.mpv.rex.ui.browser.components.BrowserTopBar
 import xyz.mpv.rex.ui.browser.selection.SelectionState
 import xyz.mpv.rex.ui.browser.states.EmptyState
 import xyz.mpv.rex.ui.utils.LocalBackStack
+import xyz.mpv.rex.utils.media.MediaLibraryEvents
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -69,6 +70,7 @@ object FoldersPreferencesScreen : Screen {
   @Composable
   override fun Content() {
     val preferences = koinInject<FoldersPreferences>()
+    val hybridMediaIndex = koinInject<HybridMediaIndexRepository>()
     val backstack = LocalBackStack.current
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -97,6 +99,10 @@ object FoldersPreferencesScreen : Screen {
             }
             preferences.blacklistedFolders.set(updated)
             selectionState = selectionState.clear()
+            MediaLibraryEvents.notifyChanged()
+            coroutineScope.launch(Dispatchers.IO) {
+              hybridMediaIndex.ensureFresh(force = true, userInitiated = true)
+            }
           },
           onSelectAll = {
             selectionState = selectionState.selectAll(blacklistedFoldersList)
@@ -167,6 +173,10 @@ object FoldersPreferencesScreen : Screen {
                 onRemove = {
                   val updated = blacklistedFolders.toMutableSet().apply { remove(folderPath) }
                   preferences.blacklistedFolders.set(updated)
+                  MediaLibraryEvents.notifyChanged()
+                  coroutineScope.launch(Dispatchers.IO) {
+                    hybridMediaIndex.ensureFresh(force = true, userInitiated = true)
+                  }
                 },
                 onLongClick = {
                   selectionState = selectionState.toggle(folderPath)
@@ -235,6 +245,11 @@ object FoldersPreferencesScreen : Screen {
         onAddFolders = { folderPaths ->
           val updated = blacklistedFolders.toMutableSet().apply { addAll(folderPaths) }
           preferences.blacklistedFolders.set(updated)
+          MediaLibraryEvents.notifyChanged()
+          coroutineScope.launch(Dispatchers.IO) {
+            hybridMediaIndex.purgeExcludedFolders(folderPaths)
+            hybridMediaIndex.ensureFresh(force = true, userInitiated = true)
+          }
         },
       )
     }
@@ -249,6 +264,10 @@ object FoldersPreferencesScreen : Screen {
             onClick = {
               preferences.blacklistedFolders.set(emptySet())
               showClearAllDialog = false
+              MediaLibraryEvents.notifyChanged()
+              coroutineScope.launch(Dispatchers.IO) {
+                hybridMediaIndex.ensureFresh(force = true, userInitiated = true)
+              }
             },
           ) {
             Text(stringResource(R.string.generic_confirm))

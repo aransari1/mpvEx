@@ -3,19 +3,18 @@
 package xyz.mpv.rex.ui.browser.states
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
-import android.provider.Settings
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,6 +46,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
@@ -60,6 +60,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import xyz.mpv.rex.BuildConfig
 import xyz.mpv.rex.R
+import xyz.mpv.rex.ui.browser.LocalNavigationBarHeight
+import xyz.mpv.rex.utils.permission.PermissionUtils
 
 @SuppressLint("UseKtx")
 @Composable
@@ -68,16 +70,16 @@ fun PermissionDeniedState(
   modifier: Modifier = Modifier,
 ) {
   val context = LocalContext.current
+  val navBarHeight = LocalNavigationBarHeight.current
   var showExplanationDialog by remember { mutableStateOf(false) }
 
-  // Determine if we're using MANAGE_EXTERNAL_STORAGE or scoped storage permissions
   val isPlayStoreBuild = remember { BuildConfig.SCOPED_STORAGE_ONLY }
 
   // Animated scale for the icon
   val infiniteTransition = rememberInfiniteTransition(label = "permission_icon")
   val scale by infiniteTransition.animateFloat(
     initialValue = 1f,
-    targetValue = 1.1f,
+    targetValue = 1.08f,
     animationSpec =
       infiniteRepeatable(
         animation = tween(2000, easing = FastOutSlowInEasing),
@@ -86,48 +88,48 @@ fun PermissionDeniedState(
     label = "icon_scale",
   )
 
-  Box(
-    modifier = modifier
-      .fillMaxSize()
-      .padding(top = 40.dp, bottom = 100.dp) // Added top padding for icon, reduced bottom padding
+  Surface(
+    modifier = modifier.fillMaxSize(),
+    color = MaterialTheme.colorScheme.background,
   ) {
-    Surface(
-      modifier = Modifier.fillMaxSize(),
-      color = MaterialTheme.colorScheme.background,
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(horizontal = 24.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+      // Scrollable content area (middle)
       Column(
-        modifier =
-          Modifier
-            .fillMaxSize()
-            .padding(32.dp) // Increased padding to prevent icon cutoff
-            .verticalScroll(rememberScrollState()),
+        modifier = Modifier
+          .weight(1f)
+          .verticalScroll(rememberScrollState())
+          .padding(vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
       ) {
-
         // Animated Icon with Surface
         Surface(
-          modifier =
-            Modifier
-              .size(152.dp) // Increased size to compensate for padding (120dp + 32dp padding)
-              .padding(16.dp) // Added padding around the icon to prevent cutoff
-              .scale(scale),
-          shape = RoundedCornerShape(32.dp),
+          modifier = Modifier
+            .size(112.dp)
+            .scale(scale),
+          shape = RoundedCornerShape(28.dp),
           color = MaterialTheme.colorScheme.errorContainer,
           tonalElevation = 3.dp,
         ) {
-          Icon(
-            imageVector = Icons.Outlined.Warning,
-            contentDescription = null,
-            modifier =
-              Modifier
-                .padding(28.dp)
-                .fillMaxSize(),
-            tint = MaterialTheme.colorScheme.onErrorContainer,
-          )
+          Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+          ) {
+            Icon(
+              imageVector = Icons.Outlined.Warning,
+              contentDescription = null,
+              modifier = Modifier.size(52.dp),
+              tint = MaterialTheme.colorScheme.onErrorContainer,
+            )
+          }
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         // Title
         Text(
@@ -143,10 +145,9 @@ fun PermissionDeniedState(
         // Description Card
         Card(
           modifier = Modifier.fillMaxWidth(),
-          colors =
-            CardDefaults.cardColors(
-              containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            ),
+          colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+          ),
           shape = RoundedCornerShape(20.dp),
         ) {
           Column(
@@ -169,37 +170,23 @@ fun PermissionDeniedState(
             )
           }
         }
+      }
 
-        Spacer(modifier = Modifier.height(32.dp))
-
+      // Pinned Bottom Section (Always above bottom navigation bar)
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(bottom = navBarHeight + 12.dp, top = 8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+      ) {
         // Allow Access Button
         FilledTonalButton(
           onClick = {
-            if (isPlayStoreBuild) {
-              // Play Store build: Use regular permission request
-              onRequestPermission()
-            } else {
-              // Standard build: Open All Files Access settings for Android 11+
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                try {
-                  val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-                  intent.data = Uri.parse("package:${context.packageName}")
-                  context.startActivity(intent)
-                } catch (_: Exception) {
-                  // Fallback to general All Files Access settings
-                  val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
-                  context.startActivity(intent)
-                }
-              } else {
-                // For older Android versions, use the regular permission request
-                onRequestPermission()
-              }
-            }
+            PermissionUtils.requestStorageAccess(context, onRequestPermission)
           },
-          modifier =
-            Modifier
-              .fillMaxWidth()
-              .height(56.dp),
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp),
           shape = RoundedCornerShape(16.dp),
         ) {
           Text(
@@ -209,7 +196,7 @@ fun PermissionDeniedState(
           )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Why do I see this? link
         TextButton(
@@ -227,8 +214,6 @@ fun PermissionDeniedState(
             fontWeight = FontWeight.Medium,
           )
         }
-
-        Spacer(modifier = Modifier.weight(1f))
       }
     }
   }
@@ -256,14 +241,12 @@ fun PermissionDeniedState(
       },
       text = {
         Column(
-          modifier =
-            Modifier
-              .heightIn(max = 400.dp)
-              .verticalScroll(rememberScrollState()),
+          modifier = Modifier
+            .heightIn(max = 400.dp)
+            .verticalScroll(rememberScrollState()),
           verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
           if (isPlayStoreBuild) {
-            // Play Store build explanation
             Text(
               text = stringResource(R.string.permission_explanation_playstore_intro),
               style = MaterialTheme.typography.bodyMedium,
@@ -293,7 +276,6 @@ fun PermissionDeniedState(
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
           } else {
-            // Standard build explanation
             Text(
               text = stringResource(R.string.permission_explanation_standard_intro),
               style = MaterialTheme.typography.bodyMedium,
@@ -319,40 +301,13 @@ fun PermissionDeniedState(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
           )
 
-          // Clickable GitHub link
-          val annotatedString =
-            buildAnnotatedString {
-              pushStringAnnotation(
-                tag = "URL",
-                annotation = githubUrl,
-              )
-              withStyle(
-                style =
-                  SpanStyle(
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Medium,
-                    textDecoration = TextDecoration.Underline,
-                  ),
-              ) {
-                append(githubUrl)
-              }
-              pop()
-            }
-
-          ClickableText(
-            text = annotatedString,
+          Text(
+            text = githubUrl,
             style = MaterialTheme.typography.bodyMedium,
-            onClick = { offset ->
-              annotatedString
-                .getStringAnnotations(
-                  tag = "URL",
-                  start = offset,
-                  end = offset,
-                ).firstOrNull()
-                ?.let {
-                  uriHandler.openUri(it.item)
-                }
-            },
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Medium,
+            textDecoration = TextDecoration.Underline,
+            modifier = Modifier.clickable { uriHandler.openUri(githubUrl) },
           )
 
           Text(
@@ -371,7 +326,7 @@ fun PermissionDeniedState(
           Text(stringResource(R.string.got_it))
         }
       },
-      shape = RoundedCornerShape(24.dp),
+      shape = RoundedCornerShape(20.dp),
     )
   }
 }

@@ -16,9 +16,13 @@ import xyz.mpv.rex.utils.media.MediaLibraryEvents
 import xyz.mpv.rex.utils.media.MetadataRetrieval
 import xyz.mpv.rex.utils.sort.SortUtils
 import xyz.mpv.rex.utils.storage.FileTypeUtils
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -38,7 +42,6 @@ class FileSystemBrowserViewModel(
   initialPath: String? = null,
 ) : BaseBrowserViewModel<FileSystemItem>(application),
   KoinComponent {
-  private val browserPreferences: BrowserPreferences by inject()
   private val foldersPreferences: xyz.mpv.rex.preferences.FoldersPreferences by inject()
   private val appearancePreferences: xyz.mpv.rex.preferences.AppearancePreferences by inject()
 
@@ -84,6 +87,7 @@ class FileSystemBrowserViewModel(
   val itemsWereDeletedOrMoved: StateFlow<Boolean> = _itemsWereDeletedOrMoved.asStateFlow()
 
   private val itemCountByPath = mutableMapOf<String, Int>()
+  private var directoryLoadJob: Job? = null
 
   companion object {
     private const val TAG = "FileSystemBrowserVM"
@@ -134,7 +138,7 @@ class FileSystemBrowserViewModel(
 
     // Refresh when blacklist changes
     viewModelScope.launch {
-      foldersPreferences.blacklistedFolders.changes().collectLatest {
+      foldersPreferences.blacklistedFolders.changes().drop(1).collectLatest {
         refresh(silent = true)
       }
     }
@@ -152,36 +156,8 @@ class FileSystemBrowserViewModel(
         _isLoading.value = true
       }
       MediaFileRepository.clearCache()
-      triggerMediaScan()
-      delay(if (silent) 100 else 800)
+      delay(if (silent) 100 else 300)
       loadData()
-    }
-  }
-  
-  private fun triggerMediaScan() {
-    try {
-      val path = _currentPath.value
-      if (path == STORAGE_ROOTS_MARKER) return
-      
-      val folder = File(path)
-      if (folder.exists() && folder.isDirectory) {
-        val mediaFiles = folder.listFiles { file ->
-          file.isFile && (
-            FileTypeUtils.isVideoFile(file) || 
-            (browserPreferences.showAudioFiles.get() && FileTypeUtils.isAudioFile(file))
-          )
-        }
-        
-        if (!mediaFiles.isNullOrEmpty()) {
-          val filePaths = mediaFiles.map { it.absolutePath }.toTypedArray()
-          android.media.MediaScannerConnection.scanFile(getApplication(), filePaths, null) { _, _ -> }
-        }
-      } else {
-        val externalStorage = android.os.Environment.getExternalStorageDirectory()
-        android.media.MediaScannerConnection.scanFile(getApplication(), arrayOf(externalStorage.absolutePath), null) { _, _ -> }
-      }
-    } catch (e: Exception) {
-      Log.e(TAG, "Failed to trigger media scan", e)
     }
   }
 
@@ -242,6 +218,9 @@ class FileSystemBrowserViewModel(
     }
 
     if (successCount > 0) {
+      val deletedFolderPaths = folders.map { it.path }.toSet()
+      _items.value = _items.value.filterNot { it is FileSystemItem.Folder && it.path in deletedFolderPaths }
+      _unsortedItems.value = _unsortedItems.value.filterNot { it is FileSystemItem.Folder && it.path in deletedFolderPaths }
       _itemsWereDeletedOrMoved.value = true
       MediaLibraryEvents.notifyChanged()
     }
@@ -249,6 +228,9 @@ class FileSystemBrowserViewModel(
   }
 
   override suspend fun deleteVideos(videos: List<Video>): Pair<Int, Int> {
+    val deletedPaths = videos.map { it.path.ifBlank { it.uri.toString() } }.toSet()
+    _items.value = _items.value.filterNot { it is FileSystemItem.VideoFile && (it.video.path.ifBlank { it.video.uri.toString() }) in deletedPaths }
+    _unsortedItems.value = _unsortedItems.value.filterNot { it is FileSystemItem.VideoFile && (it.video.path.ifBlank { it.video.uri.toString() }) in deletedPaths }
     val result = super.deleteVideos(videos)
     if (result.first > 0) {
       _itemsWereDeletedOrMoved.value = true
@@ -274,7 +256,8 @@ class FileSystemBrowserViewModel(
 
   private fun loadCurrentDirectory() {
     if (!isRootResolved) return
-    viewModelScope.launch(Dispatchers.IO) {
+    directoryLoadJob?.cancel()
+    directoryLoadJob = viewModelScope.launch(Dispatchers.IO) {
       _isLoading.value = true
       _error.value = null
 
@@ -283,7 +266,14 @@ class FileSystemBrowserViewModel(
         if (path == STORAGE_ROOTS_MARKER) {
           _breadcrumbs.value = emptyList()
           val roots = MediaFileRepository.getStorageRoots(getApplication())
+          val sortedRoots = SortUtils.sortFileSystemItems(
+            roots,
+            browserPreferences.folderSortType.get(),
+            browserPreferences.folderSortOrder.get()
+          )
           _unsortedItems.value = roots
+          _items.value = sortedRoots
+          _isLoading.value = false
         } else {
           _breadcrumbs.value = MediaFileRepository.getPathComponents(path)
           MediaFileRepository
@@ -298,7 +288,10 @@ class FileSystemBrowserViewModel(
               itemCountByPath[path] = items.size
 
               val filteredItems = if (!browserPreferences.showAudioFiles.get()) {
-                items.filterNot { it is FileSystemItem.VideoFile && it.video.isAudio }
+                items.filterNot { 
+                  (it is FileSystemItem.VideoFile && it.video.isAudio) ||
+                  (it is FileSystemItem.Folder && it.videoCount == 0)
+                }
               } else {
                 items
               }
@@ -313,7 +306,25 @@ class FileSystemBrowserViewModel(
               val basicThresholdMillis = basicThresholdDays * 24 * 60 * 60 * 1000L
               val basicWatchedThreshold = browserPreferences.watchedThreshold.get()
 
-              val basicEnrichedItems = filteredItems.map { item ->
+              val preEnrichedItems = run {
+                val videoFiles = filteredItems.filterIsInstance<FileSystemItem.VideoFile>()
+                if (videoFiles.isNotEmpty()) {
+                  val cachedVideos = MetadataRetrieval.applyCachedMetadata(
+                    videos = videoFiles.map { it.video },
+                    browserPreferences = browserPreferences,
+                    metadataCache = metadataCache
+                  )
+                  val cachedVideoMap = cachedVideos.associateBy { it.id }
+                  filteredItems.map { item ->
+                    if (item is FileSystemItem.VideoFile) {
+                      val cached = cachedVideoMap[item.video.id]
+                      if (cached != null) item.copy(video = cached) else item
+                    } else item
+                  }
+                } else filteredItems
+              }
+
+              val basicEnrichedItems = preEnrichedItems.map { item ->
                 if (item is FileSystemItem.VideoFile) {
                   val video = item.video
                   val state = basicPlaybackStates.find { it.mediaTitle == video.path || it.mediaTitle == video.displayName }
@@ -354,24 +365,31 @@ class FileSystemBrowserViewModel(
                 }
               }
 
-              // Instantly publish the basic items so the UI displays immediately
+              // Instantly publish the pre-enriched items so the UI displays immediately with cached metadata
+              val sortedBasicItems = SortUtils.sortFileSystemItems(
+                basicEnrichedItems,
+                browserPreferences.folderSortType.get(),
+                browserPreferences.folderSortOrder.get()
+              )
               _videoFilesWithPlayback.value = basicPlaybackMap
               _newVideoIds.value = basicNewIds
               _watchedVideoIds.value = basicWatchedIds
               _unsortedItems.value = basicEnrichedItems
+              _items.value = sortedBasicItems
               _isLoading.value = false
 
-              // 2. Fetch detailed video metadata (MediaInfo) asynchronously in the background
-              if (MetadataRetrieval.isVideoMetadataNeeded(browserPreferences)) {
-                val videoFiles = filteredItems.filterIsInstance<FileSystemItem.VideoFile>()
-                if (videoFiles.isNotEmpty()) {
-                  val videos = videoFiles.map { it.video }
-                  val enrichedVideos = MetadataRetrieval.enrichVideosIfNeeded(
-                    context = getApplication(),
-                    videos = videos,
-                    browserPreferences = browserPreferences,
-                    metadataCache = metadataCache
-                  )
+              // 2. Fetch detailed video metadata (MediaInfo) asynchronously in the background for uncached videos or missing durations
+              val videoFiles = preEnrichedItems.filterIsInstance<FileSystemItem.VideoFile>()
+              val isMetadataNeeded = MetadataRetrieval.isVideoMetadataNeeded(browserPreferences)
+              val uncachedVideos = videoFiles.map { it.video }.filter { it.duration <= 0L || (isMetadataNeeded && (it.fps == 0f || it.subtitleCodec.isEmpty())) }
+              if (uncachedVideos.isNotEmpty()) {
+                val videos = videoFiles.map { it.video }
+                val enrichedVideos = MetadataRetrieval.enrichVideosIfNeeded(
+                  context = getApplication(),
+                  videos = videos,
+                  browserPreferences = browserPreferences,
+                  metadataCache = metadataCache
+                )
                   
                   val enrichedVideoMap = enrichedVideos.associateBy { it.id }
                   
@@ -426,23 +444,34 @@ class FileSystemBrowserViewModel(
                     }
                   }
 
+                  val sortedFinalItems = SortUtils.sortFileSystemItems(
+                    finalEnrichedItems,
+                    browserPreferences.folderSortType.get(),
+                    browserPreferences.folderSortOrder.get()
+                  )
                   // Publish the final fully-enriched list
                   _videoFilesWithPlayback.value = finalPlaybackMap
                   _newVideoIds.value = finalNewIds
                   _watchedVideoIds.value = finalWatchedIds
                   _unsortedItems.value = finalEnrichedItems
+                  _items.value = sortedFinalItems
                 }
-              }
             }.onFailure { error ->
               _error.value = error.message
               _unsortedItems.value = emptyList()
+              _items.value = emptyList()
             }
         }
+      } catch (e: CancellationException) {
+        throw e
       } catch (e: Exception) {
         _error.value = e.message
         _unsortedItems.value = emptyList()
+        _items.value = emptyList()
       } finally {
-        _isLoading.value = false
+        if (coroutineContext.isActive) {
+          _isLoading.value = false
+        }
       }
     }
   }

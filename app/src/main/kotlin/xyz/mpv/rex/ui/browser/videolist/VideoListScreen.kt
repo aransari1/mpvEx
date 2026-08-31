@@ -36,6 +36,7 @@ import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material.icons.filled.Title
@@ -124,9 +125,7 @@ import xyz.mpv.rex.utils.media.MediaUtils
 import xyz.mpv.rex.utils.sort.SortUtils
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import my.nanihadesuka.compose.LazyColumnScrollbar
-import my.nanihadesuka.compose.LazyVerticalGridScrollbar
-import my.nanihadesuka.compose.ScrollbarSettings
+
 import org.koin.compose.koinInject
 import java.io.File
 import kotlin.math.roundToInt
@@ -330,6 +329,7 @@ data class VideoListScreen(
     // Bottom bar animation state
     var showFloatingBottomBar by remember { mutableStateOf(false) }
     var showMarkAsSheet by remember { mutableStateOf(false) }
+    var showWebShareSheet by remember { mutableStateOf(false) }
     val animationDuration = 300
 
     // Handle selection mode changes with animation
@@ -378,6 +378,14 @@ data class VideoListScreen(
           },
           onCancelSelection = { selectionManager.clear() },
           onSortClick = { sortDialogOpen.value = true },
+          onSearchClick = {
+            backstack.add(
+              xyz.mpv.rex.ui.browser.search.SearchScreen(
+                initialPath = bucketId,
+                initialFolderName = displayFolderName,
+              )
+            )
+          },
           onSettingsClick = {
             backstack.add(xyz.mpv.rex.ui.preferences.PreferencesScreen)
           },
@@ -398,9 +406,23 @@ data class VideoListScreen(
           selectionOverflowActions = buildList {
             add(
               SelectionOverflowAction(
+                icon = Icons.Filled.PictureInPictureAlt,
+                label = stringResource(R.string.open_with_mini_player),
+                onClick = { selectionManager.playSelectedInMiniPlayer() },
+              )
+            )
+            add(
+              SelectionOverflowAction(
                 icon = Icons.Filled.Share,
                 label = stringResource(R.string.generic_share),
                 onClick = { selectionManager.shareSelected() },
+              )
+            )
+            add(
+              SelectionOverflowAction(
+                icon = Icons.Filled.Share,
+                label = "Web Share",
+                onClick = { showWebShareSheet = true },
               )
             )
             val selectedVideos = selectionManager.getSelectedItems()
@@ -700,6 +722,13 @@ data class VideoListScreen(
       multiSelectionInfo?.let { (count, bytes, duration) ->
         MultiSelectionInfoSheet(count = count, totalBytes = bytes, totalDurationMs = duration, onDismiss = { multiSelectionInfo = null })
       }
+
+      if (showWebShareSheet) {
+        xyz.mpv.rex.feature.webshare.WebShareSheet(
+          videos = selectionManager.getSelectedItems(),
+          onDismiss = { showWebShareSheet = false }
+        )
+      }
     }
   }
 }
@@ -782,5 +811,4 @@ fun VideoListContent(
     gridState = gridState,
   )
 }
-
 

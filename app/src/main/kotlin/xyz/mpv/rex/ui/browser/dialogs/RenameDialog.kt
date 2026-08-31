@@ -23,8 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -39,7 +41,14 @@ fun RenameDialog(
 ) {
   if (!isOpen) return
 
-  val baseName = remember(currentName) { mutableStateOf(currentName) }
+  val baseName = remember(currentName) {
+    mutableStateOf(
+      TextFieldValue(
+        text = currentName,
+        selection = TextRange(currentName.length),
+      ),
+    )
+  }
   val isError = remember { mutableStateOf(false) }
   val errorMessage = remember { mutableStateOf("") }
   val focusRequester = remember { FocusRequester() }
@@ -53,19 +62,20 @@ fun RenameDialog(
   val invalidCharsErr = stringResource(R.string.name_cannot_contain_invalid_chars)
 
   fun validateAndConfirm() {
+    val text = baseName.value.text
     when {
-      baseName.value.isBlank() -> {
+      text.isBlank() -> {
         isError.value = true
         errorMessage.value = emptyNameErr
       }
 
-      baseName.value.contains("/") || baseName.value.contains("\\") -> {
+      text.contains("/") || text.contains("\\") -> {
         isError.value = true
         errorMessage.value = invalidCharsErr
       }
 
       else -> {
-        onConfirm(baseName.value + (extension ?: ""))
+        onConfirm(text + (extension ?: ""))
         onDismiss()
       }
     }
@@ -128,7 +138,7 @@ fun RenameDialog(
     confirmButton = {
       Button(
         onClick = { validateAndConfirm() },
-        enabled = baseName.value.isNotBlank(),
+        enabled = baseName.value.text.isNotBlank(),
         colors =
           ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,

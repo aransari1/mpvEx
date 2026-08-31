@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.util.Xml
 import xyz.mpv.rex.database.MpvExDatabase
+import xyz.mpv.rex.R
 import xyz.mpv.rex.domain.network.NetworkConnection
 import xyz.mpv.rex.domain.network.NetworkProtocol
 import xyz.mpv.rex.preferences.preference.PreferenceStore
@@ -295,7 +296,8 @@ class SettingsManager(
 
   fun getDefaultExportFilename(): String {
     val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-    return "mpvNext_settings_${dateFormat.format(Date())}.xml"
+    val appName = context.getString(R.string.app_name)
+    return "${appName}_settings_${dateFormat.format(Date())}.xml"
   }
 
   data class ImportStats(

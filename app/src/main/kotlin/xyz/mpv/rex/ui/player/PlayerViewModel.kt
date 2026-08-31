@@ -17,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import xyz.mpv.rex.R
 import xyz.mpv.rex.preferences.AudioPreferences
+import xyz.mpv.rex.preferences.DecoderPreferences
 import xyz.mpv.rex.preferences.GesturePreferences
 import xyz.mpv.rex.preferences.PlayerPreferences
 import xyz.mpv.rex.preferences.SubtitlesPreferences
@@ -33,9 +34,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -53,6 +56,7 @@ import org.koin.core.component.inject
 import java.io.File
 import androidx.documentfile.provider.DocumentFile
 import xyz.mpv.rex.preferences.AdvancedPreferences
+import xyz.mpv.rex.ui.browser.miniplayer.MiniPlayerStateManager
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
@@ -84,6 +88,7 @@ class PlayerViewModel(
 ) : ViewModel(),
   KoinComponent {
   private val playerPreferences: PlayerPreferences by inject()
+  private val decoderPreferences: DecoderPreferences by inject()
   private val gesturePreferences: GesturePreferences by inject()
   private val audioPreferences: AudioPreferences by inject()
   private val subtitlesPreferences: SubtitlesPreferences by inject()
@@ -94,6 +99,7 @@ class PlayerViewModel(
   private val wyzieRepository: WyzieSearchRepository by inject()
 
   private val browserPreferences: xyz.mpv.rex.preferences.BrowserPreferences by inject()
+  private val miniPlayerStateManager: MiniPlayerStateManager by inject()
 
   // Cache the application context to prevent leaking the Activity context
   private val appContext = host.context.applicationContext
@@ -175,7 +181,24 @@ class PlayerViewModel(
   // MPV properties with efficient collection
   val paused by MPVLib.propBoolean["pause"].collectAsState(viewModelScope)
   val pos by MPVLib.propInt["time-pos"].collectAsState(viewModelScope)
-  val duration by MPVLib.propInt["duration"].collectAsState(viewModelScope)
+  private val _mpvDuration by MPVLib.propInt["duration"].collectAsState(viewModelScope)
+  val duration: Int?
+    get() = if (_externalAudioTracks.isNotEmpty() && (_primaryVideoDuration.value ?: 0.0) > 0.0) {
+      _primaryVideoDuration.value?.toInt()
+    } else {
+      _preciseDuration.value.takeIf { it > 0f }?.toInt() ?: _mpvDuration
+    }
+
+  // External audio state and duration tracking
+  private val _externalAudioTracks = mutableListOf<String>()
+  val externalAudioTracks: List<String>
+    get() = synchronized(_externalAudioTracks) { _externalAudioTracks.toList() }
+
+  private val _primaryVideoDuration = MutableStateFlow<Double?>(null)
+  val primaryVideoDuration: StateFlow<Double?> = _primaryVideoDuration.asStateFlow()
+
+  private val _externalAudioEofEvent = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+  val externalAudioEofEvent = _externalAudioEofEvent.asSharedFlow()
 
   // High-precision position and duration for smooth seekbar
   private val _precisePosition = MutableStateFlow(0f)
@@ -226,6 +249,36 @@ class PlayerViewModel(
   val areControlsLocked: StateFlow<Boolean> = _areControlsLocked.asStateFlow()
 
   val playerUpdate = MutableStateFlow<PlayerUpdates>(PlayerUpdates.None)
+
+  // Resume playback prompt state (for Ask Every Time mode)
+  private val _resumePrompt = MutableStateFlow<ResumePromptData?>(null)
+  val resumePrompt: StateFlow<ResumePromptData?> = _resumePrompt.asStateFlow()
+
+  fun showResumePrompt(position: Int, duration: Int = 0) {
+    _resumePrompt.value = ResumePromptData(position = position, duration = duration)
+  }
+
+  fun clearResumePrompt() {
+    _resumePrompt.value = null
+  }
+
+  fun dismissResumePrompt() {
+    _resumePrompt.value = null
+    runCatching { MPVLib.setPropertyBoolean("pause", false) }
+  }
+
+  fun confirmResume(position: Int) {
+    _resumePrompt.value = null
+    seekTo(position)
+    runCatching { MPVLib.setPropertyBoolean("pause", false) }
+  }
+
+  fun restartFromBeginning() {
+    _resumePrompt.value = null
+    seekTo(0)
+    runCatching { MPVLib.setPropertyBoolean("pause", false) }
+  }
+
   val isBrightnessSliderShown = MutableStateFlow(false)
   val isVolumeSliderShown = MutableStateFlow(false)
   val volumeSliderTimestamp = MutableStateFlow(0L)
@@ -375,6 +428,31 @@ class PlayerViewModel(
     _repeatMode.value = playerPreferences.repeatMode.get()
     _shuffleEnabled.value = playerPreferences.shuffleEnabled.get()
 
+    // Observe repeat mode preference changes
+    viewModelScope.launch {
+      playerPreferences.repeatMode.changes().collect { mode ->
+        _repeatMode.value = mode
+        miniPlayerStateManager.updateState(
+          repeatMode = mode,
+          hasNext = hasNext(),
+          hasPrevious = hasPrevious(),
+        )
+      }
+    }
+
+    // Observe shuffle enabled preference changes
+    viewModelScope.launch {
+      playerPreferences.shuffleEnabled.changes().collect { enabled ->
+        _shuffleEnabled.value = enabled
+        _playlistManager.setShuffleEnabled(enabled)
+        miniPlayerStateManager.updateState(
+          shuffleEnabled = enabled,
+          hasNext = hasNext(),
+          hasPrevious = hasPrevious(),
+        )
+      }
+    }
+
     // Observe volume boost cap changes to enforce limits dynamically (in PiP)
     viewModelScope.launch {
       audioPreferences.volumeBoostCap.changes().collect { cap ->
@@ -405,7 +483,7 @@ class PlayerViewModel(
         val videoDuration = duration ?: 0
         // Use precise seeking for videos shorter than 2 minutes, or if AB loop is active, or if preference is enabled
         val isLoopActive = loopA != null || loopB != null
-        val shouldUsePreciseSeeking = playerPreferences.usePreciseSeeking.get() || videoDuration < 120 || isLoopActive
+        val shouldUsePreciseSeeking = playerPreferences.usePreciseSeeking.get() || (videoDuration in 1..119) || isLoopActive
         
         // Update hr-seek settings dynamically
         MPVLib.setPropertyString("hr-seek", if (shouldUsePreciseSeeking) "yes" else "no")
@@ -426,25 +504,50 @@ class PlayerViewModel(
 
     _customButtonManager.setup()
 
-    // Poll precise position only when playing and controls or seekbar is visible
+    // Poll precise position when controls, seekbar, or gesture seek is visible (whether playing or paused)
     viewModelScope.launch {
       combine(
-        MPVLib.propBoolean["pause"],
         controlsShown,
-        seekBarShown
-      ) { isPaused, controlsVisible, seekbarVisible ->
-        val pausedState = isPaused ?: true
-        val uiVisible = controlsVisible || seekbarVisible
-        !pausedState && uiVisible
+        seekBarShown,
+        isGestureSeeking
+      ) { controlsVisible, seekbarVisible, gestureSeeking ->
+        controlsVisible || seekbarVisible || gestureSeeking
       }.collectLatest { shouldPoll ->
         if (shouldPoll) {
           while (isActive) {
             val time = MPVLib.getPropertyDouble("time-pos")
             if (time != null) {
+              val primaryDur = _primaryVideoDuration.value
+              if (_externalAudioTracks.isNotEmpty() && primaryDur != null && primaryDur > 0) {
+                if (time >= primaryDur - 0.25) {
+                  _precisePosition.value = primaryDur.toFloat()
+                  _externalAudioEofEvent.tryEmit(Unit)
+                  delay(16)
+                  continue
+                }
+              }
               _precisePosition.value = time.toFloat()
             }
             delay(16) // ~60fps updates
           }
+        }
+      }
+    }
+
+    // Update precise position whenever integer time-pos changes in MPV (e.g. seeking while paused or controls hidden)
+    viewModelScope.launch {
+      MPVLib.propInt["time-pos"].collect { _ ->
+        val time = MPVLib.getPropertyDouble("time-pos")
+        if (time != null) {
+          val primaryDur = _primaryVideoDuration.value
+          if (_externalAudioTracks.isNotEmpty() && primaryDur != null && primaryDur > 0) {
+            if (time >= primaryDur - 0.25) {
+              _precisePosition.value = primaryDur.toFloat()
+              _externalAudioEofEvent.tryEmit(Unit)
+              return@collect
+            }
+          }
+          _precisePosition.value = time.toFloat()
         }
       }
     }
@@ -454,7 +557,15 @@ class PlayerViewModel(
       MPVLib.propInt["duration"].collect { _ ->
         val dur = MPVLib.getPropertyDouble("duration")
         if (dur != null && dur > 0) {
-          _preciseDuration.value = dur.toFloat()
+          if (_externalAudioTracks.isEmpty()) {
+            _primaryVideoDuration.value = dur
+          }
+          val effectiveDur = if (_externalAudioTracks.isNotEmpty() && (_primaryVideoDuration.value ?: 0.0) > 0.0) {
+            _primaryVideoDuration.value!!
+          } else {
+            dur
+          }
+          _preciseDuration.value = effectiveDur.toFloat()
 
           // --- AMBIENT FIX: Adapt shader to new file dimensions ---
           ambientModeManager.resetAmbientMode()
@@ -464,6 +575,11 @@ class PlayerViewModel(
             ambientModeManager.updateAmbientStretch()
           }
           // --------------------------------------------------------
+        } else if (dur == null || dur <= 0) {
+          if (_externalAudioTracks.isEmpty()) {
+            _primaryVideoDuration.value = null
+            _preciseDuration.value = 0f
+          }
         }
       }
     }
@@ -532,24 +648,88 @@ class PlayerViewModel(
 
   // ==================== Audio/Subtitle Management ====================
 
-  fun addAudio(uri: Uri) {
+  fun addAudio(uri: Uri, select: Boolean = true, silent: Boolean = false) {
     viewModelScope.launch(Dispatchers.IO) {
       runCatching {
+        // Save primary video duration before adding external audio if not saved yet
+        if (_primaryVideoDuration.value == null || (_primaryVideoDuration.value ?: 0.0) <= 0.0) {
+          val currentDur = MPVLib.getPropertyDouble("duration")
+          if (currentDur != null && currentDur > 0) {
+            _primaryVideoDuration.value = currentDur
+          }
+        }
+
         val path =
           uri.resolveUri(host.context)
             ?: return@launch withContext(Dispatchers.Main) {
-              showToast("Failed to load audio file: Invalid URI")
+              if (!silent) showToast("Failed to load audio file: Invalid URI")
             }
 
-        MPVLib.command("audio-add", path, "cached")
-        withContext(Dispatchers.Main) {
-          showToast("Audio track added")
+        synchronized(_externalAudioTracks) {
+          val uriStr = uri.toString()
+          if (!_externalAudioTracks.contains(uriStr)) {
+            _externalAudioTracks.add(uriStr)
+          }
+        }
+
+        val flag = if (select) "select" else "cached"
+        MPVLib.command("audio-add", path, flag)
+
+        _primaryVideoDuration.value?.let { primDur ->
+          if (primDur > 0) {
+            _preciseDuration.value = primDur.toFloat()
+          }
+        }
+
+        if (!silent) {
+          withContext(Dispatchers.Main) {
+            showToast("Audio track added")
+          }
         }
       }.onFailure { e ->
-        withContext(Dispatchers.Main) {
-          showToast("Failed to load audio: ${e.message}")
+        if (!silent) {
+          withContext(Dispatchers.Main) {
+            showToast("Failed to load audio: ${e.message}")
+          }
         }
         android.util.Log.e("PlayerViewModel", "Error adding audio", e)
+      }
+    }
+  }
+
+  fun resetExternalAudioTracks() {
+    synchronized(_externalAudioTracks) {
+      _externalAudioTracks.clear()
+    }
+    _primaryVideoDuration.value = null
+  }
+
+  fun prepareForFileLoad(initialDurationSec: Float? = null) {
+    resetExternalAudioTracks()
+    _precisePosition.value = 0f
+    if (initialDurationSec != null && initialDurationSec > 0f) {
+      _primaryVideoDuration.value = initialDurationSec.toDouble()
+      _preciseDuration.value = initialDurationSec
+    } else {
+      _primaryVideoDuration.value = null
+      _preciseDuration.value = 0f
+    }
+  }
+
+  fun onFileStartLoading() {
+    if (_externalAudioTracks.isEmpty()) {
+      _precisePosition.value = 0f
+      if (_primaryVideoDuration.value == null) {
+        _preciseDuration.value = 0f
+      }
+    }
+  }
+
+  fun onFileLoaded(durationSec: Double) {
+    if (durationSec > 0) {
+      if (_externalAudioTracks.isEmpty()) {
+        _primaryVideoDuration.value = durationSec
+        _preciseDuration.value = durationSec.toFloat()
       }
     }
   }
@@ -633,19 +813,29 @@ class PlayerViewModel(
         // Unselecting primary subtitle
         if (secondarySid > 0) {
           // If there's a secondary subtitle, promote it to primary
-          // First clear secondary, then set primary to that value
           val secondaryToPromote = secondarySid
           MPVLib.setPropertyString("secondary-sid", "no")
           MPVLib.setPropertyInt("sid", secondaryToPromote)
+          val track = subtitleTracks.value.firstOrNull { it.id == secondaryToPromote }
+          TrackSelector.rememberSubtitleTrack(track?.title, track?.lang, isOff = false)
         } else {
           // No secondary, just turn off primary
           MPVLib.setPropertyString("sid", "no")
+          TrackSelector.rememberSubtitleTrack(null, null, isOff = true)
         }
       }
       id == secondarySid -> MPVLib.setPropertyString("secondary-sid", "no")
-      primarySid <= 0 -> MPVLib.setPropertyInt("sid", id)
+      primarySid <= 0 -> {
+        MPVLib.setPropertyInt("sid", id)
+        val track = subtitleTracks.value.firstOrNull { it.id == id }
+        TrackSelector.rememberSubtitleTrack(track?.title, track?.lang, isOff = false)
+      }
       secondarySid <= 0 -> MPVLib.setPropertyInt("secondary-sid", id)
-      else -> MPVLib.setPropertyInt("sid", id)
+      else -> {
+        MPVLib.setPropertyInt("sid", id)
+        val track = subtitleTracks.value.firstOrNull { it.id == id }
+        TrackSelector.rememberSubtitleTrack(track?.title, track?.lang, isOff = false)
+      }
     }
   }
 
@@ -653,6 +843,18 @@ class PlayerViewModel(
     val primarySid = MPVLib.getPropertyInt("sid") ?: 0
     val secondarySid = MPVLib.getPropertyInt("secondary-sid") ?: 0
     return (id == primarySid && primarySid > 0) || (id == secondarySid && secondarySid > 0)
+  }
+
+  fun selectAudioTrack(id: Int, title: String?, lang: String?) {
+    val currentAid = MPVLib.getPropertyInt("aid") ?: 0
+    if (currentAid == id) {
+      MPVLib.setPropertyString("aid", "no")
+      TrackSelector.rememberAudioTrack(null, null)
+    } else {
+      MPVLib.setPropertyInt("aid", id)
+      TrackSelector.rememberAudioTrack(title, lang)
+      _playbackManager.resyncAudioOnTrackChange(viewModelScope)
+    }
   }
 
   private fun getFileNameFromUri(uri: Uri): String? =
@@ -805,7 +1007,8 @@ class PlayerViewModel(
 
   fun rightSeek() {
     if (_doubleTapSeekAmount.value == 0) _doubleTapSeekBasePos.value = pos
-    if ((pos ?: 0) < (duration ?: 0)) {
+    val curDuration = duration ?: 0
+    if (curDuration <= 0 || (pos ?: 0) < curDuration) {
       _doubleTapSeekAmount.value += doubleTapToSeekDuration
     }
     _isSeekingForwards.value = true
@@ -876,10 +1079,10 @@ class PlayerViewModel(
     text: String?,
   ) {
     val currentPos = pos ?: return
-    val maxDuration = duration ?: return
+    val maxDuration = duration ?: 0
 
     _doubleTapSeekAmount.update {
-      if ((value < 0 && it < 0) || currentPos + value > maxDuration) 0 else it + value
+      if ((value < 0 && it < 0) || (maxDuration > 0 && currentPos + value > maxDuration)) 0 else it + value
     }
     _seekText.value = text
     _isSeekingForwards.value = value > 0
@@ -1970,6 +2173,53 @@ class PlayerViewModel(
     MPVLib.setPropertyString("ab-loop-b", "no")
   }
 
+  fun cutABLoopClip(context: Context) {
+    val a = _abLoopA.value
+    val b = _abLoopB.value
+    if (a == null || b == null) {
+      Toast.makeText(context, context.getString(R.string.ab_loop_set_both_points), Toast.LENGTH_SHORT).show()
+      return
+    }
+
+    val startMs = (minOf(a, b) * 1000).toLong()
+    val endMs = (maxOf(a, b) * 1000).toLong()
+
+    if (endMs <= startMs) {
+      Toast.makeText(context, context.getString(R.string.ab_loop_set_both_points), Toast.LENGTH_SHORT).show()
+      return
+    }
+
+    val path = runCatching { MPVLib.getPropertyString("path") }.getOrNull()
+    if (path.isNullOrBlank()) {
+      Toast.makeText(context, "No active video source found", Toast.LENGTH_SHORT).show()
+      return
+    }
+
+    Toast.makeText(context, context.getString(R.string.ab_loop_exporting_clip), Toast.LENGTH_SHORT).show()
+
+    viewModelScope.launch {
+      val outputFile = xyz.mpv.rex.utils.media.VideoClipper.getOutputClipFile(path, startMs, endMs)
+      val result = xyz.mpv.rex.utils.media.VideoClipper.cutClip(context, path, outputFile, startMs, endMs)
+
+      withContext(Dispatchers.Main) {
+        if (result.isSuccess) {
+          val savedFile = result.getOrNull() ?: outputFile
+          Toast.makeText(
+            context,
+            context.getString(R.string.ab_loop_clip_saved, savedFile.name),
+            Toast.LENGTH_LONG
+          ).show()
+        } else {
+          Toast.makeText(
+            context,
+            context.getString(R.string.ab_loop_clip_error, result.exceptionOrNull()?.localizedMessage ?: "Unknown error"),
+            Toast.LENGTH_LONG
+          ).show()
+        }
+      }
+    }
+  }
+
   fun formatTimestamp(seconds: Double): String {
     val totalSec = seconds.toInt()
     val h = totalSec / 3600
@@ -1983,13 +2233,8 @@ class PlayerViewModel(
   fun toggleMirroring() {
     val newMirrorState = !_isMirrored.value
     _isMirrored.value = newMirrorState
-    
-    // Use labeled video filter for mirroring to avoid state desync
-    if (newMirrorState) {
-      MPVLib.command("vf", "add", "@mpvex_hflip:hflip")
-    } else {
-      MPVLib.command("vf", "remove", "@mpvex_hflip")
-    }
+
+    updateVideoFlipFilters()
     playerUpdate.value = PlayerUpdates.ShowText(if (newMirrorState) "H-Flip On" else "H-Flip Off")
   }
 
@@ -1997,14 +2242,40 @@ class PlayerViewModel(
     val newState = !_isVerticalFlipped.value
     _isVerticalFlipped.value = newState
 
-    // Use labeled video filter for vflip to avoid state desync
-    if (newState) {
-      MPVLib.command("vf", "add", "@mpvex_vflip:vflip")
-    } else {
-      MPVLib.command("vf", "remove", "@mpvex_vflip")
-    }
-
+    updateVideoFlipFilters()
     playerUpdate.value = PlayerUpdates.ShowText(if (newState) "V-Flip On" else "V-Flip Off")
+  }
+
+  private fun updateVideoFlipFilters() {
+    val isMirrored = _isMirrored.value
+    val isFlipped = _isVerticalFlipped.value
+
+    if (isMirrored || isFlipped) {
+      // Software video filters (vf) require hwdec copy mode when hardware decoding is active
+      val currentHwDec = MPVLib.getPropertyString("hwdec-current") ?: ""
+      if (currentHwDec == "mediacodec") {
+        MPVLib.setPropertyString("hwdec", "mediacodec-copy")
+      }
+
+      if (isMirrored) {
+        MPVLib.command("vf", "add", "@mpvex_hflip:hflip")
+      } else {
+        MPVLib.command("vf", "remove", "@mpvex_hflip")
+      }
+
+      if (isFlipped) {
+        MPVLib.command("vf", "add", "@mpvex_vflip:vflip")
+      } else {
+        MPVLib.command("vf", "remove", "@mpvex_vflip")
+      }
+    } else {
+      // Remove filters and restore preferred hwdec mode
+      MPVLib.command("vf", "remove", "@mpvex_hflip")
+      MPVLib.command("vf", "remove", "@mpvex_vflip")
+
+      val preferredHwDec = if (decoderPreferences.tryHWDecoding.get()) "mediacodec" else "no"
+      MPVLib.setPropertyString("hwdec", preferredHwDec)
+    }
   }
 
   // ==================== Ambient Mode Integration ====================

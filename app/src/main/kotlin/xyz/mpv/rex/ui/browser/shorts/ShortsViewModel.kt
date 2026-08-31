@@ -204,7 +204,7 @@ class ShortsViewModel(
     }
 
     suspend fun getThumbnail(video: Video): Bitmap? {
-        return thumbnailRepository.getThumbnail(video, 1080, 1920)
+        return thumbnailRepository.getThumbnail(video, 1080, 1920, forceFirstFrame = true)
     }
 
     fun syncPlaybackSpeed() {

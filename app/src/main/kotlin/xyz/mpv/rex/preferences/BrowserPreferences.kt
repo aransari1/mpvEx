@@ -53,6 +53,7 @@ class BrowserPreferences(
 
   // Media visibility preferences
   val showAudioFiles = preferenceStore.getBoolean("show_audio_files", false)
+  val includeNoMediaContent = preferenceStore.getBoolean("include_no_media_content", false)
   val showTreeViewPath = preferenceStore.getBoolean("show_tree_view_path", false)
 
   // NextShorts preferences

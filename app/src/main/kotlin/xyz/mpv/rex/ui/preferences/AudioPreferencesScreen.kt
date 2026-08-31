@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -68,12 +69,14 @@ object AudioPreferencesScreen : Screen {
         )
       },
     ) { padding ->
+      val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
       ProvidePreferenceLocals {
         LazyColumn(
           modifier =
             Modifier
               .fillMaxSize()
               .padding(padding),
+          contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
         ) {
           item {
             PreferenceSectionHeader(title = stringResource(R.string.pref_audio))
@@ -138,14 +141,6 @@ object AudioPreferencesScreen : Screen {
                 color = MaterialTheme.colorScheme.outline,
               ) 
             },
-          )
-          
-          PreferenceDivider()
-          val automaticBackgroundPlayback by preferences.automaticBackgroundPlayback.collectAsState()
-          SwitchPreference(
-            value = automaticBackgroundPlayback,
-            onValueChange = { preferences.automaticBackgroundPlayback.set(it) },
-            title = { Text(stringResource(R.string.background_playback_title)) },
           )
           
           PreferenceDivider()

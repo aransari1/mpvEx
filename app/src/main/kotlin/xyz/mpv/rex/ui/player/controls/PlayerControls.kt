@@ -27,6 +27,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ContentCut
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.foundation.Image
@@ -102,6 +103,7 @@ import androidx.constraintlayout.compose.Dimension
 import xyz.mpv.rex.R
 import xyz.mpv.rex.preferences.AppearancePreferences
 import xyz.mpv.rex.preferences.AudioPreferences
+import xyz.mpv.rex.preferences.GesturePreferences
 import xyz.mpv.rex.preferences.PlayerPreferences
 import xyz.mpv.rex.preferences.preference.collectAsState
 import xyz.mpv.rex.preferences.preference.deleteAndGet
@@ -114,12 +116,15 @@ import xyz.mpv.rex.ui.player.PlayerUpdates
 import xyz.mpv.rex.ui.player.PlayerViewModel
 import xyz.mpv.rex.ui.player.PlayerTutorialManager
 import xyz.mpv.rex.ui.player.Sheets
+import xyz.mpv.rex.ui.player.TrackSelector
 import xyz.mpv.rex.ui.player.VideoAspect
 import xyz.mpv.rex.ui.player.controls.components.BrightnessSlider
 import xyz.mpv.rex.ui.player.controls.components.CompactSpeedIndicator
 import xyz.mpv.rex.ui.player.controls.components.ControlsButton
 import xyz.mpv.rex.ui.player.controls.components.LockHint
 import xyz.mpv.rex.ui.player.controls.components.MultipleSpeedPlayerUpdate
+import xyz.mpv.rex.ui.player.controls.components.ResumePlaybackPromptDialog
+import xyz.mpv.rex.ui.player.controls.components.ResumedFromPlayerUpdate
 import xyz.mpv.rex.ui.player.controls.components.SeekPlayerUpdate
 import xyz.mpv.rex.ui.player.controls.components.SeekbarWithTimers
 import xyz.mpv.rex.ui.player.controls.components.SlideToUnlock
@@ -173,7 +178,9 @@ fun PlayerControls(
   val hideBackground by appearancePreferences.hidePlayerButtonsBackground.collectAsState()
   val playerPreferences = koinInject<PlayerPreferences>()
   val audioPreferences = koinInject<AudioPreferences>()
+  val gesturePreferences = koinInject<GesturePreferences>()
   val playerTutorialManager = koinInject<PlayerTutorialManager>()
+  val enableReleaseToCancel by gesturePreferences.enableReleaseToCancel.collectAsState()
   val showSystemStatusBar by playerPreferences.showSystemStatusBar.collectAsState()
   val showSystemNavigationBar by playerPreferences.showSystemNavigationBar.collectAsState()
   val playerGradientOpacity by playerPreferences.playerGradientOpacity.collectAsState()
@@ -196,6 +203,7 @@ fun PlayerControls(
   val showDoubleTapOvals by playerPreferences.showDoubleTapOvals.collectAsState()
   val showCircularDoubleTapSeek by playerPreferences.showCircularDoubleTapSeek.collectAsState()
   val showSeekTime by playerPreferences.showSeekTimeWhileSeeking.collectAsState()
+  val showSpeedIndicatorOverlay by playerPreferences.showSpeedIndicatorOverlay.collectAsState()
   val hideOsdText by playerPreferences.hideOsdText.collectAsState()
   var isSeeking by remember { mutableStateOf(false) }
   var dragStartValue by remember { mutableStateOf(-1f) }
@@ -306,12 +314,17 @@ fun PlayerControls(
     resetControlsTimestamp,
     areControlsLocked,
     isUnlockSliderDragging,
+    playerTimeToDisappear,
   ) {
     if (controlsShown && paused == false && !isSeeking && !isUnlockSliderDragging) {
-      // Use 2 second delay when controls are locked, otherwise use user preference
-      val delayTime = if (areControlsLocked) 2000L else playerTimeToDisappear.toLong()
-      delay(delayTime)
-      viewModel.hideControls()
+      if (areControlsLocked) {
+        // Use 2 second delay when controls are locked
+        delay(2000L)
+        viewModel.hideControls()
+      } else if (playerTimeToDisappear > 0) {
+        delay(playerTimeToDisappear.toLong())
+        viewModel.hideControls()
+      }
     }
   }
 
@@ -536,14 +549,19 @@ fun PlayerControls(
           ) {
             return@LaunchedEffect
           }
-          delay(2000)
+          val dismissDelay = if (currentPlayerUpdate is PlayerUpdates.ResumedFrom) 4000L else 2000L
+          delay(dismissDelay)
           viewModel.playerUpdate.update { PlayerUpdates.None }
         }
 
         val isSpeedLocked by viewModel.isSpeedLocked.collectAsState()
+        val isSpeedUpdate = currentPlayerUpdate is PlayerUpdates.MultipleSpeed ||
+          currentPlayerUpdate is PlayerUpdates.DynamicSpeedControl ||
+          (currentPlayerUpdate is PlayerUpdates.SpeedLockHint && !(currentPlayerUpdate as PlayerUpdates.SpeedLockHint).isLocked)
+        val shouldShowSpeedUpdate = if (isSpeedUpdate) showSpeedIndicatorOverlay else true
 
         AnimatedVisibility(
-          currentPlayerUpdate !is PlayerUpdates.None || isSpeedLocked || (doubleTapSeekAmount != 0 && !hideOsdText),
+          shouldShowSpeedUpdate && (currentPlayerUpdate !is PlayerUpdates.None || isSpeedLocked || (doubleTapSeekAmount != 0 && !hideOsdText)),
           enter = fadeIn(playerControlsEnterAnimationSpec()),
           exit = fadeOut(playerControlsExitAnimationSpec()),
           modifier =
@@ -585,28 +603,36 @@ fun PlayerControls(
             )
           } else {
             when (currentPlayerUpdate) {
-              is PlayerUpdates.MultipleSpeed -> MultipleSpeedPlayerUpdate(currentSpeed = holdForMultipleSpeed)
-            is PlayerUpdates.DynamicSpeedControl -> {
-              val speedUpdate = currentPlayerUpdate as PlayerUpdates.DynamicSpeedControl
-              val currentSpeed = speedUpdate.speed
-              CompactSpeedIndicator(currentSpeed = currentSpeed)
-            }
+              is PlayerUpdates.MultipleSpeed -> {
+                if (showSpeedIndicatorOverlay) {
+                  MultipleSpeedPlayerUpdate(currentSpeed = holdForMultipleSpeed)
+                }
+              }
+              is PlayerUpdates.DynamicSpeedControl -> {
+                if (showSpeedIndicatorOverlay) {
+                  val speedUpdate = currentPlayerUpdate as PlayerUpdates.DynamicSpeedControl
+                  val currentSpeed = speedUpdate.speed
+                  CompactSpeedIndicator(currentSpeed = currentSpeed)
+                }
+              }
 
-            is PlayerUpdates.SpeedLockHint -> {
-              val hintUpdate = currentPlayerUpdate as PlayerUpdates.SpeedLockHint
-              val currentSpeed = hintUpdate.speed
-              val isLocked = hintUpdate.isLocked
-              
-              CompactSpeedIndicator(
-                currentSpeed = currentSpeed,
-                onReset = if (isLocked) {
-                    {
-                        viewModel.isSpeedLocked.value = false
-                        viewModel.resetPlaybackSpeed()
-                    }
-                } else null
-              )
-            }
+              is PlayerUpdates.SpeedLockHint -> {
+                val hintUpdate = currentPlayerUpdate as PlayerUpdates.SpeedLockHint
+                val currentSpeed = hintUpdate.speed
+                val isLocked = hintUpdate.isLocked
+                
+                if (isLocked || showSpeedIndicatorOverlay) {
+                  CompactSpeedIndicator(
+                    currentSpeed = currentSpeed,
+                    onReset = if (isLocked) {
+                        {
+                            viewModel.isSpeedLocked.value = false
+                            viewModel.resetPlaybackSpeed()
+                        }
+                    } else null
+                  )
+                }
+              }
 
             is PlayerUpdates.AspectRatio -> {
               val customRatiosSet by playerPreferences.customAspectRatios.collectAsState()
@@ -705,6 +731,18 @@ fun PlayerControls(
                 "Frame: ${frameInfo.currentFrame}"
               }
               TextPlayerUpdate(text)
+            }
+
+            is PlayerUpdates.ResumedFrom -> {
+              val resumedUpdate = currentPlayerUpdate as PlayerUpdates.ResumedFrom
+              ResumedFromPlayerUpdate(
+                position = resumedUpdate.position,
+                onRestart = {
+                  viewModel.playerUpdate.value = PlayerUpdates.None
+                  viewModel.restartFromBeginning()
+                },
+                modifier = Modifier,
+              )
             }
 
             else -> {}
@@ -1198,7 +1236,7 @@ fun PlayerControls(
             derivedStateOf {
               val currentPos = position?.toFloat() ?: 0f
               val cacheDuration = demuxerCacheDuration ?: 0f
-              val totalDuration = duration?.toFloat() ?: 0f
+              val totalDuration = if (preciseDuration > 0) preciseDuration else duration?.toFloat() ?: 0f
               val isBuffering = cacheBufferingState ?: 0
 
               // If cache duration is available and valid, use it (up to 60 seconds)
@@ -1229,7 +1267,7 @@ fun PlayerControls(
 
               val durationFloat = if (preciseDuration > 0) preciseDuration else duration?.toFloat() ?: 0f
               val threshold = (durationFloat * 0.08f).coerceIn(15f, 400f)
-              val close = changeCount > 1 && abs(newValue - dragStartValue) < threshold
+              val close = enableReleaseToCancel && changeCount > 1 && abs(newValue - dragStartValue) < threshold
 
               if (close) {
                 isCloseToStart = true
@@ -1651,6 +1689,29 @@ fun PlayerControls(
                   )
                 }
               }
+
+              val context = LocalContext.current
+              val canCut = abLoopA != null && abLoopB != null
+              Surface(
+                shape = CircleShape,
+                color = if (canCut) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.55f),
+                border = BorderStroke(1.dp, if (canCut) MaterialTheme.colorScheme.primary.copy(alpha = 0.5f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)),
+                modifier = Modifier
+                  .size(buttonSize - 4.dp)
+                  .clip(CircleShape)
+                  .clickable(onClick = {
+                    viewModel.cutABLoopClip(context)
+                  }),
+              ) {
+                Box(contentAlignment = Alignment.Center) {
+                  Icon(
+                    imageVector = Icons.Default.ContentCut,
+                    contentDescription = stringResource(R.string.ab_loop_cut_clip),
+                    tint = if (canCut) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    modifier = Modifier.size(16.dp),
+                  )
+                }
+              }
             }
           }
         }
@@ -1808,11 +1869,7 @@ fun PlayerControls(
       audioTracks = audioTracks.toImmutableList(),
       onAddAudio = viewModel::addAudio,
       onSelectAudio = {
-        if (MPVLib.getPropertyInt("aid") == it.id) {
-          MPVLib.setPropertyBoolean("aid", false)
-        } else {
-          MPVLib.setPropertyInt("aid", it.id)
-        }
+        viewModel.selectAudioTrack(it.id, it.title, it.lang)
       },
       chapter = chapters.getOrNull(currentChapter ?: 0),
       chapters = chapters.toImmutableList(),
@@ -1844,6 +1901,16 @@ fun PlayerControls(
       panelShown = panel,
       onDismissRequest = { onOpenPanel(Panels.None) },
     )
+
+    val resumePrompt by viewModel.resumePrompt.collectAsState()
+    resumePrompt?.let { promptData ->
+      ResumePlaybackPromptDialog(
+        promptData = promptData,
+        onConfirmResume = { pos -> viewModel.confirmResume(pos) },
+        onRestart = { viewModel.restartFromBeginning() },
+        onDismiss = { viewModel.dismissResumePrompt() },
+      )
+    }
   }
 }
 

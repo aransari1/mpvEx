@@ -66,14 +66,7 @@ import xyz.mpv.rex.ui.theme.LocalThemeTransitionState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.ui.graphics.graphicsLayer
-import xyz.mpv.rex.ui.utils.CommunityIcon
-import xyz.mpv.rex.ui.browser.dialogs.CommunityLinksDialog
+import androidx.compose.runtime.LaunchedEffect
 
 /**
  * An action that appears in the selection-mode overflow (⋮) menu.
@@ -151,6 +144,8 @@ fun BrowserTopBar(
   }
 }
 
+private var hasHeaderAnimationPlayed = false
+
 /**
  * Normal mode top bar
  */
@@ -173,8 +168,6 @@ private fun NormalTopBar(
   val darkTheme = isSystemInDarkTheme()
   val themeTransition = LocalThemeTransitionState.current
   val coroutineScope = rememberCoroutineScope()
-  val showCommunityIcon by preferences.showCommunityIcon.collectAsState()
-  var showCommunityDialog by remember { mutableStateOf(false) }
   
   // Track title bounds for animation position
   val titleBounds = remember { mutableStateOf(Rect.Zero) }
@@ -237,8 +230,47 @@ private fun NormalTopBar(
           )
         }
 
+      val isAppTitleHeader = isHomeScreen || title == stringResource(R.string.app_name) || title == "mpvRex" || title == "REX Player"
+      var animatedTitleText by remember {
+        mutableStateOf(if (isAppTitleHeader && !hasHeaderAnimationPlayed) "mpvRex|" else title)
+      }
+
+      if (isAppTitleHeader && !hasHeaderAnimationPlayed) {
+        LaunchedEffect(Unit) {
+          // Initial pause showing "mpvRex|"
+          delay(600)
+
+          // Delete "mpvRex" backwards
+          val initialWord = "mpvRex"
+          for (i in (initialWord.length - 1) downTo 0) {
+            animatedTitleText = initialWord.substring(0, i) + "|"
+            delay(90)
+          }
+
+          delay(150)
+
+          // Type "REX Player" forwards
+          val targetWord = "REX Player"
+          for (i in 1..targetWord.length) {
+            animatedTitleText = targetWord.substring(0, i) + "|"
+            delay(85)
+          }
+
+          // Finish: blink cursor, then settle on final text
+          delay(400)
+          animatedTitleText = targetWord
+          delay(300)
+          animatedTitleText = "$targetWord|"
+          delay(300)
+          animatedTitleText = targetWord
+          hasHeaderAnimationPlayed = true
+        }
+      }
+
+      val displayTitle = if (isAppTitleHeader && !hasHeaderAnimationPlayed) animatedTitleText else title
+
       Text(
-        title,
+        text = displayTitle,
         style =
           if (onBackClick == null) {
             MaterialTheme.typography.headlineMediumEmphasized
@@ -283,45 +315,6 @@ private fun NormalTopBar(
           Icon(
             Icons.Filled.Search,
             contentDescription = stringResource(R.string.search_empty_title),
-            modifier = Modifier.size(24.dp),
-            tint = MaterialTheme.colorScheme.secondary,
-          )
-        }
-      }
-      if (isHomeScreen && showCommunityIcon) {
-        val infiniteTransition = rememberInfiniteTransition(label = "communityIconAnim")
-        val rotation by infiniteTransition.animateFloat(
-          initialValue = -8f,
-          targetValue = 8f,
-          animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1500, easing = androidx.compose.animation.core.EaseInOutQuad),
-            repeatMode = RepeatMode.Reverse
-          ),
-          label = "rotation"
-        )
-        val scale by infiniteTransition.animateFloat(
-          initialValue = 0.95f,
-          targetValue = 1.05f,
-          animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1500, easing = androidx.compose.animation.core.EaseInOutQuad),
-            repeatMode = RepeatMode.Reverse
-          ),
-          label = "scale"
-        )
-
-        IconButton(
-          onClick = { showCommunityDialog = true },
-          modifier = Modifier
-            .padding(horizontal = 2.dp)
-            .graphicsLayer {
-              rotationZ = rotation
-              scaleX = scale
-              scaleY = scale
-            },
-        ) {
-          Icon(
-            imageVector = CommunityIcon,
-            contentDescription = stringResource(R.string.community_links),
             modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.secondary,
           )
@@ -394,12 +387,6 @@ private fun NormalTopBar(
     },
     modifier = modifier,
   )
-
-  if (showCommunityDialog) {
-    CommunityLinksDialog(
-      onDismissRequest = { showCommunityDialog = false }
-    )
-  }
 }
 
 /**

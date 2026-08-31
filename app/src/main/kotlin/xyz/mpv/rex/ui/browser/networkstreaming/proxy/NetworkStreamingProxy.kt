@@ -4,6 +4,7 @@ import android.util.Log
 import xyz.mpv.rex.domain.network.NetworkConnection
 import xyz.mpv.rex.ui.browser.networkstreaming.clients.NetworkClient
 import xyz.mpv.rex.ui.browser.networkstreaming.clients.NetworkClientFactory
+import xyz.mpv.rex.ui.browser.networkstreaming.clients.SmbClient
 import com.hierynomus.msdtyp.AccessMask
 import com.hierynomus.mssmb2.SMB2CreateDisposition
 import com.hierynomus.mssmb2.SMB2ShareAccess
@@ -15,10 +16,13 @@ import com.hierynomus.smbj.session.Session
 import com.hierynomus.smbj.share.DiskShare
 import fi.iki.elonen.NanoHTTPD
 import kotlinx.coroutines.runBlocking
+import java.io.BufferedInputStream
 import java.io.InputStream
 import java.util.EnumSet
+import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Local HTTP proxy server that enables seeking for network streaming protocols
@@ -174,7 +178,7 @@ class NetworkStreamingProxy private constructor() : NanoHTTPD("127.0.0.1", 0) {
     val contentLength = rangeEnd - start + 1
 
     // Get stream with offset
-    val inputStream = getStreamWithOffset(streamInfo, start)
+    val inputStream = getStreamWithOffset(streamInfo, start, contentLength)
 
     if (inputStream == null) {
       return newFixedLengthResponse(
@@ -467,12 +471,16 @@ class NetworkStreamingProxy private constructor() : NanoHTTPD("127.0.0.1", 0) {
     }
   }
 
-  private fun getStreamWithOffset(streamInfo: StreamInfo, offset: Long): InputStream? {
+  private fun getStreamWithOffset(
+    streamInfo: StreamInfo,
+    offset: Long,
+    contentLength: Long,
+  ): InputStream? {
     return runBlocking {
       try {
         when (streamInfo.client) {
           is xyz.mpv.rex.ui.browser.networkstreaming.clients.SmbClient -> {
-            getStreamWithOffsetSMB(streamInfo, offset)
+            getStreamWithOffsetSMB(streamInfo, offset, contentLength)
           }
 
           is xyz.mpv.rex.ui.browser.networkstreaming.clients.FtpClient -> {
@@ -604,7 +612,9 @@ class NetworkStreamingProxy private constructor() : NanoHTTPD("127.0.0.1", 0) {
         }
       }
 
-      return wrappedStream
+      // Buffer the socket stream so NanoHTTPD's 16 KiB response reads are
+      // served from memory instead of one syscall per chunk.
+      return BufferedInputStream(wrappedStream, 1024 * 1024)
 
     } catch (e: Exception) {
       try {
@@ -683,7 +693,9 @@ class NetworkStreamingProxy private constructor() : NanoHTTPD("127.0.0.1", 0) {
         }
       }
 
-      return wrappedStream
+      // Buffer the response stream so NanoHTTPD's 16 KiB response reads are
+      // served from memory instead of one network read per chunk.
+      return BufferedInputStream(wrappedStream, 1024 * 1024)
 
     } catch (e: Exception) {
       return null
@@ -692,28 +704,24 @@ class NetworkStreamingProxy private constructor() : NanoHTTPD("127.0.0.1", 0) {
 
   /**
    * Generates a seekable InputStream for SMB files.
-   * Maintains an open network socket for the duration of the stream.
-   * Teardown is delegated to the InputStream's close() method.
+   *
+   * Reuses the SmbClient's shared session so each new HTTP range request
+   * (i.e. every seek) no longer pays for a full connection setup (TCP +
+   * negotiate + NTLM auth + tree connect ≈ 6-8 RTTs, which dominated seek
+   * latency); only a fresh tree connection and file handle are opened per
+   * request, and the stream's close() tears those down.
    */
-  private suspend fun getStreamWithOffsetSMB(streamInfo: StreamInfo, offset: Long): InputStream? {
-    var smbClient: SMBClient? = null
-    var connection: Connection? = null
-    var session: Session? = null
-    var diskShare: DiskShare? = null
-    var file: com.hierynomus.smbj.share.File? = null
+  private suspend fun getStreamWithOffsetSMB(
+    streamInfo: StreamInfo,
+    offset: Long,
+    contentLength: Long,
+  ): InputStream? {
+    val smbClient = streamInfo.client as? SmbClient ?: return null
 
     try {
       Log.d(TAG, "SMB getStreamWithOffset called, offset=$offset")
       Log.d(TAG, "  Connection path: ${streamInfo.connection.path}")
       Log.d(TAG, "  File path: ${streamInfo.filePath}")
-
-      // Extract the base share name, explicitly rejecting nested paths
-      val shareName = streamInfo.connection.path.trim('/')
-
-      if (shareName.isEmpty() || shareName.contains('/')) {
-        Log.e(TAG, "SMB: Invalid share name: $shareName")
-        return null
-      }
 
       // Isolate the relative file path within the share
       val relativePath = when {
@@ -734,127 +742,37 @@ class NetworkStreamingProxy private constructor() : NanoHTTPD("127.0.0.1", 0) {
 
       // Decode URL-encoded characters so SMBJ can resolve the literal disk path
       val decodedRelativePath = java.net.URLDecoder.decode(relativePath, "UTF-8")
-      Log.d(TAG, "  Final: share=$shareName, relativePath=$decodedRelativePath")
+      Log.d(TAG, "  Final: relativePath=$decodedRelativePath")
 
-      val smbConfig = SmbConfig.builder()
-        .withTimeout(120000, TimeUnit.MILLISECONDS) 
-        .withSoTimeout(120000, TimeUnit.MILLISECONDS)
-        .withReadTimeout(120000, TimeUnit.MILLISECONDS)
-        .withSigningRequired(false)
-        .withEncryptData(false)
-        .build()
-        
-      smbClient = SMBClient(smbConfig)
-      connection = smbClient.connect(streamInfo.connection.host, streamInfo.connection.port)
+      // Reuse the shared session (with auto-reconnect) instead of building a
+      // whole new SMB connection per range request.
+      return smbClient.withSharedSession { session, shareName ->
+        val diskShare = session.connectShare(shareName) as DiskShare
+        try {
+          val file = diskShare.openFile(
+            decodedRelativePath,
+            EnumSet.of(AccessMask.GENERIC_READ),
+            null,
+            EnumSet.of(SMB2ShareAccess.FILE_SHARE_READ),
+            SMB2CreateDisposition.FILE_OPEN,
+            null,
+          )
 
-      val authContext = if (streamInfo.connection.isAnonymous) {
-        AuthenticationContext.anonymous()
-      } else {
-        AuthenticationContext(
-          streamInfo.connection.username,
-          streamInfo.connection.password.toCharArray(),
-          null,
-        )
-      }
+          Log.d(TAG, "  Stream created successfully starting at offset $offset, contentLength=$contentLength")
 
-      session = connection.authenticate(authContext)
-      diskShare = session.connectShare(shareName) as DiskShare
-
-      file = diskShare.openFile(
-        decodedRelativePath,
-        EnumSet.of(AccessMask.GENERIC_READ),
-        null,
-        EnumSet.of(SMB2ShareAccess.FILE_SHARE_READ),
-        SMB2CreateDisposition.FILE_OPEN,
-        null,
-      )
-
-      val seekableStream = object : InputStream() {
-        private var currentPosition = offset
-        private val fileHandle = file!!
-        private var closed = false
-        private var scratch = ByteArray(0)
-        
-        override fun read(): Int {
-          if (closed) return -1
-          val buf = ByteArray(1)
-          val bytesRead = read(buf, 0, 1)
-          return if (bytesRead == 1) buf[0].toInt() and 0xFF else -1
-        }
-
-        override fun read(b: ByteArray): Int {
-          return read(b, 0, b.size)
-        }
-
-        override fun read(b: ByteArray, off: Int, len: Int): Int {
-          if (closed) return -1
-          if (len == 0) return 0
-
-          try {
-            // ZERO-COPY OPTIMIZATION: 
-            // If NanoHTTPD asks for a full buffer array, we inject that exact 
-            // array directly into the SMB client. No copying needed.
-            val readBuffer = if (off == 0 && len == b.size) {
-              b
-            } else {
-              // If an offset is requested, we reuse our scratch array to prevent GC thrashing.
-              // We ONLY allocate memory if the requested length is bigger than our current scratch pad.
-              if (scratch.size < len) {
-                scratch = ByteArray(len)
-              }
-              scratch
-            }
-
-            val bytesRead = fileHandle.read(readBuffer, currentPosition)
-
-            if (bytesRead <= 0) return -1
-
-            // If we had to use the scratch array, we copy the bytes over to the final destination.
-            if (readBuffer !== b) {
-              System.arraycopy(readBuffer, 0, b, off, bytesRead)
-            }
-            currentPosition += bytesRead
-            return bytesRead
-          } catch (e: Exception) {
-            Log.e(TAG, "Error reading from SMB file: ${e.message}")
-            return -1
-          }
-        }
-
-        override fun available(): Int {
-          if (closed) return 0
-          return try {
-            val remaining = fileHandle.fileInformation.standardInformation.endOfFile - currentPosition
-            remaining.toInt().coerceAtLeast(0)
-          } catch (e: Exception) {
-            0
-          }
-        }
-
-        override fun close() {
-          if (!closed) {
-            closed = true
-            // Complete network stack teardown initiated by the media player
-            runCatching { fileHandle.close() }
-            runCatching { diskShare.close() }
-            runCatching { session.close() }
-            runCatching { connection.close() }
-            runCatching { smbClient.close() }
-          }
+          PrefetchingSmbInputStream(
+            fileHandle = file,
+            diskShare = diskShare,
+            initialOffset = offset,
+            contentLength = contentLength,
+          )
+        } catch (e: Exception) {
+          runCatching { diskShare.close() }
+          throw e
         }
       }
-
-      Log.d(TAG, "  Stream created successfully starting at offset $offset")
-      return seekableStream
-      
     } catch (e: Exception) {
       Log.e(TAG, "SMB getStreamWithOffset error: ${e.message}", e)
-      // Cleanup partial connections if setup failed before the stream was created
-      runCatching { file?.close() }
-      runCatching { diskShare?.close() }
-      runCatching { session?.close() }
-      runCatching { connection?.close() }
-      runCatching { smbClient?.close() }
       return null
     }
   }
@@ -885,5 +803,160 @@ class NetworkStreamingProxy private constructor() : NanoHTTPD("127.0.0.1", 0) {
     }
 
     return stream
+  }
+
+  /**
+   * Seekable SMB stream with an internal prefetching double-buffer.
+   *
+   * WHY: NanoHTTPD 2.3.1 streams response bodies by reading the wrapped
+   * InputStream in hard-coded 16 KiB chunks (Response.sendBody), and with a
+   * non-buffered SMB stream each chunk becomes one synchronous SMB2 READ
+   * round-trip. On Wi-Fi (3-5 ms RTT) that caps throughput at roughly
+   * 16 KiB / RTT ≈ 4-6 MB/s, no matter how much bandwidth is available.
+   *
+   * This stream decouples the consumer's read granularity from the SMB read
+   * granularity: a dedicated daemon thread issues large (1 MiB) SMB2 reads
+   * ahead of the consumer and pushes them into a small block queue. The
+   * consumer (NanoHTTPD) keeps reading its 16 KiB chunks, but they are served
+   * from memory instead of the network, making throughput bandwidth-bound
+   * (1 MiB per RTT) instead of latency-bound.
+   *
+   * The prefetch thread self-limits to [contentLength] bytes so an abandoned
+   * connection (NanoHTTPD does not close the stream when the client drops
+   * mid-response) does not keep pulling the whole 20 GiB file.
+   *
+   * Only the file handle and this stream's own tree connection are closed by
+   * [close]; the underlying session/connection are shared via
+   * [SmbClient.withSharedSession] and owned by the client.
+   */
+  private class PrefetchingSmbInputStream(
+    private val fileHandle: com.hierynomus.smbj.share.File,
+    private val diskShare: DiskShare,
+    initialOffset: Long,
+    private val contentLength: Long,
+  ) : InputStream() {
+
+    companion object {
+      private const val TAG = "NetworkStreamingProxy"
+
+      /** Size of each SMB2 read issued by the prefetch thread. */
+      private const val BLOCK_SIZE = 1024 * 1024
+
+      /** Blocks buffered ahead of the consumer (double buffering). */
+      private const val PREFETCH_DEPTH = 2
+
+      /** Sentinel pushed by the prefetch thread to signal EOF / error. */
+      private val EOF_MARKER = ByteArray(0)
+    }
+
+    /** Block queue; [EOF_MARKER] signals EOF / error (null is not allowed). */
+    private val queue = ArrayBlockingQueue<ByteArray>(PREFETCH_DEPTH)
+
+    private var currentBlock: ByteArray? = null
+    private var blockPos = 0
+    private var eof = false
+    private val closed = AtomicBoolean(false)
+
+    /** Prefetch thread's read cursor; only touched by the prefetch thread. */
+    private var readPosition = initialOffset
+
+    /** Total bytes read from the file; only touched by the prefetch thread. */
+    private var bytesReadFromFile = 0L
+
+    private val prefetchThread =
+      Thread({ prefetchLoop() }, "SmbPrefetch-${System.identityHashCode(this)}").apply {
+        isDaemon = true
+        start()
+      }
+
+    private fun prefetchLoop() {
+      try {
+        while (!closed.get()) {
+          val remaining = contentLength - bytesReadFromFile
+          if (remaining <= 0) break
+          val requestLen = minOf(BLOCK_SIZE.toLong(), remaining).toInt()
+          val block = ByteArray(requestLen)
+          val n = fileHandle.read(block, readPosition, 0, requestLen)
+          if (n <= 0) break // EOF or error
+          readPosition += n
+          bytesReadFromFile += n
+          // Full-block reads are handed over as-is; short reads (last block,
+          // or a server that returned less than requested) are trimmed.
+          queue.put(if (n == block.size) block else block.copyOf(n))
+        }
+        // Signal EOF to the consumer. offer() is used so a consumer that
+        // already went away (close()) can never leave us blocked here.
+        if (!closed.get()) {
+          runCatching { queue.put(EOF_MARKER) }
+        }
+      } catch (e: InterruptedException) {
+        Thread.currentThread().interrupt()
+      } catch (e: Exception) {
+        Log.e(TAG, "SMB prefetch error: ${e.message}", e)
+        runCatching { queue.offer(EOF_MARKER) }
+      }
+    }
+
+    override fun read(): Int {
+      val buf = ByteArray(1)
+      val n = read(buf, 0, 1)
+      return if (n == 1) buf[0].toInt() and 0xFF else -1
+    }
+
+    override fun read(b: ByteArray): Int = read(b, 0, b.size)
+
+    @Synchronized
+    override fun read(b: ByteArray, off: Int, len: Int): Int {
+      if (closed.get()) return -1
+      if (len == 0) return 0
+
+      // Ensure we have a current block to serve from.
+      while (currentBlock == null) {
+        if (eof) return -1
+        val block =
+          try {
+            queue.take()
+          } catch (e: InterruptedException) {
+            Thread.currentThread().interrupt()
+            return -1
+          }
+        if (block === EOF_MARKER) {
+          eof = true
+          return -1
+        }
+        currentBlock = block
+        blockPos = 0
+      }
+
+      val block = currentBlock!!
+      val n = minOf(len, block.size - blockPos)
+      System.arraycopy(block, blockPos, b, off, n)
+      blockPos += n
+      if (blockPos >= block.size) {
+        currentBlock = null
+      }
+      return n
+    }
+
+    override fun available(): Int {
+      if (closed.get() || eof) return 0
+      val inCurrent = currentBlock?.let { it.size - blockPos } ?: 0
+      return inCurrent + queue.size * BLOCK_SIZE
+    }
+
+    override fun close() {
+      if (closed.compareAndSet(false, true)) {
+        // Wake the prefetch thread if it is blocked in queue.put().
+        prefetchThread.interrupt()
+        // Wake a consumer blocked in queue.take().
+        queue.drainTo(ArrayList())
+        queue.offer(EOF_MARKER)
+        // Only the file handle and this stream's own tree connection are
+        // owned here; the shared session/connection belong to SmbClient and
+        // must not be closed from this stream.
+        runCatching { fileHandle.close() }
+        runCatching { diskShare.close() }
+      }
+    }
   }
 }

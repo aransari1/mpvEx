@@ -3982,5 +3982,481 @@
   "blocked_shorts_unblock_button": {
     "source_hash": "18f2a0947f9d6523991b29b450307f22773f57d65f7efb98d48a167df04d6b1d",
     "translated_value": "Bloqueado"
+  },
+  "pref_gesture_enable_release_to_cancel_title": {
+    "source_hash": "94dfb635a44cbfc0215a55dc1d0bca9bb082153abf7f802922ed77eec6bc9c52",
+    "translated_value": "Activar \"Soltar para cancelar\""
+  },
+  "pref_player_background_playback": {
+    "source_hash": "7f6f095d5b3a3c185b9f80a4a2d5c570910405e64de04b6120935ce6f184668c",
+    "translated_value": "Reproducción en segundo plano"
+  },
+  "pref_gesture_enable_release_to_cancel_summary": {
+    "source_hash": "39ac175ec36cae663366cde0948a7e512c8aa0b60c28b4b3440b1bb244df9966",
+    "translated_value": "Revertir la posición de búsqueda al soltar cerca de la ubicación de inicio del arrastre"
+  },
+  "pref_background_playback_always": {
+    "source_hash": "de9f057a471cdb8d3b082719bdc7ad2031788d042947349723fa83c9d13a517a",
+    "translated_value": "Siempre"
+  },
+  "pref_background_playback_audio_only": {
+    "source_hash": "e8c9549d90737964947bab79ce2825bd1172fe4aff88e045b43d685333df62b9",
+    "translated_value": "Sólo archivos de audio"
+  },
+  "pref_background_playback_video_only": {
+    "source_hash": "320624d2f93d07686b1230b21863f5214a985ba81d95901bfd32359c7f5acd82",
+    "translated_value": "Sólo archivos de vídeo"
+  },
+  "pref_background_playback_never": {
+    "source_hash": "6300ef800bb884295b0b4b35682b75cecd7cc550d202db56d04a0643b8fb873f",
+    "translated_value": "Nunca"
+  },
+  "pref_player_white_seekbar_title": {
+    "source_hash": "0148166e4284100f0deb43848d10338e47786650ddfb9acd24edbeddfd4b0878",
+    "translated_value": "Barra de progreso de video blanca"
+  },
+  "pref_player_white_seekbar_summary": {
+    "source_hash": "1a044eee6a8fc2c45aa721d10b4a70d19b9d67e8bf82693d6b51c04317f05a52",
+    "translated_value": "Haga que la barra de progreso del video sea blanca en la pantalla del reproductor"
+  },
+  "pref_player_show_seekbar_chapters_title": {
+    "source_hash": "32ee6e0289f92c7b1310188ad74916849ba5ec47a9728bcdf2f0844f84fe9dd8",
+    "translated_value": "Mostrar capítulos"
+  },
+  "pref_player_show_seekbar_chapters_summary": {
+    "source_hash": "e35962ff20317cc30e1255d740748b1dda1a50b79c753b5c52df5121e2ce41f9",
+    "translated_value": "Mostrar marcadores de capítulos en la barra de búsqueda"
+  },
+  "pref_player_show_seekbar_read_ahead_title": {
+    "source_hash": "f805fa37d8cbf62f55aee5ae7d9d8fc87e7d57980b486c3db7d6f8ffd88e5a50",
+    "translated_value": "Mostrar contenido almacenado en el búfer"
+  },
+  "pref_player_show_seekbar_read_ahead_summary": {
+    "source_hash": "4f832f27a8631b8e7979c59c23a7f35674c2209924e0c6a7b058a7c470212afd",
+    "translated_value": "Mostrar una indicación visual del contenido almacenado en el búfer en la barra de desplazamiento"
+  },
+  "update_ready_to_install": {
+    "source_hash": "9399437e7951f12f8f45d6feeec0bf66839426a5e3e2b8eecb3ecd52293e6a11",
+    "translated_value": "Listo para instalar"
+  },
+  "update_available_title": {
+    "source_hash": "5ae200f91c64da483b94b729655cad16205a13042a40d898494ee6f6afe60e26",
+    "translated_value": "Actualización disponible"
+  },
+  "update_current_version": {
+    "source_hash": "4893c3c6fefef086ecbb9cb7e5e2c6dcf1813e585380b2bd74bdc4393698552b",
+    "translated_value": "Versión actual"
+  },
+  "update_latest_version": {
+    "source_hash": "08116ac54c13a917807b986d819da40b9cbe916b855de08a01ae79783e2a55aa",
+    "translated_value": "Última versión"
+  },
+  "update_release_date": {
+    "source_hash": "1fb0ecfb5d039ebc6d64e5060590ee452634dab48921d1a8669804a8bb275f83",
+    "translated_value": "Fecha de lanzamiento"
+  },
+  "update_size": {
+    "source_hash": "1af851907331c0ed99e7c63b4e55df808bc5fc4c990a1cf80ca8c0f76daf1f3b",
+    "translated_value": "Tamaño"
+  },
+  "update_release_notes": {
+    "source_hash": "bd4702c187a9a655880be010957d7688c186852ddb6252d52bda2e299649cb9d",
+    "translated_value": "Notas de la versión"
+  },
+  "update_downloading": {
+    "source_hash": "a778d3492af219c3649f527b1219da0eedabb6b0f01190824331d293bd6dea24",
+    "translated_value": "Descargando…"
+  },
+  "update_install": {
+    "source_hash": "569ca49f4aaf7846e952c1d4aeca72febd0b79fa1c4f9db08fd3127551218572",
+    "translated_value": "Instalar"
+  },
+  "update_download": {
+    "source_hash": "d6eafe82359100423c93c5ce53c352c1b51ca1e699215fcec3f5c5dd9bf12d24",
+    "translated_value": "Descargar"
+  },
+  "update_ignore": {
+    "source_hash": "fce77c34d3fec98733dd4c29f1592a92e60e93e43f0bfe8690c91160ae7efebe",
+    "translated_value": "Ignorar"
+  },
+  "update_cancel": {
+    "source_hash": "19766ed6ccb2f4a32778eed80d1928d2c87a18d7c275ccb163ec6709d3eb2e27",
+    "translated_value": "Cancelar"
+  },
+  "player_sheets_tab_aesthetics": {
+    "source_hash": "11296d9df520d91606a2ab393edfd47d1410b63835dad607834237aa88424fcc",
+    "translated_value": "Estética"
+  },
+  "player_sheets_tab_gestures": {
+    "source_hash": "19f425135f78d2b1d6874131c4f7e2a73fd064057c651e08d388449ebf18c606",
+    "translated_value": "Gestos"
+  },
+  "ambient_mode_on": {
+    "source_hash": "94d2d7b8f801affe71a9a0cdf328ed05e86220f5995e3d7ac63f70fa6ae66770",
+    "translated_value": "Modo ambiente: ENCENDIDO"
+  },
+  "ambient_mode_off": {
+    "source_hash": "35e8a2753f65d0b14c9b76d4c7401df435f835eecd2328bfc779630e66f8713a",
+    "translated_value": "Modo ambiente: APAGADO"
+  },
+  "pref_player_show_speed_indicator_overlay_summary": {
+    "source_hash": "fd00bfd06f2db75a34d57e9965eb027b66a9fc287e294c01b1bb409e277b8eb7",
+    "translated_value": "Mostrar el indicador de velocidad del chip al mantenerlo presionado para la reproducción rápida"
+  },
+  "pref_player_show_speed_indicator_overlay": {
+    "source_hash": "2c2333d5f9be28ea1c08080a02f41e212d1137c6f9c0f031a4e2f39ee5a2dc04",
+    "translated_value": "Mostrar superposición del indicador de velocidad"
+  },
+  "pref_decoder_codec_info_title": {
+    "source_hash": "109f5539f30637a7bec3e5ba557e9780058ee412cc0dee6360459fb2385111d2",
+    "translated_value": "Compatibilidad con códecs del dispositivo"
+  },
+  "pref_decoder_codec_info_summary": {
+    "source_hash": "a6a272bba79356a91b359c2058aece55cbf183f651086831948f5bfab9a4c480",
+    "translated_value": "Verifique las capacidades de aceleración de hardware y decodificación de software para formatos de video y audio"
+  },
+  "codec_info_hw_badge": {
+    "source_hash": "94ba9cd5ffa703b9bec6723daf6fb003db5e1e99bf051f26562a74b9f6271482",
+    "translated_value": "Aceleración por hardware"
+  },
+  "codec_info_sw_badge": {
+    "source_hash": "5ceb788fe7d5ed45af6fbb654075b70d7c27d544942b82cd340c4b0c96b51367",
+    "translated_value": "Software (CPU)"
+  },
+  "codec_info_filter_all": {
+    "source_hash": "a52ace420f2175d08b1577a1bea5445e36801229c074ef9ed6c55a73401fd9c2",
+    "translated_value": "Todo"
+  },
+  "codec_info_filter_video": {
+    "source_hash": "d534be829e32196b4d1e53b67103cf1e376b1d60071857572598c196abfefbc6",
+    "translated_value": "Video"
+  },
+  "codec_info_filter_audio": {
+    "source_hash": "bc1b88907d3b748af99cb9d4ffc07a0118dad5dab21a9dbdcc5a17a09641364a",
+    "translated_value": "Audio"
+  },
+  "codec_info_filter_hw_only": {
+    "source_hash": "e7f72a9180f7e6b2b712157d4623a7e0a986f1a344aae0c0092ebe5460c29f95",
+    "translated_value": "Sólo hardware"
+  },
+  "codec_info_stats_title": {
+    "source_hash": "5c21be9f4ab65b6f2e3f28d73a64d2e9a7c2d174e0f7a1675f977882a9f7393d",
+    "translated_value": "Descripción general del códec del sistema"
+  },
+  "codec_info_stats_summary": {
+    "source_hash": "7024bf7d7a4ee90757362f550022bc04332f5c175c072bc86a6b3a2919a95bfd",
+    "translated_value": "%1$d decodificadores (%2$d hardware, %3$d software)"
+  },
+  "codec_info_max_res": {
+    "source_hash": "e958f655480bc1d27d6206524f03d5ae9414d9770ae2a82f47988ce5a47ea0ab",
+    "translated_value": "Máximo: %s"
+  },
+  "media_info_selection_title": {
+    "source_hash": "1f109f6484f7a2f5f1d359f84ed080c4007ceda292eddd2b64fb3613ad0c2724",
+    "translated_value": "Información sobre la selección"
+  },
+  "media_info_selected_label": {
+    "source_hash": "57fd7a0cf33f2666eede69e44f8857159653f2f28e4fd7482a5e16d4af628d2a",
+    "translated_value": "Seleccionado"
+  },
+  "media_info_total_length": {
+    "source_hash": "51d925cbb59d7305477d6036a9bfc6a324f10bcef12bfb552f5484a17f6e6b56",
+    "translated_value": "Duración total"
+  },
+  "shorts_action_loved": {
+    "source_hash": "0bed945e401542d1de21d0050befa2366979ea8fe3f6b3a30c8d2a4b680cc6fa",
+    "translated_value": "Amado"
+  },
+  "shorts_action_love": {
+    "source_hash": "9f4024faec10ef6d29aa32d7935d94b1a816fd4fe0359fbf12d49d44b5ff33b8",
+    "translated_value": "Amor"
+  },
+  "shorts_action_block": {
+    "source_hash": "211d0bb8cf4f5b5202c2a9b7996e483898644aa24714b1e10edd80a54ba4b560",
+    "translated_value": "Bloquear"
+  },
+  "shorts_action_blocked": {
+    "source_hash": "18f2a0947f9d6523991b29b450307f22773f57d65f7efb98d48a167df04d6b1d",
+    "translated_value": "Bloqueado"
+  },
+  "shorts_action_free": {
+    "source_hash": "f411a1fb62758b4c54690d0a702b4955b54dd22115416fa7b1ce51b4a084818d",
+    "translated_value": "Libre"
+  },
+  "shorts_action_back": {
+    "source_hash": "76900f1bfd16c8d4dd3d25e6f46638d7165aee23883ccea6bfe071c514421769",
+    "translated_value": "Atrás"
+  },
+  "shorts_action_more": {
+    "source_hash": "d47d7cb0e4f8fd2be5ee07826694c18917d83ca77d0a01698582d05f432db996",
+    "translated_value": "Más"
+  },
+  "shorts_no_blocked_videos_found": {
+    "source_hash": "ff7fdb7e4b246a2e8a78693f60744596cd9fbd976c0394f4beaf95edc254dae9",
+    "translated_value": "No se encontraron videos bloqueados"
+  },
+  "shorts_no_vertical_videos_found": {
+    "source_hash": "547f122e16c08fe45f690e30b39057d805767a294f16945d074716c22ad56645",
+    "translated_value": "No se encontraron videos verticales"
+  },
+  "shorts_all_finished_title": {
+    "source_hash": "9231b62d703d9677f6c4597a2a711496b45cb8ec8e3e35391ba7d74644b55df9",
+    "translated_value": "Todos los vídeos terminados."
+  },
+  "shorts_all_finished_message": {
+    "source_hash": "df78a3244c4f327117fb7c7874279853a86d644f9907ab18eec233d586ba0b29",
+    "translated_value": "Has visto todos los vídeos verticales por ahora."
+  },
+  "shorts_video_info_title": {
+    "source_hash": "014cb05e1cdaf03d29f5d5354a375d4554ebae54d9e83ae595bf776d949f6d1c",
+    "translated_value": "Información del vídeo"
+  },
+  "ab_loop_cut_clip": {
+    "source_hash": "6749ab247ac10e1e83574ba612ce5b4f1a5df98280b3bde3d57dd14a82f511c9",
+    "translated_value": "Cortar clip"
+  },
+  "ab_loop_set_both_points": {
+    "source_hash": "21666b87c143e0f6879973ed8719a5a6fbbda4c9c7a5e32b488b749571ef43c6",
+    "translated_value": "Establezca los puntos A y B para cortar el clip."
+  },
+  "ab_loop_exporting_clip": {
+    "source_hash": "bd08dcb7f5ab4db326883773c28f9e4438a2e9f84983c28cfa5b6b7485018655",
+    "translated_value": "Exportando clip..."
+  },
+  "ab_loop_clip_saved": {
+    "source_hash": "0dec1a5d99b84e83742cca60d69f0da4ca74d4e5a64021d267877f030932b0aa",
+    "translated_value": "Clip guardado en %s"
+  },
+  "ab_loop_clip_error": {
+    "source_hash": "7a5098d79155c0b3e859579c52adeedc41fab7b59956c80c0cc51dc61b278d0e",
+    "translated_value": "No se pudo exportar el clip: %s"
+  },
+  "shorts_video_info_resolution": {
+    "source_hash": "ec85ef7cb5945f5ba9c21cc7dcd67b2da8aa3667a04c2f001a266b41ff2b7822",
+    "translated_value": "Resolución: %1$dx%2$d"
+  },
+  "player_sheets_zoom_decrease": {
+    "source_hash": "a4199cb6b97c2fb256a6fe0800fc78fc7b9e447b172288fc6cd0bde8ed1a6256",
+    "translated_value": "Disminuir zoom"
+  },
+  "player_sheets_zoom_increase": {
+    "source_hash": "8420ff983584e8ab27379c1378a0858b75354dab667065ffa1da04fe8e06de44",
+    "translated_value": "aumentar el zoom"
+  },
+  "custom_buttons_title": {
+    "source_hash": "4ea34e99079c123522a728e16a4bed0646a637e22d1576ab451363755a5a1bf4",
+    "translated_value": "Botones personalizados"
+  },
+  "custom_buttons_subtitle": {
+    "source_hash": "21c6eeb4f7bd306b5260c4beebab7e7ee6ff920e2787023f628f91020a2a6d5d",
+    "translated_value": "Arrastra para cambiar el orden • Toca cualquier espacio para expandirlo y editarlo"
+  },
+  "custom_buttons_export_success": {
+    "source_hash": "88d8889d6d1f0b325319085792ce030261d59b43004daa436d3a47f3387d3156",
+    "translated_value": "Botones exportados exitosamente"
+  },
+  "custom_buttons_import_export_title": {
+    "source_hash": "6e061fabef2190a6d7cb2576ae2b9df184c8c6243c1156a860dba3daa5b4763b",
+    "translated_value": "Importar / Exportar"
+  },
+  "custom_buttons_import_export_desc": {
+    "source_hash": "ad272938a6ce41d69538eee526aba553bb132fca365042c2517a5cab2c60a45e",
+    "translated_value": "Haga una copia de seguridad o comparta todos sus botones personalizados con su código Lua como un archivo XML"
+  },
+  "generic_import": {
+    "source_hash": "2cff9baabf56ca002610e113bc94deb6ededddfc3c130365b6e88ed5195bf774",
+    "translated_value": "Importar"
+  },
+  "generic_export": {
+    "source_hash": "3664895579f0a7e68c4aa09c91316e20239bc74499010e6423ece40cad7c28f7",
+    "translated_value": "Exportar"
+  },
+  "custom_button_empty_slot": {
+    "source_hash": "f8b4d62d118662441f18e8eb1580d57fd8f6dfa8b79fc2c12806ad676f13db58",
+    "translated_value": "Espacio en blanco"
+  },
+  "custom_button_drag_disabled": {
+    "source_hash": "4cc921e80e4ba62acbdcd5ef8efd8acdcd3372a184cd12239e6cbca2ca213125",
+    "translated_value": "Arrastrar desactivado"
+  },
+  "custom_button_field_label": {
+    "source_hash": "707eab0c23ecbf6e5382ba61a346bc76aefee81303280fc0e08e59df18afbf8a",
+    "translated_value": "Botón"
+  },
+  "custom_button_lua_scripts_label": {
+    "source_hash": "ca9557425f605e2a3f531a5e8205f9d3e2d82ce339b70ed7ed75a7441c9dee77",
+    "translated_value": "Scripts lua"
+  },
+  "custom_button_title_field": {
+    "source_hash": "83dff2f044eb855eb2c55a93f7ee1402daba4c67bb7d8fa5a499589bf9fb7627",
+    "translated_value": "Título del botón *"
+  },
+  "custom_button_tap_action": {
+    "source_hash": "bd8880749122b84e9f2b5aec20bbc67f05eba5547eaab53763007c6b62bec52f",
+    "translated_value": "Acción al pulsar"
+  },
+  "custom_button_tap_action_required": {
+    "source_hash": "a131a52893bb40c14f555db9adfc12c0ed2085f08fe088823b48b680d4868af6",
+    "translated_value": "Acción al pulsar *"
+  },
+  "custom_button_long_press_action": {
+    "source_hash": "e96ab6d8b913efddf15d9badfedb305fa30f79580c0176c373a31550f6805f05",
+    "translated_value": "Acción al pulsar prolongadamente"
+  },
+  "custom_button_on_startup": {
+    "source_hash": "68fa16ae8cc78219ef08b97365e3494ae03f34586a74ba393dbe7a362aa3ff89",
+    "translated_value": "Al iniciar"
+  },
+  "custom_button_settings_label": {
+    "source_hash": "74a883a037bc227f91891ab654a753d3a99f31ab06ae5b5d2b6e594a692b41f8",
+    "translated_value": "Ajustes"
+  },
+  "custom_button_enabled_label": {
+    "source_hash": "51b972725ecef161b76e1623415b6f8fa46c468638c8a604d134a827c326dca3",
+    "translated_value": "Botón habilitado"
+  },
+  "custom_button_enabled_desc": {
+    "source_hash": "658eb1d482885deeca284c6eed5f9b6d3c28e4128ef77090fd908beee0c03ed2",
+    "translated_value": "El botón está activo en el reproductor"
+  },
+  "custom_button_disabled_desc": {
+    "source_hash": "9b2d3ee65aed07ce78064d51005db174ca50b492551adc0fe0870695efaf18b6",
+    "translated_value": "El botón está guardado pero oculto"
+  },
+  "custom_button_add": {
+    "source_hash": "c0f290f352610a38e9f19ecaafb19e357f8ec84cfea8d36e28eb17bd8a16c393",
+    "translated_value": "Añadir botón"
+  },
+  "custom_button_lua_editor_hint": {
+    "source_hash": "1e30bafed251b73978107fbbcef008d1e46e9758058257182af746a201f4724a",
+    "translated_value": "Toque para escribir el código Lua..."
+  },
+  "custom_button_select_import_title": {
+    "source_hash": "d8d2157d88913027e35ca6e2840b2b253ae87ce9c4db8487d4299a02045c67d6",
+    "translated_value": "Seleccionar botones para importar"
+  },
+  "custom_button_select_import_subtitle": {
+    "source_hash": "85bdc2ba48cfb2212e905f033d9140ed9cd3cb4ed6edc6ad6c3fbeb6186d771c",
+    "translated_value": "Elija qué botones importar"
+  },
+  "custom_button_will_overwrite": {
+    "source_hash": "bd1132bafa29d2b254dda833fcd2a9b622ca81644b5d8b0d3d5b23dcd48ac3fb",
+    "translated_value": "Sobrescribirá el botón existente"
+  },
+  "custom_button_read_failed": {
+    "source_hash": "a63086f46436676b2f610eef8e37b1ef5ac81da1381898ab391a1c1f398045d1",
+    "translated_value": "No se pudo leer el archivo: %1$s"
+  },
+  "custom_button_field_label_with_slot": {
+    "source_hash": "fed2d9b8a028df44297fdbb3d9f0f25bdef72753019d56fb65f47943e26c7a2e",
+    "translated_value": "%1$s · %2$s"
+  },
+  "custom_buttons_imported_count#plural#one": {
+    "source_hash": "b2e18b06ad27cc447cd221f54335914547c1adaedf6c3bc9b6271452d35c0df6",
+    "translated_value": "Botón %1$d importado"
+  },
+  "custom_buttons_imported_count#plural#other": {
+    "source_hash": "bfdff01366a6f26e5daae2dac53478a4cca945faa42b9fa5e04c0f99e8a49a40",
+    "translated_value": "Botones %1$d importados"
+  },
+  "video_settings_filter_presets_title": {
+    "source_hash": "8b15e931722543793c8f6d22e6281868094a3aed8836979b71bde7d78db381cb",
+    "translated_value": "Preajustes de filtros"
+  },
+  "filter_preset_none": {
+    "source_hash": "dc937b59892604f5a86ac96936cd7ff09e25f18ae6b758e8014a24c7fa039e91",
+    "translated_value": "Ninguno"
+  },
+  "filter_preset_none_desc": {
+    "source_hash": "cdfe1de4f2175d4d28a229e6bf74a656f99518a33fa1eee0cfa3b063e1a2ae5c",
+    "translated_value": "Configuración predeterminada sin ajustes"
+  },
+  "filter_preset_vivid": {
+    "source_hash": "acbbdc931814110787e029449285ced1c985e1d2567b30f6510d540934fefa2d",
+    "translated_value": "Vívido"
+  },
+  "filter_preset_vivid_desc": {
+    "source_hash": "326dd3335293bdc1590091b1ccae3360bc7a28365e2dd86ed57da61bdffbd7c5",
+    "translated_value": "Colores mejorados con detalles nítidos"
+  },
+  "filter_preset_warm_tone": {
+    "source_hash": "b51475dc0a816a5e3801bbf3089518c75160000376168e877922569d3de46acf",
+    "translated_value": "Tono cálido"
+  },
+  "filter_preset_warm_tone_desc": {
+    "source_hash": "b1b2b8b51c8e230f4b40ff5b6f406194a00d95145b95ac58b8c1125876afb3f4",
+    "translated_value": "Colores más cálidos con tinte dorado."
+  },
+  "filter_preset_cool_tone": {
+    "source_hash": "af5b4dc43beeb8e2d25f65b777c148ad1c193497666c55bd1a0ac9d1674ee31a",
+    "translated_value": "Tono frío"
+  },
+  "filter_preset_cool_tone_desc": {
+    "source_hash": "dfe2e3ca3a8f57a0b21451363b7e90d445d5fce29b36327e65e380cc9256c074",
+    "translated_value": "Colores más fríos con tinte azul"
+  },
+  "filter_preset_soft_pastel": {
+    "source_hash": "7f8b96504e854b6d8cca44ab4dd8c48f75672cae42357213b9ecaf68d81c1d80",
+    "translated_value": "Pastel suave"
+  },
+  "filter_preset_soft_pastel_desc": {
+    "source_hash": "b8a926f9be283174bae21d932ff205c0755747910299e6e1f6baab85f4515b72",
+    "translated_value": "Colores suaves y apagados con un aspecto delicado."
+  },
+  "filter_preset_cinematic": {
+    "source_hash": "912d0988b06550601e2fd95360ea72f9bb25f0c7dd54bc741a20dc24f28242c9",
+    "translated_value": "Cinemático"
+  },
+  "filter_preset_cinematic_desc": {
+    "source_hash": "fa673bc311d0c897943bcbb6bf520b188855d8a656d60ab7ee489c4e38134a99",
+    "translated_value": "Corrección de color con aspecto cinematográfico y profundidad"
+  },
+  "filter_preset_dramatic": {
+    "source_hash": "82ebcd30003de028ffe198dfb2946f44806a66cface9d7b9c2fcc56654f92747",
+    "translated_value": "Dramático"
+  },
+  "filter_preset_dramatic_desc": {
+    "source_hash": "b9e73243bb26e403d1400926fa59fe3254718506fe19897b5d522c506577b7a3",
+    "translated_value": "Estilo dramático de alto contraste"
+  },
+  "filter_preset_night_mode": {
+    "source_hash": "01aac6e13b23a1ada5e5db1fdadcbf4889702fa018d6475b880a0f7f1f435f1b",
+    "translated_value": "Modo nocturno"
+  },
+  "filter_preset_night_mode_desc": {
+    "source_hash": "f1e8a87fd56baa5461a8dcc4ccf21d4fc90ebf1d61255217807f15d922cfd64b",
+    "translated_value": "Brillo reducido para ambientes oscuros"
+  },
+  "filter_preset_nostalgic": {
+    "source_hash": "b53839619c9788b1c2b1db3134f8db64c8c97b59438d9e9e291d00a990d51ef9",
+    "translated_value": "Nostálgico"
+  },
+  "filter_preset_nostalgic_desc": {
+    "source_hash": "a79b3be1c67fdf996cb2c219d53d56a826114c839630f6aa68b8d8efb0acce92",
+    "translated_value": "Estilo de película vintage con enfoque suave"
+  },
+  "filter_preset_ghibli_style": {
+    "source_hash": "551781469038ffba2d26c1969662badc18178f15f72e5cf31107d962c03a1eda",
+    "translated_value": "Estilo Ghibli"
+  },
+  "filter_preset_ghibli_style_desc": {
+    "source_hash": "eb12e51c8712344aeadff717adced64cdc24dc212e9c854bf40b1e8e12bbadcb",
+    "translated_value": "Colores suaves y fantásticos de anime"
+  },
+  "filter_preset_neon_pop": {
+    "source_hash": "f0262d340be0bba083611ff94740fb9539c23dec7a5b12ab77e9ed5e46dd14a4",
+    "translated_value": "Neon Pop"
+  },
+  "filter_preset_neon_pop_desc": {
+    "source_hash": "f8e02e1750abfe8a4a4696c92ca46e8fdfc00119cbd0bf1e188c39977e465f3e",
+    "translated_value": "Colores vibrantes, tipo neón, con un toque atrevido"
+  },
+  "filter_preset_deep_black": {
+    "source_hash": "d57eb7d8be7249a62bb3a9a0ebefac9d44c42aff05d3641c4c4a88234cd3e62e",
+    "translated_value": "Negro intenso"
+  },
+  "filter_preset_deep_black_desc": {
+    "source_hash": "dbac9195f155e6e2e319e6ce93148a1db93926ce48cb546eb99f2cfca33fd24e",
+    "translated_value": "Negros mejorados para pantallas OLED"
   }
 }

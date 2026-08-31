@@ -6,7 +6,7 @@ import xyz.mpv.rex.domain.media.model.VideoFolder
 import xyz.mpv.rex.domain.playbackstate.repository.PlaybackStateRepository
 import xyz.mpv.rex.preferences.AppearancePreferences
 import xyz.mpv.rex.preferences.BrowserPreferences
-import xyz.mpv.rex.utils.storage.CoreMediaScanner
+import xyz.mpv.rex.database.repository.HybridMediaIndexRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.context.GlobalContext
@@ -35,11 +35,12 @@ object MediaMetadataOps {
                 val foldersPreferences = koin.get<xyz.mpv.rex.preferences.FoldersPreferences>()
                 val blacklistedFolders = foldersPreferences.blacklistedFolders.get()
                 
-                val folders = CoreMediaScanner.getFlatMediaFolders(
-                    context = context, 
-                    playbackStates = playbackStates, 
+                val hybridIndex = koin.get<HybridMediaIndexRepository>()
+                hybridIndex.ensureFreshIfEmpty()
+                val folders = hybridIndex.getFlatFolders(
+                    playbackStates = playbackStates,
                     thresholdDays = thresholdDays,
-                    blacklistedFolders = blacklistedFolders
+                    watchedThreshold = browserPreferences.watchedThreshold.get(),
                 )
                 folders
                     .filter { folder -> 

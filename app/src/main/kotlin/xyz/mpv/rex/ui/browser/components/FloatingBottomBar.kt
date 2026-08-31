@@ -25,10 +25,18 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.res.stringResource
-import xyz.mpv.rex.R
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.koin.compose.koinInject
+import xyz.mpv.rex.ui.browser.MainScreen
+import xyz.mpv.rex.R
+import xyz.mpv.rex.ui.browser.miniplayer.MiniPlayerStateManager
+import xyz.mpv.rex.ui.utils.LocalBackStack
 
 /**
  * Material 3 Floating Button Bar for file/folder operations
@@ -51,9 +59,24 @@ fun BrowserBottomBar(
   showAddToPlaylist: Boolean = true,
   onMarkAsClick: (() -> Unit)? = null,
 ) {
+  val miniPlayerStateManager = koinInject<MiniPlayerStateManager>()
+  val miniPlayerState by miniPlayerStateManager.state.collectAsState()
+  val backstack = LocalBackStack.current
+  val isMainScreen = backstack.lastOrNull() == MainScreen
+
+  val navBarHeight = if (isMainScreen) 80.dp else 0.dp
+  val miniPlayerOffset = if (miniPlayerState.isPlaybackActive) 75.dp else 0.dp
+  val targetBottomPadding = navBarHeight + miniPlayerOffset + 16.dp
+
+  val animatedBottomPadding by animateDpAsState(
+    targetValue = targetBottomPadding,
+    animationSpec = tween(220),
+    label = "browserBottomBarPadding"
+  )
+
   AnimatedVisibility(
     visible = isSelectionMode,
-    modifier = modifier,
+    modifier = modifier.padding(bottom = animatedBottomPadding),
     enter = fadeIn(),
     exit = fadeOut(),
   ) {

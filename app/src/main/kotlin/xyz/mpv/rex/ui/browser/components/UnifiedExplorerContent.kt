@@ -44,9 +44,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.ui.res.stringResource
 import xyz.mpv.rex.R
-import my.nanihadesuka.compose.LazyColumnScrollbar
-import my.nanihadesuka.compose.LazyVerticalGridScrollbar
-import my.nanihadesuka.compose.ScrollbarSettings
+import androidx.compose.foundation.layout.fillMaxHeight
 
 val LocalLastPlayedVideoPathsInFolder = compositionLocalOf<Set<String>> { emptySet() }
 val LocalRecentlyPlayedFilePaths = compositionLocalOf<Set<String>> { emptySet() }
@@ -270,7 +268,7 @@ fun <T> UnifiedExplorerContent(
             start = 8.dp,
             end = 8.dp,
             top = 8.dp,
-            bottom = navigationBarHeight + 8.dp
+            bottom = navigationBarHeight + 16.dp
           ),
           verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
@@ -494,7 +492,7 @@ fun <T> UnifiedExplorerContent(
             start = 8.dp,
             end = 8.dp,
             top = 8.dp,
-            bottom = navigationBarHeight + 8.dp
+            bottom = navigationBarHeight + 16.dp
           ),
           horizontalArrangement = Arrangement.spacedBy(4.dp),
           verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -552,7 +550,7 @@ fun <T> UnifiedExplorerContent(
             start = 8.dp,
             end = 8.dp,
             top = 8.dp,
-            bottom = navigationBarHeight + 8.dp
+            bottom = navigationBarHeight + 16.dp
           ),
           verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
@@ -641,37 +639,15 @@ fun <T> UnifiedExplorerContent(
 
       // Scrollbar overlay with bottom padding to avoid overlap with navigation
       if (items.size > 20) {
-        Box(
+        FastScrollbar(
+          listState = if (mediaLayoutMode == MediaLayoutMode.GRID && !showSections) null else listState,
+          gridState = if (mediaLayoutMode == MediaLayoutMode.GRID && !showSections) gridState else null,
           modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = navigationBarHeight)
-        ) {
-          if (mediaLayoutMode == MediaLayoutMode.GRID && !showSections) {
-            LazyVerticalGridScrollbar(
-              state = gridState,
-              settings = ScrollbarSettings(
-                thumbUnselectedColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                thumbSelectedColor = MaterialTheme.colorScheme.primary,
-                thumbMinLength = 0.08f,
-                thumbMaxLength = 0.08f,
-              ),
-            ) {
-              // Empty content - scrollbar only
-            }
-          } else {
-            LazyColumnScrollbar(
-              state = listState,
-              settings = ScrollbarSettings(
-                thumbUnselectedColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-                thumbSelectedColor = MaterialTheme.colorScheme.primary,
-                thumbMinLength = 0.08f,
-                thumbMaxLength = 0.08f,
-              ),
-            ) {
-              // Empty content - scrollbar only
-            }
-          }
-        }
+            .align(Alignment.CenterEnd)
+            .fillMaxHeight()
+            .padding(top = 8.dp, bottom = navigationBarHeight + 16.dp),
+          thumbColor = MaterialTheme.colorScheme.primary,
+        )
       }
     }
 

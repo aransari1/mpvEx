@@ -6,6 +6,8 @@ import android.util.Log
 import xyz.mpv.rex.database.entities.PlaybackStateEntity
 import xyz.mpv.rex.domain.media.model.MediaFolder
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Locale
@@ -64,6 +66,7 @@ object CoreMediaScanner {
      */
     private data class ScannedItem(
         val name: String,
+        val path: String,
         val size: Long,
         val duration: Long,
         val dateModified: Long,
@@ -106,18 +109,18 @@ object CoreMediaScanner {
      * Get immediate children of a parent path (for Tree/Filesystem View)
      */
     suspend fun getFoldersInDirectory(
-        context: Context, 
+        context: Context,
         parentPath: String,
         playbackStates: List<PlaybackStateEntity> = emptyList(),
         thresholdDays: Int = 7,
-        blacklistedFolders: Set<String> = emptySet()
+        blacklistedFolders: Set<String> = emptySet(),
+        policy: MediaScanPolicy = MediaScanPolicy(),
     ): List<MediaFolder> = withContext(Dispatchers.IO) {
         val allNodes = getOrBuildMediaTree(context, playbackStates, thresholdDays, blacklistedFolders)
-        
-        getEffectiveChildren(parentPath, allNodes)
-            .map { node ->
-                // Use recursive counts for browser view
-                MediaFolder(
+
+        val foldersByPath = getEffectiveChildren(parentPath, allNodes)
+            .associate { node ->
+                node.path to MediaFolder(
                     id = node.path,
                     name = node.name,
                     path = node.path,
@@ -129,9 +132,84 @@ object CoreMediaScanner {
                     hasSubfolders = node.hasDirectSubfolders,
                     isRecursive = true,
                     newCount = node.recursiveNewCount,
-                    unwatchedVideoCount = node.recursiveUnwatchedCount
+                    unwatchedVideoCount = node.recursiveUnwatchedCount,
                 )
-            }.sortedBy { it.name.lowercase(Locale.getDefault()) }
+            }
+            .toMutableMap()
+
+        if (policy.includeNoMediaContent) {
+            discoverDirectNoMediaFolders(parentPath, blacklistedFolders, policy)
+                .forEach { foldersByPath[it.path] = it }
+        }
+
+        foldersByPath.values.sortedBy { it.name.lowercase(Locale.getDefault()) }
+    }
+
+    /**
+     * Discovers only immediate children of the active directory. This is
+     * deliberately separate from the cached global MediaStore tree.
+     */
+    private suspend fun discoverDirectNoMediaFolders(
+        parentPath: String,
+        blacklistedFolders: Set<String>,
+        policy: MediaScanPolicy,
+    ): List<MediaFolder> {
+        val parent = File(parentPath)
+        val children = parent.listFiles() ?: return emptyList()
+        val parentIsNoMedia = FileFilterUtils.isWithinNoMediaBoundary(parent)
+        val result = mutableListOf<MediaFolder>()
+
+        for (child in children) {
+            currentCoroutineContext().ensureActive()
+            if (!child.isDirectory || child.absolutePath in blacklistedFolders) continue
+            if (FileFilterUtils.shouldSkipFolder(child, policy)) continue
+            if (!parentIsNoMedia && !FileFilterUtils.hasNoMediaFile(child)) continue
+
+            val entries = child.listFiles() ?: continue
+            var videoCount = 0
+            var audioCount = 0
+            var totalSize = 0L
+            var latestModified = child.lastModified() / 1000
+            var hasSubfolders = false
+
+            for (entry in entries) {
+                currentCoroutineContext().ensureActive()
+                if (entry.isDirectory) {
+                    if (!FileFilterUtils.shouldSkipFolder(entry, policy)) hasSubfolders = true
+                    continue
+                }
+                if (!entry.isFile || FileFilterUtils.shouldSkipFile(entry)) continue
+
+                val isVideo = FileTypeUtils.isVideoFile(entry)
+                val isAudio = FileTypeUtils.isAudioFile(entry)
+                if (!isVideo && !isAudio) continue
+
+                if (isAudio) audioCount++ else videoCount++
+                totalSize += entry.length()
+                latestModified = maxOf(latestModified, entry.lastModified() / 1000)
+            }
+
+            if (videoCount > 0 || audioCount > 0 || hasSubfolders) {
+                val normalizedPath =
+                    runCatching { child.canonicalPath }.getOrElse { child.absoluteFile.normalize().path }
+                result += MediaFolder(
+                    id = normalizedPath,
+                    name = child.name,
+                    path = normalizedPath,
+                    videoCount = videoCount,
+                    audioCount = audioCount,
+                    totalSize = totalSize,
+                    totalDuration = 0,
+                    lastModified = latestModified,
+                    hasSubfolders = hasSubfolders,
+                    isRecursive = false,
+                    newCount = 0,
+                    unwatchedVideoCount = videoCount + audioCount,
+                )
+            }
+        }
+
+        return result
     }
 
     /**
@@ -256,7 +334,9 @@ object CoreMediaScanner {
                     }
 
                     // Calculate unwatched status for all media (audio and video)
-                    val playbackState = playbackStates.find { it.mediaTitle == item.name }
+                    val playbackState = playbackStates.find {
+                        it.mediaTitle == item.path || it.mediaTitle == item.name || it.mediaTitle == File(item.path).name
+                    }
                     var isWatched = false
                     
                     if (playbackState != null) {
@@ -267,7 +347,7 @@ object CoreMediaScanner {
                             val watched = durationSeconds - playbackState.timeRemaining.toLong()
                             val progressValue = (watched.toFloat() / durationSeconds.toFloat()).coerceIn(0f, 1f)
                             if (progressValue >= (watchedThreshold / 100f)) {
-                                isWatched = true
+                                 isWatched = true
                             }
                         }
                     }
@@ -276,7 +356,7 @@ object CoreMediaScanner {
                         unwatchedCount++
                     }
 
-                    // Calculate NEW status
+                    // Calculate NEW status: unplayed videos within the time threshold
                     val videoAge = currentTime - (item.dateModified * 1000)
                     val isNew = (playbackState == null && videoAge <= thresholdMillis) || (playbackState != null && playbackState.timeRemaining == -1)
                     if (isNew) {
@@ -345,6 +425,7 @@ object CoreMediaScanner {
                     rawMedia.getOrPut(folderPath) { mutableListOf() }.add(
                         ScannedItem(
                             name = cursor.getString(nameIdx) ?: file.name,
+                            path = path,
                             size = cursor.getLong(sizeIdx),
                             duration = cursor.getLong(durationIdx),
                             dateModified = cursor.getLong(dateIdx),
@@ -395,6 +476,7 @@ object CoreMediaScanner {
                     itemsInFolder.add(
                         ScannedItem(
                             name = file.name,
+                            path = file.absolutePath,
                             size = file.length(),
                             duration = 0, // Filesystem doesn't give duration
                             dateModified = file.lastModified() / 1000,

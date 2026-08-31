@@ -44,8 +44,42 @@ class TrackSelector(
   private val audioPreferences: AudioPreferences,
   private val subtitlesPreferences: SubtitlesPreferences,
 ) {
+  data class TrackChoice(
+    val title: String = "",
+    val lang: String = "",
+    val isOff: Boolean = false,
+  )
+
   companion object {
     private const val TAG = "TrackSelector"
+
+    var rememberedAudioChoice: TrackChoice? = null
+      private set
+    var rememberedSubtitleChoice: TrackChoice? = null
+      private set
+
+    fun rememberAudioTrack(title: String?, lang: String?) {
+      rememberedAudioChoice = TrackChoice(
+        title = (title ?: "").lowercase().trim(),
+        lang = (lang ?: "").lowercase().trim(),
+        isOff = false,
+      )
+      Log.d(TAG, "Remembered audio choice: title='${rememberedAudioChoice?.title}', lang='${rememberedAudioChoice?.lang}'")
+    }
+
+    fun rememberSubtitleTrack(title: String?, lang: String?, isOff: Boolean) {
+      rememberedSubtitleChoice = TrackChoice(
+        title = (title ?: "").lowercase().trim(),
+        lang = (lang ?: "").lowercase().trim(),
+        isOff = isOff,
+      )
+      Log.d(TAG, "Remembered subtitle choice: title='${rememberedSubtitleChoice?.title}', lang='${rememberedSubtitleChoice?.lang}', isOff=$isOff")
+    }
+
+    fun clearRememberedChoices() {
+      rememberedAudioChoice = null
+      rememberedSubtitleChoice = null
+    }
   }
 
   // The Data Class for massively improved performance.
@@ -103,11 +137,47 @@ class TrackSelector(
           forced = MPVLib.getPropertyBoolean("track-list/$i/forced") ?: false,
           hearing = MPVLib.getPropertyBoolean("track-list/$i/hearing-impaired") ?: false,
           external = MPVLib.getPropertyBoolean("track-list/$i/external") ?: false,
-          image = MPVLib.getPropertyBoolean("track-list/$i/image") ?: false
+          image = (MPVLib.getPropertyBoolean("track-list/$i/image") ?: false) ||
+                  (MPVLib.getPropertyBoolean("track-list/$i/albumart") ?: false)
         )
       )
     }
     return list
+  }
+
+  private fun findMatchingTrack(tracks: List<Track>, choice: TrackChoice): Track? {
+    if (choice.isOff) return null
+
+    val targetTitle = choice.title.trim().lowercase()
+    val targetLang = choice.lang.trim().lowercase()
+
+    // 1. Match both non-empty title and non-empty lang
+    if (targetTitle.isNotEmpty() && targetLang.isNotEmpty()) {
+      tracks.firstOrNull {
+        it.title.trim().lowercase() == targetTitle &&
+          (it.lang.trim().lowercase() == targetLang ||
+           it.lang.startsWith(targetLang) ||
+           targetLang.startsWith(it.lang))
+      }?.let { return it }
+    }
+
+    // 2. Match non-empty title
+    if (targetTitle.isNotEmpty()) {
+      tracks.firstOrNull {
+        it.title.trim().lowercase() == targetTitle
+      }?.let { return it }
+    }
+
+    // 3. Match non-empty lang when title is empty
+    if (targetTitle.isEmpty() && targetLang.isNotEmpty()) {
+      tracks.firstOrNull {
+        (it.lang.trim().lowercase() == targetLang ||
+         it.lang.startsWith(targetLang) ||
+         targetLang.startsWith(it.lang))
+      }?.let { return it }
+    }
+
+    return null
   }
 
   // ==================================================
@@ -162,8 +232,34 @@ class TrackSelector(
 
   private suspend fun ensureAudioTrackSelected(tracks: List<Track>, hasState: Boolean) {
     try {
+      val audioTracks = tracks.filter { it.type == "audio" }
+      if (audioTracks.isEmpty()) return
+
       val currentAid = MPVLib.getPropertyInt("aid")
-      if (hasState && currentAid != null && currentAid > 0) return
+      if (hasState && currentAid != null && currentAid > 0) {
+        audioTracks.firstOrNull { it.id == currentAid }?.let {
+          rememberAudioTrack(it.title, it.lang)
+        }
+        return
+      }
+
+      // Pass 0: Try remembered audio choice from previous video/session
+      if (!hasState && rememberedAudioChoice != null) {
+        val choice = rememberedAudioChoice!!
+        val matchedTrack = findMatchingTrack(audioTracks, choice)
+        if (matchedTrack != null) {
+          if (currentAid == matchedTrack.id) {
+            Log.d(TAG, "Smart Audio: Matched remembered choice '${choice.title}'/'${choice.lang}' (id=${matchedTrack.id}) [Already Active. Skipping Change.]")
+          } else {
+            Log.d(TAG, "Smart Audio: Matched remembered choice '${choice.title}'/'${choice.lang}' (id=${matchedTrack.id}) [Applied]")
+            MPVLib.setPropertyInt("aid", matchedTrack.id)
+          }
+          rememberAudioTrack(matchedTrack.title, matchedTrack.lang)
+          return
+        } else {
+          Log.d(TAG, "Smart Audio: Remembered choice '${choice.title}'/'${choice.lang}' not found in new video. Falling back to normal selection.")
+        }
+      }
 
       val preferredLangs = audioPreferences.preferredLanguages.get()
         .split(",")
@@ -171,7 +267,6 @@ class TrackSelector(
         .filter { it.isNotEmpty() }
 
       val ignoreKeywords = listOf("commentary", "description", "adh", "comment", "extra")
-      val audioTracks = tracks.filter { it.type == "audio" }
 
       // Priority 1: Preferred clean audio
       if (preferredLangs.isNotEmpty()) {
@@ -185,6 +280,7 @@ class TrackSelector(
                   Log.d(TAG, "Smart Audio: Selected ${track.lang} (id=${track.id}) [Applied]")
                   MPVLib.setPropertyInt("aid", track.id)
                 }
+                rememberAudioTrack(track.title, track.lang)
                 return
               }
             }
@@ -193,7 +289,12 @@ class TrackSelector(
       }
 
       // Priority 2: Fallback MPV default
-      if (currentAid != null && currentAid > 0) return
+      if (currentAid != null && currentAid > 0) {
+        audioTracks.firstOrNull { it.id == currentAid }?.let {
+          rememberAudioTrack(it.title, it.lang)
+        }
+        return
+      }
 
       // Priority 3: First available clean audio track
       for (track in audioTracks) {
@@ -204,6 +305,7 @@ class TrackSelector(
             Log.d(TAG, "Smart Audio: Fallback (id=${track.id}) [Applied]")
             MPVLib.setPropertyInt("aid", track.id)
           }
+          rememberAudioTrack(track.title, track.lang)
           return
         }
       }
@@ -218,11 +320,14 @@ class TrackSelector(
 
   private suspend fun ensureSubtitleTrackSelected(tracks: List<Track>, hasState: Boolean) {
     try {
+      val subTracks = tracks.filter { it.type == "sub" }
+
       // If user has disabled subtitles by default, turn off subtitles unless we are restoring state
       if (subtitlesPreferences.disableSubtitlesByDefault.get()) {
         if (!hasState) {
           Log.d(TAG, "Smart Sub: Subtitles disabled by default (user preference). Disabling subtitle track.")
           MPVLib.setPropertyString("sid", "no")
+          rememberSubtitleTrack(null, null, isOff = true)
         } else {
           Log.d(TAG, "Smart Sub: Subtitles disabled by default, but respecting saved playback state.")
         }
@@ -231,13 +336,43 @@ class TrackSelector(
 
       val currentSid = MPVLib.getPropertyInt("sid") ?: 0
 
-      // Respect manual "Subtitles Off" state
+      // Respect manual "Subtitles Off" state in saved DB state
       if (hasState && currentSid == 0) {
         Log.d(TAG, "Smart Sub: User disabled subtitles manually. Respecting choice.")
+        rememberSubtitleTrack(null, null, isOff = true)
         return
       }
 
-      if (hasState && currentSid > 0) return
+      if (hasState && currentSid > 0) {
+        subTracks.firstOrNull { it.id == currentSid }?.let {
+          rememberSubtitleTrack(it.title, it.lang, isOff = false)
+        }
+        return
+      }
+
+      // Pass 0: Try remembered subtitle choice from previous video/session
+      if (!hasState && rememberedSubtitleChoice != null) {
+        val choice = rememberedSubtitleChoice!!
+        if (choice.isOff) {
+          Log.d(TAG, "Smart Sub: Remembering choice [Subtitles Off]. Disabling subtitle track.")
+          MPVLib.setPropertyString("sid", "no")
+          return
+        }
+
+        val matchedTrack = findMatchingTrack(subTracks, choice)
+        if (matchedTrack != null) {
+          if (currentSid == matchedTrack.id) {
+            Log.d(TAG, "Smart Sub: Matched remembered choice '${choice.title}'/'${choice.lang}' (id=${matchedTrack.id}) [Already Active. Skipping Change.]")
+          } else {
+            Log.d(TAG, "Smart Sub: Matched remembered choice '${choice.title}'/'${choice.lang}' (id=${matchedTrack.id}) [Applied]")
+            MPVLib.setPropertyInt("sid", matchedTrack.id)
+          }
+          rememberSubtitleTrack(matchedTrack.title, matchedTrack.lang, isOff = false)
+          return
+        } else {
+          Log.d(TAG, "Smart Sub: Remembered choice '${choice.title}'/'${choice.lang}' not found in new video. Falling back to normal selection.")
+        }
+      }
 
       val isAnimeContext = detectAnimeContext(tracks)
       Log.d(TAG, "Smart Tracks: Context defined by Internal Auto-Detection -> $isAnimeContext")
@@ -256,7 +391,6 @@ class TrackSelector(
       if (preferredLangs.isEmpty()) preferredLangs = listOf("eng", "en")
 
       val ignoreSubs = listOf("signs", "songs", "lyrics", "forced", "sdh", "colored", "karaoke")
-      val subTracks = tracks.filter { it.type == "sub" }
 
       // PASS 00: EXTERNAL TRACK OVERRIDE (Protects manually loaded subtitle files)
       for (track in subTracks) {
@@ -267,6 +401,7 @@ class TrackSelector(
             Log.d(TAG, "Smart Sub: External Subtitle Detected (id=${track.id}) [Applied]")
             MPVLib.setPropertyInt("sid", track.id)
           }
+          rememberSubtitleTrack(track.title, track.lang, isOff = false)
           return
         }
       }
@@ -285,6 +420,7 @@ class TrackSelector(
                   Log.d(TAG, "Smart Sub: Native File Default Japanese Sub (id=${track.id}) [Applied]")
                   MPVLib.setPropertyInt("sid", track.id)
                 }
+                rememberSubtitleTrack(track.title, track.lang, isOff = false)
                 return
               }
             }
@@ -306,6 +442,7 @@ class TrackSelector(
                   Log.d(TAG, "Smart Sub: Anime Dialogue matched (id=${track.id}) [Applied]")
                   MPVLib.setPropertyInt("sid", track.id)
                 }
+                rememberSubtitleTrack(track.title, track.lang, isOff = false)
                 return
               }
             }
@@ -324,6 +461,7 @@ class TrackSelector(
                 Log.d(TAG, "Smart Sub: Clean Match (id=${track.id}) [Applied]")
                 MPVLib.setPropertyInt("sid", track.id)
               }
+              rememberSubtitleTrack(track.title, track.lang, isOff = false)
               return
             }
           }
@@ -340,6 +478,7 @@ class TrackSelector(
               Log.d(TAG, "Smart Sub: Fallback Match (id=${track.id}) [Applied]")
               MPVLib.setPropertyInt("sid", track.id)
             }
+            rememberSubtitleTrack(track.title, track.lang, isOff = false)
             return
           }
         }
@@ -350,3 +489,4 @@ class TrackSelector(
     }
   }
 }
+

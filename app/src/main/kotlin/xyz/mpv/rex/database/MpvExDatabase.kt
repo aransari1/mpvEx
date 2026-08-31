@@ -4,12 +4,15 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import xyz.mpv.rex.database.converters.NetworkProtocolConverter
+import xyz.mpv.rex.database.dao.HybridMediaDao
 import xyz.mpv.rex.database.dao.NetworkConnectionDao
 import xyz.mpv.rex.database.dao.PlaybackStateDao
 import xyz.mpv.rex.database.dao.PlaylistDao
 import xyz.mpv.rex.database.dao.RecentlyPlayedDao
 import xyz.mpv.rex.database.dao.VideoMetadataDao
 import xyz.mpv.rex.database.dao.ShortsMediaDao
+import xyz.mpv.rex.database.entities.HybridMediaEntity
+import xyz.mpv.rex.database.entities.HybridMediaRootEntity
 import xyz.mpv.rex.database.entities.PlaybackStateEntity
 import xyz.mpv.rex.database.entities.PlaylistEntity
 import xyz.mpv.rex.database.entities.PlaylistItemEntity
@@ -27,8 +30,10 @@ import xyz.mpv.rex.domain.network.NetworkConnection
     PlaylistEntity::class,
     PlaylistItemEntity::class,
     ShortsMediaEntity::class,
+    HybridMediaEntity::class,
+    HybridMediaRootEntity::class,
   ],
-  version = 13,
+  version = 15,
   exportSchema = true,
 )
 @TypeConverters(NetworkProtocolConverter::class)
@@ -44,4 +49,6 @@ abstract class MpvExDatabase : RoomDatabase() {
   abstract fun playlistDao(): PlaylistDao
 
   abstract fun shortsMediaDao(): ShortsMediaDao
+
+  abstract fun hybridMediaDao(): HybridMediaDao
 }

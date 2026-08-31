@@ -3,17 +3,22 @@ package xyz.mpv.rex.preferences
 
 import xyz.mpv.rex.preferences.preference.PreferenceStore
 import xyz.mpv.rex.preferences.preference.getEnum
+import xyz.mpv.rex.ui.player.BackgroundPlaybackMode
 import xyz.mpv.rex.ui.player.PlayerOrientation
 import xyz.mpv.rex.ui.player.RepeatMode
+import xyz.mpv.rex.ui.player.ResumePlaybackMode
 import xyz.mpv.rex.ui.player.VideoAspect
 
 class PlayerPreferences(
   preferenceStore: PreferenceStore,
 ) {
   val orientation = preferenceStore.getEnum("player_orientation", PlayerOrientation.Video)
+  val backgroundPlayback = preferenceStore.getEnum("background_playback_mode", BackgroundPlaybackMode.AudioOnly)
   val invertDuration = preferenceStore.getBoolean("invert_duration")
   val holdForMultipleSpeed = preferenceStore.getFloat("hold_for_multiple_speed", 2f)
+  val rememberLongPressSpeed = preferenceStore.getBoolean("remember_long_press_speed", true)
   val showDynamicSpeedOverlay = preferenceStore.getBoolean("show_dynamic_speed_overlay", true)
+  val showSpeedIndicatorOverlay = preferenceStore.getBoolean("show_speed_indicator_overlay", true)
   val showDoubleTapOvals = preferenceStore.getBoolean("show_double_tap_ovals", true)
   val showCircularDoubleTapSeek = preferenceStore.getBoolean("show_circular_double_tap_seek", true)
   val showSeekTimeWhileSeeking = preferenceStore.getBoolean("show_seek_time_while_seeking", true)
@@ -39,6 +44,7 @@ class PlayerPreferences(
   val swapVolumeAndBrightness = preferenceStore.getBoolean("display_volume_on_right")
   val showLoadingCircle = preferenceStore.getBoolean("show_loading_circle", true)
   val savePositionOnQuit = preferenceStore.getBoolean("save_position", true)
+  val resumePlaybackMode = preferenceStore.getEnum("resume_playback_mode", ResumePlaybackMode.Always)
 
   val closeAfterReachingEndOfVideo = preferenceStore.getBoolean("close_after_eof", true)
 
@@ -66,10 +72,16 @@ class PlayerPreferences(
   val playlistMode = preferenceStore.getBoolean("playlist_mode", true)
   val playlistViewMode = preferenceStore.getBoolean("playlist_view_mode_list", true) // true = list, false = grid
 
+  // When enabled, tapping a media item starts playback directly in the bottom mini player bar
+  // (headless, no full-screen player) instead of opening PlayerActivity.
+  val playInMiniPlayerDirectly = preferenceStore.getBoolean("play_in_mini_player_directly", false)
+
   val useWavySeekbar = preferenceStore.getBoolean("use_wavy_seekbar", true)
   val bottomControlsBelowSeekbar = preferenceStore.getBoolean("bottom_controls_below_seekbar", false)
   val showSeekBarWhenSeeking = preferenceStore.getBoolean("show_seekbar_when_seeking", false)
   val whiteSeekBar = preferenceStore.getBoolean("white_seekbar", false)
+  val showSeekbarChapters = preferenceStore.getBoolean("show_seekbar_chapters", true)
+  val showSeekbarReadAhead = preferenceStore.getBoolean("show_seekbar_read_ahead", true)
   val hideOsdText = preferenceStore.getBoolean("hide_osd_text_v2", false)
 
   val customSkipDuration = preferenceStore.getInt("custom_skip_duration", 90)

@@ -181,11 +181,13 @@ object SubtitlesPreferencesScreen : Screen {
             preferences.subtitleSaveFolder.set(uri.toString())
           }
 
+        val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
         LazyColumn(
           modifier =
             Modifier
               .fillMaxSize()
               .padding(padding),
+          contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
         ) {
           // === GENERAL SECTION ===
           item {
@@ -282,6 +284,21 @@ object SubtitlesPreferencesScreen : Screen {
                 summary = {
                   Text(
                     stringResource(R.string.player_sheets_sub_scale_by_window_summary),
+                    color = MaterialTheme.colorScheme.outline,
+                  )
+                },
+              )
+
+              PreferenceDivider()
+
+              val forceLtr by preferences.forceLtr.collectAsState()
+              SwitchPreference(
+                value = forceLtr,
+                onValueChange = { preferences.forceLtr.set(it) },
+                title = { Text(stringResource(R.string.pref_subtitles_force_ltr_title)) },
+                summary = {
+                  Text(
+                    stringResource(R.string.pref_subtitles_force_ltr_summary),
                     color = MaterialTheme.colorScheme.outline,
                   )
                 },

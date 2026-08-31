@@ -376,6 +376,8 @@ private fun SquigglySeekbar(
 ) {
   val playerPreferences = koinInject<PlayerPreferences>()
   val whiteSeekBar by playerPreferences.whiteSeekBar.collectAsState()
+  val showSeekbarChapters by playerPreferences.showSeekbarChapters.collectAsState()
+  val showSeekbarReadAhead by playerPreferences.showSeekbarReadAhead.collectAsState()
   val primaryColor = if (whiteSeekBar) Color.White else MaterialTheme.colorScheme.primary
   val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
 
@@ -613,11 +615,13 @@ private fun SquigglySeekbar(
         return
       }
       val gaps =
-        chapters
-          .map { (it.start / duration).coerceIn(0f, 1f) * totalWidth }
-          .filter { it in startX..endX }
-          .sorted()
-          .map { x -> (x - gapHalf).coerceAtLeast(startX) to (x + gapHalf).coerceAtMost(endX) }
+        if (showSeekbarChapters) {
+          chapters
+            .map { (it.start / duration).coerceIn(0f, 1f) * totalWidth }
+            .filter { it in startX..endX }
+            .sorted()
+            .map { x -> (x - gapHalf).coerceAtLeast(startX) to (x + gapHalf).coerceAtMost(endX) }
+        } else emptyList()
 
       var segmentStart = startX
       for ((gapStart, gapEnd) in gaps) {
@@ -657,20 +661,20 @@ private fun SquigglySeekbar(
     drawPathWithGaps(0f, totalProgressPx, primaryColor)
 
     // Buffer segment
-    if (totalReadAheadPx > totalProgressPx) {
+    if (showSeekbarReadAhead && totalReadAheadPx > totalProgressPx) {
       val bufferAlpha = 0.5f
       drawPathWithGaps(totalProgressPx, totalReadAheadPx, primaryColor.copy(alpha = bufferAlpha))
     }
 
+    val unplayedStart = if (showSeekbarReadAhead) maxOf(totalProgressPx, totalReadAheadPx) else totalProgressPx
+
     if (transitionEnabled) {
       val disabledAlpha = 77f / 255f
-      val unplayedStart = maxOf(totalProgressPx, totalReadAheadPx)
       drawPathWithGaps(unplayedStart, totalWidth, primaryColor.copy(alpha = disabledAlpha))
     } else {
-      val flatLineStart = maxOf(totalProgressPx, totalReadAheadPx)
       drawLine(
         color = surfaceVariant.copy(alpha = 0.4f),
-        start = Offset(flatLineStart, centerY),
+        start = Offset(unplayedStart, centerY),
         end = Offset(totalWidth, centerY),
         strokeWidth = strokeWidth,
         cap = StrokeCap.Round,
@@ -758,11 +762,7 @@ fun VideoTimer(
   val appearancePreferences = koinInject<AppearancePreferences>()
   val matchTheme by appearancePreferences.matchPlayerControlsToTheme.collectAsState()
   
-  val timeText by remember(isInverted) {
-    derivedStateOf {
-      Utils.prettyTime(value().toInt(), isInverted)
-    }
-  }
+  val timeText = Utils.prettyTime(value().toInt(), isInverted)
   
   Text(
     modifier =
@@ -799,6 +799,8 @@ fun StandardSeekbar(
 ) {
     val playerPreferences = koinInject<PlayerPreferences>()
     val whiteSeekBar by playerPreferences.whiteSeekBar.collectAsState()
+    val showSeekbarChapters by playerPreferences.showSeekbarChapters.collectAsState()
+    val showSeekbarReadAhead by playerPreferences.showSeekbarReadAhead.collectAsState()
     val primaryColor = if (whiteSeekBar) Color.White else MaterialTheme.colorScheme.primary
     val interactionSource = remember { MutableInteractionSource() }
     
@@ -941,10 +943,12 @@ fun StandardSeekbar(
                     val thumbGapStart = (thumbPx - gapHalf).coerceIn(0f, size.width)
                     val thumbGapEnd = (thumbPx + gapHalf).coerceIn(0f, size.width)
                     
-                    val chapterGaps = chapters
-                        .map { (it.start / duration).coerceIn(0f, 1f) * size.width }
-                        .filter { it > 0f && it < size.width }
-                        .map { x -> (x - chapterGapHalf) to (x + chapterGapHalf) }
+                    val chapterGaps = if (showSeekbarChapters) {
+                        chapters
+                            .map { (it.start / duration).coerceIn(0f, 1f) * size.width }
+                            .filter { it > 0f && it < size.width }
+                            .map { x -> (x - chapterGapHalf) to (x + chapterGapHalf) }
+                    } else emptyList()
 
                     val allGaps = (chapterGaps + (thumbGapStart to thumbGapEnd))
                         .filter { it.first < it.second }
@@ -964,7 +968,7 @@ fun StandardSeekbar(
 
                         val isOuterRight = endX >= size.width - 0.5f
                         val isInnerRight = kotlin.math.abs(endX - thumbGapStart) < 0.5f
-                        val isBufferRight = kotlin.math.abs(endX - readAheadPx) < 0.5f && readAheadPx > playedPx
+                        val isBufferRight = kotlin.math.abs(endX - readAheadPx) < 0.5f && readAheadPx > playedPx && showSeekbarReadAhead
 
                         val cornerRadiusRight = when {
                             isOuterRight || isBufferRight -> androidx.compose.ui.geometry.CornerRadius(outerRadius)
@@ -1017,7 +1021,7 @@ fun StandardSeekbar(
                      }
                      
                      // 2. Buffer
-                     if (readAheadPx > playedPx) {
+                     if (showSeekbarReadAhead && readAheadPx > playedPx) {
                          drawRangeWithGaps(playedPx, readAheadPx, allGaps, primaryColor.copy(alpha = bufferAlpha))
                      }
                      

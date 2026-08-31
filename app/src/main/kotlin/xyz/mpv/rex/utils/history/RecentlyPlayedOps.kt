@@ -52,6 +52,24 @@ object RecentlyPlayedOps {
     )
   }
 
+  fun recordPlaybackStart(
+    uri: Uri,
+    fileName: String,
+    launchSource: String? = null,
+    playlistId: Int? = null,
+  ) {
+    historyManager.recordPlaybackStart(
+      uri = uri,
+      fileName = fileName,
+      launchSource = launchSource ?: "direct_mini_player",
+      playlistId = playlistId,
+    )
+  }
+
+  fun updateCurrentMediaMetadata(fileName: String) {
+    historyManager.updateCurrentMediaMetadata(fileName)
+  }
+
   suspend fun clearAll() {
     historyManager.clearAll()
   }

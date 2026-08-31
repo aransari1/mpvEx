@@ -492,6 +492,61 @@ val MIGRATION_12_13 = object : Migration(12, 13) {
   }
 }
 
+val MIGRATION_13_14 = object : Migration(13, 14) {
+  override fun migrate(db: SupportSQLiteDatabase) {
+    db.execSQL("ALTER TABLE `PlaybackStateEntity` ADD COLUMN `externalAudioTracks` TEXT NOT NULL DEFAULT ''")
+  }
+}
+
+val MIGRATION_14_15 = object : Migration(14, 15) {
+  override fun migrate(db: SupportSQLiteDatabase) {
+    db.execSQL(
+      """
+      CREATE TABLE IF NOT EXISTS hybrid_media_index (
+        identity TEXT NOT NULL,
+        sourceType TEXT NOT NULL,
+        sourceRoot TEXT NOT NULL,
+        location TEXT NOT NULL,
+        parentIdentity TEXT NOT NULL,
+        parentDisplayName TEXT NOT NULL,
+        displayName TEXT NOT NULL,
+        mimeType TEXT NOT NULL,
+        size INTEGER NOT NULL,
+        dateModified INTEGER NOT NULL,
+        isAudio INTEGER NOT NULL,
+        isNoMedia INTEGER NOT NULL,
+        duration INTEGER NOT NULL,
+        width INTEGER NOT NULL,
+        height INTEGER NOT NULL,
+        rotation INTEGER NOT NULL,
+        metadataState TEXT NOT NULL,
+        available INTEGER NOT NULL,
+        lastSeenGeneration INTEGER NOT NULL,
+        PRIMARY KEY(identity)
+      )
+      """.trimIndent(),
+    )
+    db.execSQL("CREATE INDEX IF NOT EXISTS index_hybrid_media_index_parentIdentity ON hybrid_media_index(parentIdentity)")
+    db.execSQL("CREATE INDEX IF NOT EXISTS index_hybrid_media_index_sourceRoot ON hybrid_media_index(sourceRoot)")
+    db.execSQL("CREATE INDEX IF NOT EXISTS index_hybrid_media_index_available ON hybrid_media_index(available)")
+    db.execSQL(
+      """
+      CREATE TABLE IF NOT EXISTS hybrid_media_roots (
+        identity TEXT NOT NULL,
+        sourceType TEXT NOT NULL,
+        location TEXT NOT NULL,
+        displayName TEXT NOT NULL,
+        available INTEGER NOT NULL,
+        lastGeneration INTEGER NOT NULL,
+        lastCompletedAt INTEGER NOT NULL,
+        lastError TEXT,
+        PRIMARY KEY(identity)
+      )
+      """.trimIndent(),
+    )
+  }
+}
+
 val DatabaseModule =
   module {
     single<Json> {
@@ -506,7 +561,7 @@ val DatabaseModule =
       Room
         .databaseBuilder(context, MpvExDatabase::class.java, "mpvex.db")
         .setJournalMode(RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING)
-        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15)
         .fallbackToDestructiveMigration(false) // This is now safe
         .build()
     }
@@ -523,6 +578,16 @@ val DatabaseModule =
       xyz.mpv.rex.database.repository.VideoMetadataCacheRepository(
         context = androidContext(),
         dao = get<MpvExDatabase>().videoMetadataDao(),
+      )
+    }
+
+    single {
+      xyz.mpv.rex.database.repository.HybridMediaIndexRepository(
+        context = androidContext(),
+        dao = get<MpvExDatabase>().hybridMediaDao(),
+        browserPreferences = get(),
+        foldersPreferences = get(),
+        metadataCacheRepository = get(),
       )
     }
 

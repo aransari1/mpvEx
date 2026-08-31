@@ -63,6 +63,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import xyz.mpv.rex.database.repository.PlaylistRepository
@@ -82,9 +84,7 @@ import xyz.mpv.rex.ui.browser.states.EmptyState
 import xyz.mpv.rex.ui.utils.LocalBackStack
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
-import my.nanihadesuka.compose.LazyColumnScrollbar
-import my.nanihadesuka.compose.LazyVerticalGridScrollbar
-import my.nanihadesuka.compose.ScrollbarSettings
+
 import org.koin.compose.koinInject
 
 @Serializable
@@ -327,7 +327,7 @@ object PlaylistScreen : Screen {
             onPlaylistLongClick = { playlistWithCount ->
               selectionManager.handleLongClick(playlistWithCount)
             },
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(top = paddingValues.calculateTopPadding()),
             isInSelectionMode = selectionManager.isInSelectionMode,
           )
         }
@@ -346,7 +346,20 @@ object PlaylistScreen : Screen {
       if (showRenameDialog && selectionManager.isSingleSelection) {
         val selectedPlaylist = selectionManager.getSelectedItems().firstOrNull()
         if (selectedPlaylist != null) {
-          var playlistName by remember { mutableStateOf(selectedPlaylist.playlist.name) }
+          var playlistName by remember(selectedPlaylist) {
+            mutableStateOf(
+              TextFieldValue(
+                text = selectedPlaylist.playlist.name,
+                selection = TextRange(selectedPlaylist.playlist.name.length),
+              ),
+            )
+          }
+          val focusRequester = remember { FocusRequester() }
+
+          LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+          }
+
           androidx.compose.material3.AlertDialog(
             onDismissRequest = { showRenameDialog = false },
             title = { Text(stringResource(R.string.rename_playlist)) },
@@ -356,21 +369,24 @@ object PlaylistScreen : Screen {
                 onValueChange = { playlistName = it },
                 label = { Text(stringResource(R.string.playlist_name)) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+                modifier =
+                  Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
               )
             },
             confirmButton = {
               androidx.compose.material3.TextButton(
                 onClick = {
-                  if (playlistName.isNotBlank()) {
+                  if (playlistName.text.isNotBlank()) {
                     scope.launch {
-                      repository.updatePlaylist(selectedPlaylist.playlist.copy(name = playlistName.trim()))
+                      repository.updatePlaylist(selectedPlaylist.playlist.copy(name = playlistName.text.trim()))
                       showRenameDialog = false
                       selectionManager.clear()
                     }
                   }
                 },
-                enabled = playlistName.isNotBlank(),
+                enabled = playlistName.text.isNotBlank(),
               ) {
                 Text(stringResource(R.string.rename))
               }

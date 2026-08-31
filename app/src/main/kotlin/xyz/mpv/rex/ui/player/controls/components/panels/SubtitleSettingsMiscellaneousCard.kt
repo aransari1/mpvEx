@@ -93,6 +93,21 @@ fun SubtitlesMiscellaneousCard(modifier: Modifier = Modifier) {
           summary = { Text(stringResource(R.string.pref_subtitles_open_at_video_location_summary)) },
         )
 
+        val forceLtr by preferences.forceLtr.collectAsState()
+        SwitchPreference(
+          forceLtr,
+          onValueChange = {
+            preferences.forceLtr.set(it)
+            val value = if (it) "yes" else "no"
+            runCatching {
+              MPVLib.setPropertyString("sub-vsfilter-bidi-compat", value)
+              MPVLib.command("sub-reload")
+            }
+          },
+          { Text(stringResource(R.string.pref_subtitles_force_ltr_title)) },
+          summary = { Text(stringResource(R.string.pref_subtitles_force_ltr_summary)) },
+        )
+
         val subScale by MPVLib.propFloat["sub-scale"].collectAsState()
         val subPos by MPVLib.propInt["sub-pos"].collectAsState()
         SliderItem(

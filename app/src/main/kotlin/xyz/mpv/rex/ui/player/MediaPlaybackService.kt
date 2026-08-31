@@ -5,9 +5,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ServiceInfo
+import android.media.AudioManager
 import android.graphics.Bitmap
 import android.os.Binder
 import android.os.Build
@@ -22,11 +25,13 @@ import androidx.core.app.ServiceCompat
 import androidx.media.MediaBrowserServiceCompat
 import androidx.media.session.MediaButtonReceiver
 import xyz.mpv.rex.R
+import xyz.mpv.rex.MainActivity
 import `is`.xyz.mpv.MPVLib
 import `is`.xyz.mpv.MPVNode
 import xyz.mpv.rex.preferences.PlayerPreferences
 import xyz.mpv.rex.preferences.GesturePreferences
 import xyz.mpv.rex.ui.player.SingleActionGesture
+import xyz.mpv.rex.ui.browser.miniplayer.MiniPlayerStateManager
 import kotlinx.coroutines.cancel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -72,14 +77,30 @@ class MediaPlaybackService :
   private val playerPreferences: PlayerPreferences by inject()
   private val gesturePreferences: GesturePreferences by inject()
   private val playbackManager: PlaybackManager by inject()
+  private val miniPlayerStateManager: MiniPlayerStateManager by inject()
 
   private val serviceScope = kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main)
 
   private var mediaTitle = ""
   private var mediaArtist = ""
+  private var isDirectMiniPlayerSession = false
   private var paused = false
   private var lastNotificationUpdateTime = 0L
   private val notificationUpdateIntervalMs = 1000L // Update notification every 1 second
+
+  /**
+   * Receiver for ACTION_AUDIO_BECOMING_NOISY (headphone disconnect).
+   * Pauses playback when headphones are unplugged during background playback.
+   */
+  private val noisyReceiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) {
+      if (intent?.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
+        Log.d(TAG, "Headphones disconnected — pausing background playback")
+        MPVLib.setPropertyBoolean("pause", true)
+      }
+    }
+  }
+  private var noisyReceiverRegistered = false
 
   /**
    * Listener for playback actions that the service cannot handle alone (like playlist navigation).
@@ -109,6 +130,15 @@ class MediaPlaybackService :
     createNotificationChannel(this)
 
     setupMediaSession()
+
+    // Register noisy receiver so headphone disconnects pause background playback
+    if (!noisyReceiverRegistered) {
+      registerReceiver(
+        noisyReceiver,
+        IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY),
+      )
+      noisyReceiverRegistered = true
+    }
     
     // Only add MPV observer if MPV is initialized
     try {
@@ -144,6 +174,7 @@ class MediaPlaybackService :
       // Get media info from intent extras if available
       val title = it.getStringExtra("media_title")
       val artist = it.getStringExtra("media_artist")
+      isDirectMiniPlayerSession = it.getBooleanExtra("direct_mini_player", false)
       
       if (!title.isNullOrBlank()) {
         mediaTitle = title
@@ -233,7 +264,7 @@ class MediaPlaybackService :
               if (!canHandle()) return
               Log.d(TAG, "onSkipToNext called")
               listener?.onNextRequested() ?: run {
-                MPVLib.command("playlist-next")
+                miniPlayerStateManager.playNext()
               }
             }
 
@@ -241,7 +272,7 @@ class MediaPlaybackService :
               if (!canHandle()) return
               Log.d(TAG, "onSkipToPrevious called")
               listener?.onPreviousRequested() ?: run {
-                MPVLib.command("playlist-prev")
+                miniPlayerStateManager.playPrevious()
               }
             }
 
@@ -310,6 +341,18 @@ class MediaPlaybackService :
           .build(),
       )
 
+      miniPlayerStateManager.updateState(
+        isPlaybackActive = true,
+        title = title,
+        artist = mediaArtist,
+        currentPositionMs = position,
+        durationMs = duration,
+        isPaused = paused,
+        thumbnail = thumbnail,
+        shuffleEnabled = playerPreferences.shuffleEnabled.get(),
+        repeatMode = playerPreferences.repeatMode.get(),
+      )
+
       // Update notification
       updateNotification()
     } catch (e: Exception) {
@@ -328,7 +371,10 @@ class MediaPlaybackService :
 
   private fun buildNotification(): Notification {
     val openAppIntent =
-      Intent(this, PlayerActivity::class.java).apply {
+      Intent(
+        this,
+        if (isDirectMiniPlayerSession) MainActivity::class.java else PlayerActivity::class.java,
+      ).apply {
         flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
       }
     val pendingIntent =
@@ -464,6 +510,12 @@ class MediaPlaybackService :
       // Cancel coroutine scope
       serviceScope.cancel()
 
+      // Unregister noisy receiver
+      if (noisyReceiverRegistered) {
+        runCatching { unregisterReceiver(noisyReceiver) }
+        noisyReceiverRegistered = false
+      }
+
       // Remove MPV observer safely
       try {
         MPVLib.removeObserver(this)
@@ -502,6 +554,12 @@ class MediaPlaybackService :
       // Clear thumbnail to prevent memory leak
       thumbnail = null
       
+      runCatching {
+        MPVLib.command("stop")
+      }
+
+      miniPlayerStateManager.clearState()
+
       Log.d(TAG, "Service cleanup completed")
       super.onDestroy()
     } catch (e: Exception) {

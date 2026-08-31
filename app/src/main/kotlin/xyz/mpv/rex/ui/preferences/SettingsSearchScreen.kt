@@ -207,8 +207,10 @@ object SettingsSearchScreen : Screen {
                         }
                     }
                 } else {
+                    val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
                     ) {
                         itemsIndexed(
                             items = searchResults,

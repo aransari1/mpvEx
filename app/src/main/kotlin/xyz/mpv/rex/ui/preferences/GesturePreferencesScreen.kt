@@ -84,12 +84,14 @@ object GesturePreferencesScreen : Screen {
         )
       },
     ) { padding ->
+      val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
       ProvidePreferenceLocals {
         LazyColumn(
           modifier =
             Modifier
               .fillMaxSize()
               .padding(padding),
+          contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
         ) {
           item {
             PreferenceSectionHeader(title = stringResource(R.string.pref_gesture_double_tap_title))
@@ -336,6 +338,22 @@ object GesturePreferencesScreen : Screen {
             summary = {
               Text(
                 text = stringResource(id = R.string.pref_gesture_use_relative_seeking_summary),
+              )
+            },
+          )
+
+          val enableReleaseToCancel by preferences.enableReleaseToCancel.collectAsState()
+          SwitchPreference(
+            value = enableReleaseToCancel,
+            onValueChange = { preferences.enableReleaseToCancel.set(it) },
+            title = {
+              Text(
+                text = stringResource(id = R.string.pref_gesture_enable_release_to_cancel_title),
+              )
+            },
+            summary = {
+              Text(
+                text = stringResource(id = R.string.pref_gesture_enable_release_to_cancel_summary),
               )
             },
           )

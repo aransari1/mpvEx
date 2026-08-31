@@ -103,11 +103,13 @@ object ShortsPreferencesScreen : Screen {
                 )
             },
         ) { padding ->
+            val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
             ProvidePreferenceLocals {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
                 ) {
                     item {
                         PreferenceSectionHeader(title = stringResource(R.string.general))
@@ -120,13 +122,6 @@ object ShortsPreferencesScreen : Screen {
                                 onValueChange = { browserPreferences.enableShorts.set(it) },
                                 title = { Text(stringResource(R.string.pref_enable_rexshorts)) },
                                 summary = { Text(stringResource(R.string.pref_enable_rexshorts_summary)) },
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.VideoLibrary,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
                             )
 
                             PreferenceDivider()
@@ -136,13 +131,6 @@ object ShortsPreferencesScreen : Screen {
                                 onValueChange = { browserPreferences.autoSwipeShorts.set(it) },
                                 title = { Text(stringResource(R.string.pref_auto_swipe_shorts)) },
                                 summary = { Text(stringResource(R.string.pref_auto_swipe_shorts_summary)) },
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Repeat,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
                             )
 
                             PreferenceDivider()
@@ -152,13 +140,6 @@ object ShortsPreferencesScreen : Screen {
                                 onValueChange = { browserPreferences.enableGlassShortsControls.set(it) },
                                 title = { Text(stringResource(R.string.pref_enable_glass_shorts_controls)) },
                                 summary = { Text(stringResource(R.string.pref_enable_glass_shorts_controls_summary)) },
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Opacity,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
                             )
 
                             PreferenceDivider()
@@ -168,13 +149,6 @@ object ShortsPreferencesScreen : Screen {
                                 onValueChange = { browserPreferences.showShortsBackButton.set(it) },
                                 title = { Text(stringResource(R.string.pref_show_shorts_back_button)) },
                                 summary = { Text(stringResource(R.string.pref_show_shorts_back_button_summary)) },
-                                icon = {
-                                    Icon(
-                                        Icons.AutoMirrored.Outlined.ArrowBack,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
                             )
                         }
                     }
@@ -190,13 +164,6 @@ object ShortsPreferencesScreen : Screen {
                                 onValueChange = { browserPreferences.includeShortHorizontalVideos.set(it) },
                                 title = { Text(stringResource(R.string.pref_include_short_horizontal_videos)) },
                                 summary = { Text(stringResource(R.string.pref_include_short_horizontal_videos_summary)) },
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.HorizontalRule,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                }
                             )
 
                             PreferenceDivider()
@@ -216,9 +183,6 @@ object ShortsPreferencesScreen : Screen {
                                 valueRange = 1f..10f,
                                 valueSteps = 9,
                                 enabled = includeHorizontal,
-                                icon = {
-                                    // Empty icon for alignment if needed or specific icon
-                                }
                             )
 
                             PreferenceDivider()
@@ -240,13 +204,6 @@ object ShortsPreferencesScreen : Screen {
                                     }
                                     Text(text = text, color = MaterialTheme.colorScheme.outline)
                                 },
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Folder,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
-                                },
                                 onClick = { showFolderSelector = true }
                             )
                         }
@@ -265,13 +222,6 @@ object ShortsPreferencesScreen : Screen {
                                         text = stringResource(R.string.pref_blocked_videos_summary),
                                         color = MaterialTheme.colorScheme.outline
                                     ) 
-                                },
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Block,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary
-                                    )
                                 },
                                 onClick = { backstack.add(BlockedShortsScreen) }
                             )

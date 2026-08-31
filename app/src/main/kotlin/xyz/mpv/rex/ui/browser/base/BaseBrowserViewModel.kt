@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import xyz.mpv.rex.database.repository.VideoMetadataCacheRepository
 import xyz.mpv.rex.domain.media.model.Video
 import xyz.mpv.rex.domain.playbackstate.repository.PlaybackStateRepository
+import xyz.mpv.rex.preferences.BrowserPreferences
 import xyz.mpv.rex.preferences.UiPreferences
 import xyz.mpv.rex.preferences.UiSettings
 import xyz.mpv.rex.repository.MediaFileRepository
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -45,6 +47,7 @@ abstract class BaseBrowserViewModel<T>(
   protected val metadataCache: VideoMetadataCacheRepository by inject()
   protected val uiPreferences: UiPreferences by inject()
   protected val playbackStateRepository: PlaybackStateRepository by inject()
+  protected val browserPreferences: BrowserPreferences by inject()
   
   // Common UI States
   val uiSettings: StateFlow<UiSettings> = uiPreferences.observeUiSettings()
@@ -87,18 +90,47 @@ abstract class BaseBrowserViewModel<T>(
 
   init {
     // Reactive Synchronization:
-    // Observe playback state changes and media library events, debouncing triggers
-    // to prevent redundant reload storms and cache invalidation races.
+    // Observe media library structural changes (file operations), debouncing triggers
+    // to prevent redundant reload storms.
     viewModelScope.launch(Dispatchers.Main) {
-      merge(
-        playbackStateRepository.observeAllPlaybackStates(),
-        MediaLibraryEvents.changes
-      )
+      MediaLibraryEvents.changes
         .debounce(300L)
         .collectLatest {
-          Log.d("BaseBrowserViewModel", "Invalidating scanner cache and refreshing browser data")
-          withContext(Dispatchers.IO) {
-            MediaFileRepository.clearCache()
+          Log.d("BaseBrowserViewModel", "Refreshing browser data from media library event")
+          loadData()
+        }
+    }
+
+    // Observe playback state updates (when a video is watched or marked as watched/unwatched)
+    // Clear the core media scanner cache and reload folder/video states
+    viewModelScope.launch(Dispatchers.Main) {
+      playbackStateRepository.observeAllPlaybackStates()
+        .drop(1)
+        .debounce(250L)
+        .collectLatest {
+          Log.d("BaseBrowserViewModel", "Refreshing browser data from playback state update")
+          MediaFileRepository.clearCache()
+          loadData()
+        }
+    }
+
+    // Observe .nomedia folder visibility changes
+    viewModelScope.launch(Dispatchers.Main) {
+      browserPreferences.includeNoMediaContent.changes()
+        .drop(1)
+        .collectLatest { includeNoMedia ->
+          Log.d("BaseBrowserViewModel", "includeNoMediaContent changed to $includeNoMedia")
+          MediaFileRepository.clearCache()
+          if (includeNoMedia) {
+            val hybridIndex = org.koin.core.context.GlobalContext.get().get<xyz.mpv.rex.database.repository.HybridMediaIndexRepository>()
+            val count = withContext(Dispatchers.IO) { hybridIndex.getNoMediaCount() }
+            if (count == 0) {
+              withContext(Dispatchers.IO) {
+                runCatching {
+                  hybridIndex.ensureFresh(force = true, userInitiated = false)
+                }
+              }
+            }
           }
           loadData()
         }
@@ -121,9 +153,6 @@ abstract class BaseBrowserViewModel<T>(
       // Clear core media scanner cache
       MediaFileRepository.clearCache()
       
-      // Delay to allow filesystem/MediaStore sync if needed
-      delay(if (silent) 100 else 500)
-      
       loadData()
     }
   }
@@ -140,6 +169,7 @@ abstract class BaseBrowserViewModel<T>(
     // Invalidate cache for deleted videos
     val paths = videos.map { it.path }
     metadataCache.invalidateVideos(paths)
+    MediaFileRepository.clearCache()
 
     return result
   }

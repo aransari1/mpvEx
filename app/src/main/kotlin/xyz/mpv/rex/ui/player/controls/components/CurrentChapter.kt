@@ -8,8 +8,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.basicMarquee
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
@@ -36,17 +37,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import xyz.mpv.rex.preferences.AppearancePreferences
 import xyz.mpv.rex.preferences.preference.collectAsState
-import xyz.mpv.rex.ui.theme.controlColor
 import xyz.mpv.rex.ui.theme.spacing
 import dev.vivvvek.seeker.Segment
 import `is`.xyz.mpv.Utils
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CurrentChapter(
   chapter: Segment,
   modifier: Modifier = Modifier,
   onClick: () -> Unit = {},
+  onDoubleClick: (() -> Unit)? = null,
+  onLongClick: (() -> Unit)? = null,
 ) {
   val appearancePreferences = koinInject<AppearancePreferences>()
   val enableGlass by appearancePreferences.enableGlassPlayerControls.collectAsState()
@@ -81,7 +84,11 @@ fun CurrentChapter(
         .height(40.dp)
         .widthIn(max = 220.dp)
         .clip(RoundedCornerShape(50))
-        .clickable(onClick = onClick),
+        .combinedClickable(
+          onClick = onClick,
+          onDoubleClick = onDoubleClick,
+          onLongClick = onLongClick,
+        ),
     shape = RoundedCornerShape(50),
     color = if (enableGlass) Color.Transparent else MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.55f),
     contentColor = MaterialTheme.colorScheme.onSurface,

@@ -4058,5 +4058,305 @@
   "media_info_total_length": {
     "source_hash": "51d925cbb59d7305477d6036a9bfc6a324f10bcef12bfb552f5484a17f6e6b56",
     "translated_value": "总时长"
+  },
+  "pref_player_show_seekbar_chapters_title": {
+    "source_hash": "32ee6e0289f92c7b1310188ad74916849ba5ec47a9728bcdf2f0844f84fe9dd8",
+    "translated_value": "显示章节标记"
+  },
+  "pref_player_show_seekbar_chapters_summary": {
+    "source_hash": "e35962ff20317cc30e1255d740748b1dda1a50b79c753b5c52df5121e2ce41f9",
+    "translated_value": "在进度条上显示章节节点"
+  },
+  "pref_player_show_seekbar_read_ahead_title": {
+    "source_hash": "f805fa37d8cbf62f55aee5ae7d9d8fc87e7d57980b486c3db7d6f8ffd88e5a50",
+    "translated_value": "显示缓冲区域"
+  },
+  "pref_player_show_seekbar_read_ahead_summary": {
+    "source_hash": "4f832f27a8631b8e7979c59c23a7f35674c2209924e0c6a7b058a7c470212afd",
+    "translated_value": "进度条可视化展示已缓冲的视频片段"
+  },
+  "ambient_mode_on": {
+    "source_hash": "94d2d7b8f801affe71a9a0cdf328ed05e86220f5995e3d7ac63f70fa6ae66770",
+    "translated_value": "环境模式：开启"
+  },
+  "ambient_mode_off": {
+    "source_hash": "35e8a2753f65d0b14c9b76d4c7401df435f835eecd2328bfc779630e66f8713a",
+    "translated_value": "环境模式：关闭"
+  },
+  "shorts_action_love": {
+    "source_hash": "9f4024faec10ef6d29aa32d7935d94b1a816fd4fe0359fbf12d49d44b5ff33b8",
+    "translated_value": "点赞"
+  },
+  "shorts_action_loved": {
+    "source_hash": "0bed945e401542d1de21d0050befa2366979ea8fe3f6b3a30c8d2a4b680cc6fa",
+    "translated_value": "已点赞"
+  },
+  "shorts_action_block": {
+    "source_hash": "211d0bb8cf4f5b5202c2a9b7996e483898644aa24714b1e10edd80a54ba4b560",
+    "translated_value": "屏蔽"
+  },
+  "shorts_action_blocked": {
+    "source_hash": "18f2a0947f9d6523991b29b450307f22773f57d65f7efb98d48a167df04d6b1d",
+    "translated_value": "已屏蔽"
+  },
+  "shorts_action_free": {
+    "source_hash": "f411a1fb62758b4c54690d0a702b4955b54dd22115416fa7b1ce51b4a084818d",
+    "translated_value": "解除"
+  },
+  "shorts_action_back": {
+    "source_hash": "76900f1bfd16c8d4dd3d25e6f46638d7165aee23883ccea6bfe071c514421769",
+    "translated_value": "返回"
+  },
+  "shorts_action_more": {
+    "source_hash": "d47d7cb0e4f8fd2be5ee07826694c18917d83ca77d0a01698582d05f432db996",
+    "translated_value": "更多"
+  },
+  "shorts_no_blocked_videos_found": {
+    "source_hash": "ff7fdb7e4b246a2e8a78693f60744596cd9fbd976c0394f4beaf95edc254dae9",
+    "translated_value": "暂无屏蔽的视频"
+  },
+  "shorts_no_vertical_videos_found": {
+    "source_hash": "547f122e16c08fe45f690e30b39057d805767a294f16945d074716c22ad56645",
+    "translated_value": "未找到竖版视频"
+  },
+  "shorts_all_finished_title": {
+    "source_hash": "9231b62d703d9677f6c4597a2a711496b45cb8ec8e3e35391ba7d74644b55df9",
+    "translated_value": "全部视频已看完"
+  },
+  "shorts_all_finished_message": {
+    "source_hash": "df78a3244c4f327117fb7c7874279853a86d644f9907ab18eec233d586ba0b29",
+    "translated_value": "当前所有竖版视频您都已浏览完毕。"
+  },
+  "shorts_video_info_title": {
+    "source_hash": "014cb05e1cdaf03d29f5d5354a375d4554ebae54d9e83ae595bf776d949f6d1c",
+    "translated_value": "视频信息"
+  },
+  "shorts_video_info_resolution": {
+    "source_hash": "ec85ef7cb5945f5ba9c21cc7dcd67b2da8aa3667a04c2f001a266b41ff2b7822",
+    "translated_value": "分辨率：%1$d×%2$d"
+  },
+  "player_sheets_zoom_decrease": {
+    "source_hash": "a4199cb6b97c2fb256a6fe0800fc78fc7b9e447b172288fc6cd0bde8ed1a6256",
+    "translated_value": "缩小画面"
+  },
+  "player_sheets_zoom_increase": {
+    "source_hash": "8420ff983584e8ab27379c1378a0858b75354dab667065ffa1da04fe8e06de44",
+    "translated_value": "放大画面"
+  },
+  "custom_buttons_title": {
+    "source_hash": "4ea34e99079c123522a728e16a4bed0646a637e22d1576ab451363755a5a1bf4",
+    "translated_value": "自定义按钮"
+  },
+  "custom_buttons_subtitle": {
+    "source_hash": "21c6eeb4f7bd306b5260c4beebab7e7ee6ff920e2787023f628f91020a2a6d5d",
+    "translated_value": "拖动调整顺序 · 点击空位展开编辑"
+  },
+  "custom_buttons_export_success": {
+    "source_hash": "88d8889d6d1f0b325319085792ce030261d59b43004daa436d3a47f3387d3156",
+    "translated_value": "按钮导出成功"
+  },
+  "custom_buttons_import_export_title": {
+    "source_hash": "6e061fabef2190a6d7cb2576ae2b9df184c8c6243c1156a860dba3daa5b4763b",
+    "translated_value": "导入/导出"
+  },
+  "custom_buttons_import_export_desc": {
+    "source_hash": "ad272938a6ce41d69538eee526aba553bb132fca365042c2517a5cab2c60a45e",
+    "translated_value": "将全部自定义按钮及其 Lua 脚本保存为 XML 文件备份或分享"
+  },
+  "generic_import": {
+    "source_hash": "2cff9baabf56ca002610e113bc94deb6ededddfc3c130365b6e88ed5195bf774",
+    "translated_value": "导入"
+  },
+  "generic_export": {
+    "source_hash": "3664895579f0a7e68c4aa09c91316e20239bc74499010e6423ece40cad7c28f7",
+    "translated_value": "导出"
+  },
+  "custom_button_empty_slot": {
+    "source_hash": "f8b4d62d118662441f18e8eb1580d57fd8f6dfa8b79fc2c12806ad676f13db58",
+    "translated_value": "空白位"
+  },
+  "custom_button_drag_disabled": {
+    "source_hash": "4cc921e80e4ba62acbdcd5ef8efd8acdcd3372a184cd12239e6cbca2ca213125",
+    "translated_value": "已禁止拖动"
+  },
+  "custom_button_field_label": {
+    "source_hash": "707eab0c23ecbf6e5382ba61a346bc76aefee81303280fc0e08e59df18afbf8a",
+    "translated_value": "按钮"
+  },
+  "custom_button_lua_scripts_label": {
+    "source_hash": "ca9557425f605e2a3f531a5e8205f9d3e2d82ce339b70ed7ed75a7441c9dee77",
+    "translated_value": "Lua脚本"
+  },
+  "custom_button_title_field": {
+    "source_hash": "83dff2f044eb855eb2c55a93f7ee1402daba4c67bb7d8fa5a499589bf9fb7627",
+    "translated_value": "按钮名称 *"
+  },
+  "custom_button_tap_action": {
+    "source_hash": "bd8880749122b84e9f2b5aec20bbc67f05eba5547eaab53763007c6b62bec52f",
+    "translated_value": "点击执行动作"
+  },
+  "custom_button_tap_action_required": {
+    "source_hash": "a131a52893bb40c14f555db9adfc12c0ed2085f08fe088823b48b680d4868af6",
+    "translated_value": "点击执行动作 *"
+  },
+  "custom_button_long_press_action": {
+    "source_hash": "e96ab6d8b913efddf15d9badfedb305fa30f79580c0176c373a31550f6805f05",
+    "translated_value": "长按执行动作"
+  },
+  "custom_button_on_startup": {
+    "source_hash": "68fa16ae8cc78219ef08b97365e3494ae03f34586a74ba393dbe7a362aa3ff89",
+    "translated_value": "启动时运行"
+  },
+  "custom_button_settings_label": {
+    "source_hash": "74a883a037bc227f91891ab654a753d3a99f31ab06ae5b5d2b6e594a692b41f8",
+    "translated_value": "设置"
+  },
+  "custom_button_enabled_label": {
+    "source_hash": "51b972725ecef161b76e1623415b6f8fa46c468638c8a604d134a827c326dca3",
+    "translated_value": "启用按钮"
+  },
+  "custom_button_enabled_desc": {
+    "source_hash": "658eb1d482885deeca284c6eed5f9b6d3c28e4128ef77090fd908beee0c03ed2",
+    "translated_value": "播放器内可正常使用该按钮"
+  },
+  "custom_button_disabled_desc": {
+    "source_hash": "9b2d3ee65aed07ce78064d51005db174ca50b492551adc0fe0870695efaf18b6",
+    "translated_value": "按钮已保存，但不会显示"
+  },
+  "custom_button_add": {
+    "source_hash": "c0f290f352610a38e9f19ecaafb19e357f8ec84cfea8d36e28eb17bd8a16c393",
+    "translated_value": "添加按钮"
+  },
+  "custom_button_lua_editor_hint": {
+    "source_hash": "1e30bafed251b73978107fbbcef008d1e46e9758058257182af746a201f4724a",
+    "translated_value": "点击此处编写 Lua 代码..."
+  },
+  "custom_button_select_import_title": {
+    "source_hash": "d8d2157d88913027e35ca6e2840b2b253ae87ce9c4db8487d4299a02045c67d6",
+    "translated_value": "选择要导入的按钮"
+  },
+  "custom_button_select_import_subtitle": {
+    "source_hash": "85bdc2ba48cfb2212e905f033d9140ed9cd3cb4ed6edc6ad6c3fbeb6186d771c",
+    "translated_value": "勾选需要导入的按钮"
+  },
+  "custom_button_will_overwrite": {
+    "source_hash": "bd1132bafa29d2b254dda833fcd2a9b622ca81644b5d8b0d3d5b23dcd48ac3fb",
+    "translated_value": "将会覆盖现有同名按钮"
+  },
+  "custom_button_read_failed": {
+    "source_hash": "a63086f46436676b2f610eef8e37b1ef5ac81da1381898ab391a1c1f398045d1",
+    "translated_value": "文件读取失败：%1$s"
+  },
+  "custom_button_field_label_with_slot": {
+    "source_hash": "fed2d9b8a028df44297fdbb3d9f0f25bdef72753019d56fb65f47943e26c7a2e",
+    "translated_value": "%1$s · %2$s"
+  },
+  "custom_buttons_imported_count#plural#one": {
+    "source_hash": "b2e18b06ad27cc447cd221f54335914547c1adaedf6c3bc9b6271452d35c0df6",
+    "translated_value": "成功导入 %1$d 个按钮"
+  },
+  "custom_buttons_imported_count#plural#other": {
+    "source_hash": "bfdff01366a6f26e5daae2dac53478a4cca945faa42b9fa5e04c0f99e8a49a40",
+    "translated_value": "成功导入 %1$d 个按钮"
+  },
+  "video_settings_filter_presets_title": {
+    "source_hash": "8b15e931722543793c8f6d22e6281868094a3aed8836979b71bde7d78db381cb",
+    "translated_value": "滤镜预设"
+  },
+  "filter_preset_none": {
+    "source_hash": "dc937b59892604f5a86ac96936cd7ff09e25f18ae6b758e8014a24c7fa039e91",
+    "translated_value": "无滤镜"
+  },
+  "filter_preset_none_desc": {
+    "source_hash": "cdfe1de4f2175d4d28a229e6bf74a656f99518a33fa1eee0cfa3b063e1a2ae5c",
+    "translated_value": "默认原始画面，无任何色彩调整"
+  },
+  "filter_preset_vivid": {
+    "source_hash": "acbbdc931814110787e029449285ced1c985e1d2567b30f6510d540934fefa2d",
+    "translated_value": "鲜艳"
+  },
+  "filter_preset_vivid_desc": {
+    "source_hash": "326dd3335293bdc1590091b1ccae3360bc7a28365e2dd86ed57da61bdffbd7c5",
+    "translated_value": "提升色彩饱和度，画面细节更锐利"
+  },
+  "filter_preset_warm_tone": {
+    "source_hash": "b51475dc0a816a5e3801bbf3089518c75160000376168e877922569d3de46acf",
+    "translated_value": "暖色调"
+  },
+  "filter_preset_warm_tone_desc": {
+    "source_hash": "b1b2b8b51c8e230f4b40ff5b6f406194a00d95145b95ac58b8c1125876afb3f4",
+    "translated_value": "整体偏暖，带有金黄质感"
+  },
+  "filter_preset_cool_tone": {
+    "source_hash": "af5b4dc43beeb8e2d25f65b777c148ad1c193497666c55bd1a0ac9d1674ee31a",
+    "translated_value": "冷色调"
+  },
+  "filter_preset_cool_tone_desc": {
+    "source_hash": "dfe2e3ca3a8f57a0b21451363b7e90d445d5fce29b36327e65e380cc9256c074",
+    "translated_value": "清冷画质，自带蓝色滤镜"
+  },
+  "filter_preset_soft_pastel": {
+    "source_hash": "7f8b96504e854b6d8cca44ab4dd8c48f75672cae42357213b9ecaf68d81c1d80",
+    "translated_value": "柔和马卡龙"
+  },
+  "filter_preset_soft_pastel_desc": {
+    "source_hash": "b8a926f9be283174bae21d932ff205c0755747910299e6e1f6baab85f4515b72",
+    "translated_value": "低饱和柔和色彩，观感温润"
+  },
+  "filter_preset_cinematic": {
+    "source_hash": "912d0988b06550601e2fd95360ea72f9bb25f0c7dd54bc741a20dc24f28242c9",
+    "translated_value": "电影质感"
+  },
+  "filter_preset_cinematic_desc": {
+    "source_hash": "fa673bc311d0c897943bcbb6bf520b188855d8a656d60ab7ee489c4e38134a99",
+    "translated_value": "胶片级调色，画面富有层次感"
+  },
+  "filter_preset_dramatic": {
+    "source_hash": "82ebcd30003de028ffe198dfb2946f44806a66cface9d7b9c2fcc56654f92747",
+    "translated_value": "高对比戏剧风"
+  },
+  "filter_preset_dramatic_desc": {
+    "source_hash": "b9e73243bb26e403d1400926fa59fe3254718506fe19897b5d522c506577b7a3",
+    "translated_value": "高对比度，氛围感强烈"
+  },
+  "filter_preset_night_mode": {
+    "source_hash": "01aac6e13b23a1ada5e5db1fdadcbf4889702fa018d6475b880a0f7f1f435f1b",
+    "translated_value": "夜间模式"
+  },
+  "filter_preset_night_mode_desc": {
+    "source_hash": "f1e8a87fd56baa5461a8dcc4ccf21d4fc90ebf1d61255217807f15d922cfd64b",
+    "translated_value": "降低画面亮度，适合暗光环境观看"
+  },
+  "filter_preset_nostalgic": {
+    "source_hash": "b53839619c9788b1c2b1db3134f8db64c8c97b59438d9e9e291d00a990d51ef9",
+    "translated_value": "复古怀旧"
+  },
+  "filter_preset_nostalgic_desc": {
+    "source_hash": "a79b3be1c67fdf996cb2c219d53d56a826114c839630f6aa68b8d8efb0acce92",
+    "translated_value": "老式胶片质感，轻微柔焦效果"
+  },
+  "filter_preset_ghibli_style": {
+    "source_hash": "551781469038ffba2d26c1969662badc18178f15f72e5cf31107d962c03a1eda",
+    "translated_value": "吉卜力动画风"
+  },
+  "filter_preset_ghibli_style_desc": {
+    "source_hash": "eb12e51c8712344aeadff717adced64cdc24dc212e9c854bf40b1e8e12bbadcb",
+    "translated_value": "柔和梦幻的动漫配色"
+  },
+  "filter_preset_neon_pop": {
+    "source_hash": "f0262d340be0bba083611ff94740fb9539c23dec7a5b12ab77e9ed5e46dd14a4",
+    "translated_value": "霓虹潮流"
+  },
+  "filter_preset_neon_pop_desc": {
+    "source_hash": "f8e02e1750abfe8a4a4696c92ca46e8fdfc00119cbd0bf1e188c39977e465f3e",
+    "translated_value": "高饱和霓虹亮色，视觉冲击力强"
+  },
+  "filter_preset_deep_black": {
+    "source_hash": "d57eb7d8be7249a62bb3a9a0ebefac9d44c42aff05d3641c4c4a88234cd3e62e",
+    "translated_value": "深邃黑场"
+  },
+  "filter_preset_deep_black_desc": {
+    "source_hash": "dbac9195f155e6e2e319e6ce93148a1db93926ce48cb546eb99f2cfca33fd24e",
+    "translated_value": "加深黑色画面，适配 OLED 屏幕"
   }
 }

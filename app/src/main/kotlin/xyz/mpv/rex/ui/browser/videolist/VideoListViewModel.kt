@@ -13,14 +13,18 @@ import xyz.mpv.rex.utils.history.RecentlyPlayedOps
 import xyz.mpv.rex.utils.media.MediaLibraryEvents
 import xyz.mpv.rex.utils.media.MetadataRetrieval
 import xyz.mpv.rex.utils.storage.FileTypeUtils
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -39,13 +43,13 @@ data class VideoWithPlaybackInfo(
   val isNeverPlayed: Boolean = true, // true if video has never been opened
 )
 
+@OptIn(kotlinx.coroutines.FlowPreview::class)
 class VideoListViewModel(
   application: Application,
   private val bucketId: String,
 ) : BaseBrowserViewModel<VideoWithPlaybackInfo>(application),
   KoinComponent {
   private val appearancePreferences: xyz.mpv.rex.preferences.AppearancePreferences by inject()
-  private val browserPreferences: xyz.mpv.rex.preferences.BrowserPreferences by inject()
   private val recentlyPlayedRepository: xyz.mpv.rex.domain.recentlyplayed.repository.RecentlyPlayedRepository by inject()
 
   private val _videos = MutableStateFlow<List<Video>>(emptyList())
@@ -85,7 +89,16 @@ class VideoListViewModel(
 
   init {
     loadData()
-    // Note: BaseBrowserViewModel handles MediaLibraryEvents and Playback changes centrally.
+    viewModelScope.launch {
+      playbackStateRepository.observeAllPlaybackStates()
+        .drop(1)
+        .debounce(250L)
+        .collect {
+          if (_videos.value.isNotEmpty()) {
+            loadPlaybackInfo(_videos.value)
+          }
+        }
+    }
   }
 
   override fun loadData() {
@@ -109,34 +122,24 @@ class VideoListViewModel(
         previousVideoCount = videoList.size
 
         if (videoList.isEmpty()) {
-          triggerMediaScan()
-          delay(800)
-          var retryVideoList = MediaFileRepository.getVideosInFolder(getApplication(), bucketId)
-          if (!browserPreferences.showAudioFiles.get()) {
-            retryVideoList = retryVideoList.filterNot { it.isAudio }
-          }
-          _videos.value = retryVideoList
-          loadPlaybackInfo(retryVideoList)
+          _videos.value = emptyList()
+          _videosWithPlaybackInfo.value = emptyList()
           _isLoading.value = false
-
-          // Enrich with metadata in the background only if chips are enabled
-          if (MetadataRetrieval.isVideoMetadataNeeded(browserPreferences) && retryVideoList.isNotEmpty()) {
-            val enrichedList = MetadataRetrieval.enrichVideosIfNeeded(
-              context = getApplication(),
-              videos = retryVideoList,
-              browserPreferences = browserPreferences,
-              metadataCache = metadataCache
-            )
-            _videos.value = enrichedList
-            loadPlaybackInfo(enrichedList)
-          }
         } else {
+          // Pre-apply DB cached metadata before initial emission to ensure durations and chips appear immediately
+          videoList = MetadataRetrieval.applyCachedMetadata(
+            videos = videoList,
+            browserPreferences = browserPreferences,
+            metadataCache = metadataCache
+          )
           _videos.value = videoList
           loadPlaybackInfo(videoList)
           _isLoading.value = false
 
-          // Enrich with metadata in the background only if chips are enabled
-          if (MetadataRetrieval.isVideoMetadataNeeded(browserPreferences)) {
+          // Extract metadata in background for any uncached videos or videos with missing duration
+          val isMetadataNeeded = MetadataRetrieval.isVideoMetadataNeeded(browserPreferences)
+          val uncachedCount = videoList.count { it.duration <= 0L || (isMetadataNeeded && (it.fps == 0f || it.subtitleCodec.isEmpty())) }
+          if (uncachedCount > 0) {
             val enrichedList = MetadataRetrieval.enrichVideosIfNeeded(
               context = getApplication(),
               videos = videoList,
@@ -147,16 +150,34 @@ class VideoListViewModel(
             loadPlaybackInfo(enrichedList)
           }
         }
+      } catch (e: CancellationException) {
+        throw e
       } catch (e: Exception) {
         Log.e(tag, "Error loading videos for bucket $bucketId", e)
+        _videos.value = emptyList()
+        _videosWithPlaybackInfo.value = emptyList()
       } finally {
-        _isLoading.value = false
+        if (coroutineContext.isActive) {
+          _isLoading.value = false
+        }
       }
     }
   }
 
   override fun refresh(silent: Boolean) {
     loadData()
+  }
+
+  override suspend fun deleteVideos(videos: List<Video>): Pair<Int, Int> {
+    val deletedPaths = videos.map { it.path.ifBlank { it.uri.toString() } }.toSet()
+    _videos.value = _videos.value.filterNot { (it.path.ifBlank { it.uri.toString() }) in deletedPaths }
+    _videosWithPlaybackInfo.value = _videosWithPlaybackInfo.value.filterNot {
+      (it.video.path.ifBlank { it.video.uri.toString() }) in deletedPaths
+    }
+    if (_videos.value.isEmpty()) {
+      _videosWereDeletedOrMoved.value = true
+    }
+    return super.deleteVideos(videos)
   }
 
   /**
@@ -223,26 +244,6 @@ class VideoListViewModel(
         )
       }
     _videosWithPlaybackInfo.value = videosWithInfo
-  }
-
-  private fun triggerMediaScan() {
-    try {
-      val folder = File(bucketId)
-      if (folder.exists() && folder.isDirectory) {
-        val mediaFiles = folder.listFiles { file ->
-          file.isFile && (
-            FileTypeUtils.isVideoFile(file) || 
-            (browserPreferences.showAudioFiles.get() && FileTypeUtils.isAudioFile(file))
-          )
-        }
-        if (!mediaFiles.isNullOrEmpty()) {
-          val filePaths = mediaFiles.map { it.absolutePath }.toTypedArray()
-          android.media.MediaScannerConnection.scanFile(getApplication(), filePaths, null) { _, _ -> }
-        }
-      }
-    } catch (e: Exception) {
-      Log.e(tag, "Failed to trigger media scan", e)
-    }
   }
 
   companion object {

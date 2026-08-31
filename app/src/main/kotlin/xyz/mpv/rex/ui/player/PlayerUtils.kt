@@ -52,7 +52,9 @@ internal fun Uri.openContentFd(context: Context): String? =
 private fun Uri.tryFileDescriptorPath(context: Context): String? =
   runCatching {
     context.contentResolver.openFileDescriptor(this, "r")?.use { pfd ->
-      Utils.findRealPath(pfd.fd)?.also {
+      Utils.findRealPath(pfd.fd)?.takeIf { path ->
+        path.isNotBlank() && File(path).exists() && File(path).canRead()
+      }?.also {
         Log.d(TAG, "Resolved via file descriptor: $it")
       }
     }
@@ -73,7 +75,7 @@ private fun Uri.tryMediaStoreQuery(context: Context): String? =
             cursor
               .getString(columnIndex)
               ?.takeIf { path ->
-                path.isNotBlank() && File(path).exists()
+                path.isNotBlank() && File(path).exists() && File(path).canRead()
               }?.also {
                 Log.d(TAG, "Resolved via MediaStore: $it")
               }
@@ -126,14 +128,14 @@ private fun Uri.tryDocumentUriParsing(context: Context): String? {
 private fun tryPrimaryStoragePath(docId: String): String? {
   val path = docId.substringAfter(StoragePaths.PRIMARY_PREFIX)
   val fullPath = "${StoragePaths.PRIMARY_STORAGE}/$path"
-  return fullPath.takeIf { File(it).exists() }?.also {
+  return fullPath.takeIf { File(it).exists() && File(it).canRead() }?.also {
     Log.d(TAG, "Resolved document URI to primary storage: $it")
   }
 }
 
 private fun tryRawPath(docId: String): String? {
   val rawPath = docId.substringAfter(StoragePaths.RAW_PREFIX)
-  return rawPath.takeIf { File(it).exists() }?.also {
+  return rawPath.takeIf { File(it).exists() && File(it).canRead() }?.also {
     Log.d(TAG, "Resolved document URI from raw path: $it")
   }
 }
@@ -151,7 +153,7 @@ private fun tryExternalStoragePaths(docId: String): String? {
       "${StoragePaths.MEDIA_RW}/$path",
     )
 
-  return possiblePaths.firstOrNull { File(it).exists() }?.also {
+  return possiblePaths.firstOrNull { File(it).exists() && File(it).canRead() }?.also {
     Log.d(TAG, "Resolved document URI to: $it")
   }
 }

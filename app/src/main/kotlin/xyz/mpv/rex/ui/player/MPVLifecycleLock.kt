@@ -17,11 +17,24 @@ object MPVLifecycleLock {
   private val _isTearingDown = MutableStateFlow(false)
   val isTearingDown = _isTearingDown.asStateFlow()
 
+  @Volatile
+  var isNativeInitialized: Boolean = false
+    private set
+
   /**
-   * Called when MPV teardown begins in PlayerActivity.cleanupMPV().
+   * Called when native MPV initialization is complete in MPVView.postInitOptions().
+   */
+  fun onNativeInitialized() {
+    isNativeInitialized = true
+    Log.d(TAG, "Native MPV marked initialized")
+  }
+
+  /**
+   * Called when MPV teardown begins in PlayerActivity.cleanupMPV() or HeadlessPlaybackController.stop().
    */
   fun onTeardownStart() {
     _isTearingDown.value = true
+    isNativeInitialized = false
     Log.d(TAG, "Native MPV teardown started")
   }
 
@@ -30,6 +43,7 @@ object MPVLifecycleLock {
    */
   fun onTeardownComplete() {
     _isTearingDown.value = false
+    isNativeInitialized = false
     Log.d(TAG, "Native MPV teardown completed")
   }
 

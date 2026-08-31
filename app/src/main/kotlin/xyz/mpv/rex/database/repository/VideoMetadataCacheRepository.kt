@@ -93,6 +93,31 @@ class VideoMetadataCacheRepository(
     }
 
   /**
+   * Fast batch lookup of cached metadata directly from database (no MediaInfo extraction)
+   */
+  suspend fun getCachedMetadataBatch(
+    paths: List<String>,
+  ): Map<String, MediaInfoOps.VideoMetadata> =
+    withContext(Dispatchers.IO) {
+      if (paths.isEmpty()) return@withContext emptyMap()
+      val cachedEntries = dao.getMetadataBatch(paths)
+      cachedEntries.associate { cached ->
+        cached.path to MediaInfoOps.VideoMetadata(
+          sizeBytes = cached.size,
+          durationMs = cached.duration,
+          width = cached.width,
+          height = cached.height,
+          rotation = cached.rotation,
+          fps = cached.fps,
+          hasEmbeddedSubtitles = cached.hasEmbeddedSubtitles,
+          subtitleCodec = cached.subtitleCodec,
+          artist = cached.artist,
+          album = cached.album,
+        )
+      }
+    }
+
+  /**
    * OPTIMIZED: Batch get metadata from cache or extract using MediaInfo
    * Processes multiple files with batch cache lookup and parallel extraction
    * Returns map of paths to metadata (much faster than individual calls)

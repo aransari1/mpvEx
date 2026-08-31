@@ -1,15 +1,20 @@
 package xyz.mpv.rex.ui.preferences
 
 import android.os.Build
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.draw.clip
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -35,6 +40,7 @@ import xyz.mpv.rex.preferences.ThumbnailStrategy
 import xyz.mpv.rex.preferences.AppearancePreferences
 import xyz.mpv.rex.preferences.BrowserPreferences
 import xyz.mpv.rex.preferences.GesturePreferences
+import xyz.mpv.rex.preferences.FoldersPreferences
 import xyz.mpv.rex.preferences.MultiChoiceSegmentedButton
 import xyz.mpv.rex.ui.preferences.components.ThemePicker
 import xyz.mpv.rex.ui.preferences.components.SwitchPreference
@@ -45,6 +51,18 @@ import xyz.mpv.rex.ui.utils.LocalBackStack
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.serialization.Serializable
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.outlined.Language
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.ui.semantics.Role
+import xyz.mpv.rex.utils.locale.LocaleHelper
+import me.zhanghai.compose.preference.Preference
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.SliderPreference
 import org.koin.compose.koinInject
@@ -60,6 +78,8 @@ import kotlinx.coroutines.withContext
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.HorizontalDivider
+import xyz.mpv.rex.utils.media.MediaLibraryEvents
+import xyz.mpv.rex.utils.media.OpenDocumentTreeContract
 
 @Serializable
 object AppearancePreferencesScreen : Screen {
@@ -69,6 +89,8 @@ object AppearancePreferencesScreen : Screen {
         val preferences = koinInject<AppearancePreferences>()
         val browserPreferences = koinInject<BrowserPreferences>()
         val gesturePreferences = koinInject<GesturePreferences>()
+        val foldersPreferences = koinInject<FoldersPreferences>()
+        val hybridMediaIndex = koinInject<xyz.mpv.rex.database.repository.HybridMediaIndexRepository>()
         val backstack = LocalBackStack.current
         val systemDarkTheme = isSystemInDarkTheme()
 
@@ -84,10 +106,24 @@ object AppearancePreferencesScreen : Screen {
 
         val context = LocalContext.current
         val scope = rememberCoroutineScope()
+        val libraryScanRoots by foldersPreferences.libraryScanRoots.collectAsState()
+        val libraryRootPicker = rememberLauncherForActivityResult(OpenDocumentTreeContract()) { uri ->
+            uri ?: return@rememberLauncherForActivityResult
+            runCatching {
+                context.contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION,
+                )
+            }.onSuccess {
+                foldersPreferences.libraryScanRoots.set(libraryScanRoots + uri.toString())
+                MediaLibraryEvents.notifyChanged()
+            }
+        }
         val thumbnailRepository = koinInject<ThumbnailRepository>()
         var showNetworkWarning by remember { mutableStateOf(false) }
         var pendingStrategyChange by remember { mutableStateOf<ThumbnailStrategy?>(null) }
         var pendingPositionChange by remember { mutableStateOf<Int?>(null) }
+        var showLanguageDialog by remember { mutableStateOf(false) }
 
         // ملاحظة: النصوص أدناه (Toast) لم تُلمس عمداً — stringResource() لا يعمل
         // خارج composition، وتحتاج تعديل توقيع الدالة (تمرير Context.getString
@@ -133,13 +169,46 @@ object AppearancePreferencesScreen : Screen {
                 )
             },
         ) { padding ->
+            val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
             ProvidePreferenceLocals {
                 LazyColumn(
                     modifier =
                     Modifier
                         .fillMaxSize()
                         .padding(padding),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
                 ) {
+                    item {
+                        PreferenceSectionHeader(title = stringResource(id = R.string.pref_appearance_language_title))
+                    }
+
+                    item {
+                        val currentLanguage = remember { LocaleHelper.getCurrentLanguage(context) }
+                        PreferenceCard {
+                            Preference(
+                                title = { Text(text = stringResource(id = R.string.pref_appearance_language_title)) },
+                                summary = {
+                                    Text(
+                                        text = if (currentLanguage.code.isEmpty()) {
+                                            stringResource(R.string.system_default)
+                                        } else {
+                                            "${currentLanguage.nativeName} (${currentLanguage.localizedName})"
+                                        },
+                                        color = MaterialTheme.colorScheme.outline,
+                                    )
+                                },
+                                icon = {
+                                    Icon(
+                                        Icons.Outlined.Language,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                    )
+                                },
+                                onClick = { showLanguageDialog = true },
+                            )
+                        }
+                    }
+
                     item {
                         PreferenceSectionHeader(title = stringResource(id = R.string.pref_appearance_category_theme))
                     }
@@ -524,6 +593,59 @@ object AppearancePreferencesScreen : Screen {
 
                             PreferenceDivider()
 
+                            val includeNoMediaContent by browserPreferences.includeNoMediaContent.collectAsState()
+                            SwitchPreference(
+                                value = includeNoMediaContent,
+                                onValueChange = { newValue ->
+                                    browserPreferences.includeNoMediaContent.set(newValue)
+                                    MediaLibraryEvents.notifyChanged()
+                                    scope.launch(Dispatchers.IO) {
+                                        runCatching { hybridMediaIndex.ensureFresh(force = true, userInitiated = true) }
+                                    }
+                                },
+                                title = {
+                                    Text(
+                                        text = stringResource(id = R.string.pref_include_no_media_content_title),
+                                    )
+                                },
+                                summary = {
+                                    Text(
+                                        text = stringResource(id = R.string.pref_include_no_media_content_summary),
+                                        color = MaterialTheme.colorScheme.outline,
+                                    )
+                                },
+                            )
+
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                TextButton(
+                                    onClick = { libraryRootPicker.launch(null) },
+                                    enabled = includeNoMediaContent,
+                                ) {
+                                    Text(text = stringResource(R.string.pref_add_library_root))
+                                }
+                                Text(
+                                    text = stringResource(
+                                        R.string.pref_library_root_count,
+                                        libraryScanRoots.size,
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.outline,
+                                    modifier = Modifier.padding(horizontal = 16.dp),
+                                )
+                                if (libraryScanRoots.isNotEmpty()) {
+                                    TextButton(
+                                        onClick = {
+                                            foldersPreferences.libraryScanRoots.set(emptySet())
+                                            MediaLibraryEvents.notifyChanged()
+                                        },
+                                    ) {
+                                        Text(text = stringResource(R.string.pref_clear_library_roots))
+                                    }
+                                }
+                            }
+
+                            PreferenceDivider()
+
                             val showTreeViewPath by browserPreferences.showTreeViewPath.collectAsState()
                             SwitchPreference(
                                 value = showTreeViewPath,
@@ -829,6 +951,93 @@ object AppearancePreferencesScreen : Screen {
 
                 }
             }
+        }
+
+        if (showLanguageDialog) {
+            val currentCode = remember { LocaleHelper.getSavedLanguageCode(context) }
+            var selectedCode by remember { mutableStateOf(currentCode) }
+            val languages = remember { LocaleHelper.getSupportedLanguages(context) }
+
+            AlertDialog(
+                onDismissRequest = { showLanguageDialog = false },
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Language,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                },
+                title = {
+                    Text(
+                        text = stringResource(R.string.pref_appearance_language_title),
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                    )
+                },
+                text = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 350.dp)
+                            .verticalScroll(rememberScrollState())
+                            .selectableGroup(),
+                    ) {
+                        languages.forEach { language ->
+                            val isSelected = selectedCode == language.code
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .selectable(
+                                        selected = isSelected,
+                                        onClick = { selectedCode = language.code },
+                                        role = Role.RadioButton,
+                                    )
+                                    .padding(horizontal = 8.dp, vertical = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                RadioButton(
+                                    selected = isSelected,
+                                    onClick = null,
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column {
+                                    Text(
+                                        text = language.nativeName,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                    )
+                                    if (language.code.isNotEmpty()) {
+                                        Text(
+                                            text = language.localizedName,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                confirmButton = {
+                    FilledTonalButton(
+                        onClick = {
+                            LocaleHelper.setAppLanguage(context, selectedCode)
+                            showLanguageDialog = false
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                    ) {
+                        Text(stringResource(R.string.generic_confirm))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showLanguageDialog = false }) {
+                        Text(stringResource(R.string.generic_cancel))
+                    }
+                },
+                shape = RoundedCornerShape(24.dp),
+            )
         }
     }
 }

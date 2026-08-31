@@ -84,12 +84,14 @@ object DecoderPreferencesScreen : Screen {
         )
       },
     ) { padding ->
+      val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
       ProvidePreferenceLocals {
         LazyColumn(
           modifier =
             Modifier
               .fillMaxSize()
               .padding(padding),
+          contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
         ) {
           item {
             PreferenceSectionHeader(title = stringResource(R.string.pref_decoder))
@@ -121,6 +123,19 @@ object DecoderPreferencesScreen : Screen {
                   preferences.tryHWDecoding.set(it)
                 },
                 title = { Text(stringResource(R.string.pref_decoder_try_hw_dec_title)) },
+              )
+
+              PreferenceDivider()
+
+              me.zhanghai.compose.preference.Preference(
+                title = { Text(stringResource(R.string.pref_decoder_codec_info_title)) },
+                summary = {
+                  Text(
+                    stringResource(R.string.pref_decoder_codec_info_summary),
+                    color = MaterialTheme.colorScheme.outline,
+                  )
+                },
+                onClick = { backstack.add(CodecInformationScreen) },
               )
 
               PreferenceDivider()

@@ -22,6 +22,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.provider.Settings
+import androidx.core.content.ContextCompat
 import xyz.mpv.rex.BuildConfig
 import xyz.mpv.rex.domain.media.model.Video
 import xyz.mpv.rex.utils.history.RecentlyPlayedOps
@@ -41,6 +45,52 @@ import java.io.File
  */
 object PermissionUtils {
   private const val FILE_ACCESS_TAG = "FileAccessRequest"
+  
+  /**
+   * Check if storage permission is currently granted.
+   */
+  fun isStoragePermissionGranted(context: Context): Boolean =
+    if (!BuildConfig.SCOPED_STORAGE_ONLY && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      android.os.Environment.isExternalStorageManager()
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      ContextCompat.checkSelfPermission(
+        context,
+        android.Manifest.permission.READ_MEDIA_VIDEO,
+      ) == PackageManager.PERMISSION_GRANTED
+    } else if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+      ContextCompat.checkSelfPermission(
+        context,
+        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+      ) == PackageManager.PERMISSION_GRANTED
+    } else {
+      ContextCompat.checkSelfPermission(
+        context,
+        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+      ) == PackageManager.PERMISSION_GRANTED
+    }
+
+  /**
+   * Launch system storage permission request (All Files Access settings on Android 11+ non-playstore, or runtime permission).
+   */
+  fun requestStorageAccess(context: Context, onRequestPermission: () -> Unit) {
+    if (BuildConfig.SCOPED_STORAGE_ONLY) {
+      onRequestPermission()
+    } else {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        try {
+          val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+            data = Uri.parse("package:${context.packageName}")
+          }
+          context.startActivity(intent)
+        } catch (_: Exception) {
+          val intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+          context.startActivity(intent)
+        }
+      } else {
+        onRequestPermission()
+      }
+    }
+  }
   
   private var mediaRequestLauncher: ActivityResultLauncher<IntentSenderRequest>? = null
   private var resultOkCallback: () -> Unit = {}
@@ -235,7 +285,7 @@ object PermissionUtils {
     ): Pair<Int, Int> =
       withContext(Dispatchers.IO) {
         if (!BuildConfig.SCOPED_STORAGE_ONLY || hasManageStoragePermission()) {
-          deleteVideosDirectly(videos)
+          deleteVideosDirectly(context, videos)
         } else {
           deleteVideosScoped(context, videos)
         }
@@ -244,18 +294,33 @@ object PermissionUtils {
     /**
      * Delete videos using direct file operations (requires MANAGE_EXTERNAL_STORAGE on Android 11+)
      */
-    private suspend fun deleteVideosDirectly(videos: List<Video>): Pair<Int, Int> =
+    private suspend fun deleteVideosDirectly(context: Context, videos: List<Video>): Pair<Int, Int> =
       withContext(Dispatchers.IO) {
         var deleted = 0
         var failed = 0
+        val deletedPaths = mutableListOf<String>()
 
         for (video in videos) {
           try {
             val file = File(video.path)
             if (file.exists() && file.delete()) {
               deleted++
+              deletedPaths.add(video.path)
               RecentlyPlayedOps.onVideoDeleted(video.path)
               PlaybackStateOps.onVideoDeleted(video.path)
+
+              runCatching {
+                if (video.uri.scheme == "content") {
+                  context.contentResolver.delete(video.uri, null, null)
+                } else {
+                  context.contentResolver.delete(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    "${MediaStore.Video.Media.DATA} = ?",
+                    arrayOf(video.path)
+                  )
+                }
+              }
+              android.media.MediaScannerConnection.scanFile(context, arrayOf(video.path), null, null)
               Log.d(TAG, "✓ Deleted: ${video.displayName}")
             } else {
               failed++
@@ -267,8 +332,12 @@ object PermissionUtils {
           }
         }
 
-        // Notify that media library has changed
+        // Notify that media library has changed and purge from index
         if (deleted > 0) {
+          runCatching {
+            val hybridIndex = org.koin.core.context.GlobalContext.get().getOrNull<xyz.mpv.rex.database.repository.HybridMediaIndexRepository>()
+            hybridIndex?.removeEntries(deletedPaths)
+          }
           MediaLibraryEvents.notifyChanged()
         }
 
@@ -285,6 +354,7 @@ object PermissionUtils {
       withContext(Dispatchers.IO) {
         var deleted = 0
         var failed = 0
+        val deletedPaths = mutableListOf<String>()
 
         val contentVideos = videos.filter { it.uri.scheme == "content" }
         val fileVideos = videos.filter { it.uri.scheme != "content" }
@@ -294,6 +364,7 @@ object PermissionUtils {
           if (granted) {
             contentVideos.forEach { video ->
               deleted++
+              deletedPaths.add(video.path)
               RecentlyPlayedOps.onVideoDeleted(video.path)
               PlaybackStateOps.onVideoDeleted(video.path)
               Log.d(TAG, "✓ Deleted (scoped request): ${video.displayName}")
@@ -308,6 +379,7 @@ object PermissionUtils {
               val rows = context.contentResolver.delete(video.uri, null, null)
               if (rows > 0) {
                 deleted++
+                deletedPaths.add(video.path)
                 RecentlyPlayedOps.onVideoDeleted(video.path)
                 PlaybackStateOps.onVideoDeleted(video.path)
                 Log.d(TAG, "✓ Deleted (scoped): ${video.displayName}")
@@ -327,8 +399,10 @@ object PermissionUtils {
             val file = File(video.path)
             if (!file.exists() || file.delete()) {
               deleted++
+              deletedPaths.add(video.path)
               RecentlyPlayedOps.onVideoDeleted(video.path)
               PlaybackStateOps.onVideoDeleted(video.path)
+              android.media.MediaScannerConnection.scanFile(context, arrayOf(video.path), null, null)
               Log.d(TAG, "✓ Deleted (file fallback): ${video.displayName}")
             } else {
               failed++
@@ -341,6 +415,10 @@ object PermissionUtils {
         }
 
         if (deleted > 0) {
+          runCatching {
+            val hybridIndex = org.koin.core.context.GlobalContext.get().getOrNull<xyz.mpv.rex.database.repository.HybridMediaIndexRepository>()
+            hybridIndex?.removeEntries(deletedPaths)
+          }
           MediaLibraryEvents.notifyChanged()
         }
 

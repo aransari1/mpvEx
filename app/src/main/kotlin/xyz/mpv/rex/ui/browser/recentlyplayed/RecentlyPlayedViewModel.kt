@@ -192,9 +192,17 @@ class RecentlyPlayedViewModel(application: Application) :
 
   suspend fun deleteRecentItems(itemsToDelete: List<RecentlyPlayedItem>): Pair<Int, Int> {
     return try {
-      val videoPaths = itemsToDelete.filterIsInstance<RecentlyPlayedItem.VideoItem>().map { it.video.path }
-      val playlistIds = itemsToDelete.filterIsInstance<RecentlyPlayedItem.PlaylistItem>().map { it.playlist.id }
+      val videoPaths = itemsToDelete.filterIsInstance<RecentlyPlayedItem.VideoItem>().map { it.video.path }.toSet()
+      val playlistIds = itemsToDelete.filterIsInstance<RecentlyPlayedItem.PlaylistItem>().map { it.playlist.id }.toSet()
       
+      // Optimistically remove from UI state immediately
+      _items.value = _items.value.filterNot { item ->
+        when (item) {
+          is RecentlyPlayedItem.VideoItem -> item.video.path in videoPaths
+          is RecentlyPlayedItem.PlaylistItem -> item.playlist.id in playlistIds
+        }
+      }
+
       var deletedCount = 0
       if (videoPaths.isNotEmpty()) {
         videoPaths.forEach { path ->

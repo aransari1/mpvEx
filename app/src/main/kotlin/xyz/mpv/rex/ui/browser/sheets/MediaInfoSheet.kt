@@ -45,10 +45,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import xyz.mpv.rex.utils.media.MediaFormatter
@@ -292,7 +296,7 @@ private fun MediaInfoSectionCard(section: InfoSection) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
                 text = section.name,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium.copy(textDirection = TextDirection.Ltr),
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(bottom = 12.dp),
@@ -306,20 +310,22 @@ private fun MediaInfoSectionCard(section: InfoSection) {
                         ) {
                             Text(
                                 text = key,
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Ltr),
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(end = 16.dp),
                             )
-                            Text(
-                                text = value,
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontFamily = FontFamily.Monospace,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.weight(1.5f),
-                            )
+                            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                                Text(
+                                    text = value,
+                                    style = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Ltr),
+                                    fontFamily = FontFamily.Monospace,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.weight(1.5f),
+                                )
+                            }
                         }
                     }
                 }
@@ -421,12 +427,14 @@ fun MultiSelectionInfoSheet(count: Int, totalBytes: Long, totalDurationMs: Long,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        Text(
-                            text = countWithUnit,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontFamily = FontFamily.Monospace,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                            Text(
+                                text = countWithUnit,
+                                style = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Ltr),
+                                fontFamily = FontFamily.Monospace,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -438,12 +446,14 @@ fun MultiSelectionInfoSheet(count: Int, totalBytes: Long, totalDurationMs: Long,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        Text(
-                            text = MediaFormatter.formatFileSize(totalBytes),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontFamily = FontFamily.Monospace,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                            Text(
+                                text = MediaFormatter.formatFileSize(totalBytes),
+                                style = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Ltr),
+                                fontFamily = FontFamily.Monospace,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -455,12 +465,14 @@ fun MultiSelectionInfoSheet(count: Int, totalBytes: Long, totalDurationMs: Long,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                        Text(
-                            text = MediaFormatter.formatDuration(totalDurationMs),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontFamily = FontFamily.Monospace,
-                            color = MaterialTheme.colorScheme.onSurface,
-                        )
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                            Text(
+                                text = MediaFormatter.formatDuration(totalDurationMs),
+                                style = MaterialTheme.typography.bodyMedium.copy(textDirection = TextDirection.Ltr),
+                                fontFamily = FontFamily.Monospace,
+                                color = MaterialTheme.colorScheme.onSurface,
+                            )
+                        }
                     }
                 }
             }

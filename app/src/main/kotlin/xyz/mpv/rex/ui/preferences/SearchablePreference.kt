@@ -67,6 +67,13 @@ object SearchablePreferences {
                 screen = AppearancePreferencesScreen,
             ))
             add(SearchablePreference(
+                titleRes = R.string.pref_include_no_media_content_title,
+                summaryRes = R.string.pref_include_no_media_content_summary,
+                keywords = listOf("nomedia", "hidden media", "file explorer", "scan", "excluded"),
+                category = "Appearance",
+                screen = AppearancePreferencesScreen,
+            ))
+            add(SearchablePreference(
                 titleRes = R.string.pref_appearance_show_network_thumbnails_title,
                 summaryRes = R.string.pref_appearance_show_network_thumbnails_summary,
                 keywords = listOf("network", "thumbnail", "stream", "preview", "images"),
@@ -124,6 +131,20 @@ object SearchablePreferences {
                 titleRes = R.string.pref_appearance_enable_glass_seekbar_title,
                 summaryRes = R.string.pref_appearance_enable_glass_seekbar_summary,
                 keywords = listOf("glass", "glassmorphism", "seekbar", "progress", "slider", "player", "appearance"),
+                category = "Appearance",
+                screen = PlayerControlsPreferencesScreen,
+            ))
+            add(SearchablePreference(
+                titleRes = R.string.pref_player_show_seekbar_chapters_title,
+                summaryRes = R.string.pref_player_show_seekbar_chapters_summary,
+                keywords = listOf("chapters", "seekbar", "markers", "gaps", "progress", "player"),
+                category = "Appearance",
+                screen = PlayerControlsPreferencesScreen,
+            ))
+            add(SearchablePreference(
+                titleRes = R.string.pref_player_show_seekbar_read_ahead_title,
+                summaryRes = R.string.pref_player_show_seekbar_read_ahead_summary,
+                keywords = listOf("buffer", "buffered", "cache", "read ahead", "visual hint", "seekbar", "progress", "player"),
                 category = "Appearance",
                 screen = PlayerControlsPreferencesScreen,
             ))
@@ -377,6 +398,29 @@ object SearchablePreferences {
                 screen = AppearancePreferencesScreen,
             ))
 
+            // Media & Library preferences
+            add(SearchablePreference(
+                titleRes = R.string.pref_media_library_title,
+                summaryRes = R.string.pref_media_library_summary,
+                keywords = listOf("media", "library", "nomedia", "scan", "rescan", "cache", "blacklist", "audio", "folders", "indexing"),
+                category = "Media & Library",
+                screen = MediaLibraryPreferencesScreen,
+            ))
+            add(SearchablePreference(
+                titleRes = R.string.pref_rescan_library_title,
+                summaryRes = R.string.pref_rescan_library_summary,
+                keywords = listOf("rescan", "scan", "refresh", "indexing", "library", "storage", "reindex"),
+                category = "Media & Library",
+                screen = MediaLibraryPreferencesScreen,
+            ))
+            add(SearchablePreference(
+                titleRes = R.string.pref_clear_metadata_cache_title,
+                summaryRes = R.string.pref_clear_metadata_cache_summary,
+                keywords = listOf("clear", "cache", "metadata", "thumbnails", "reset", "purge"),
+                category = "Media & Library",
+                screen = MediaLibraryPreferencesScreen,
+            ))
+
             // Folder preferences
             add(SearchablePreference(
                 titleRes = R.string.pref_folders_title,
@@ -433,6 +477,13 @@ object SearchablePreferences {
                 keywords = listOf("anime4k", "upscale", "shader", "anime", "upscale"),
                 category = "Decoder",
                 screen = DecoderPreferencesScreen,
+            ))
+            add(SearchablePreference(
+                titleRes = R.string.pref_decoder_codec_info_title,
+                summaryRes = R.string.pref_decoder_codec_info_summary,
+                keywords = listOf("codec", "hardware", "software", "decoder", "av1", "hevc", "h264", "vp9", "media", "gpu", "hw", "sw"),
+                category = "Decoder",
+                screen = CodecInformationScreen,
             ))
 
             // Subtitle preferences

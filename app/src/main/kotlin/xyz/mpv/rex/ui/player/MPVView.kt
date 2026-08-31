@@ -6,6 +6,7 @@ import android.util.AttributeSet
 
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
+import android.view.SurfaceHolder
 import xyz.mpv.rex.preferences.AdvancedPreferences
 import xyz.mpv.rex.preferences.AudioPreferences
 import xyz.mpv.rex.preferences.DecoderPreferences
@@ -34,6 +35,28 @@ class MPVView(
   private val anime4kManager: Anime4KManager by inject()
 
   var isExiting = false
+
+  /**
+   * When the activity handles rotation itself (see `configChanges` in the manifest) the
+   * SurfaceView is resized in place, so only [surfaceChanged] fires — not [surfaceCreated].
+   * The base class merely pushes the new `android-surface-size` to mpv. While playback is
+   * paused mpv's render loop is idle and never draws a frame at the new geometry, so the
+   * compositor stretches the previous (now wrongly-sized) buffer and exposes uninitialized
+   * regions — the "stretched frame + artifacts" seen on rotation while paused (video and
+   * audio album-art alike). Forcing a repaint of the current frame fixes it.
+   */
+  override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+    super.surfaceChanged(holder, format, width, height)
+    if (isExiting) return
+    // Only needed while paused; during playback the next frame repaints at the new size.
+    val paused = runCatching { MPVLib.getPropertyBoolean("pause") }.getOrNull() == true
+    if (paused) {
+      // A zero-distance exact seek re-decodes and re-renders the current frame at the new
+      // surface size without advancing playback. Works for both video and single-frame
+      // album art, and (unlike frame-step) is well-behaved at EOF.
+      runCatching { MPVLib.command("seek", "0", "relative+exact") }
+    }
+  }
 
   fun getVideoOutAspect(): Double? {
     // Try to get aspect from video-params/aspect first
@@ -123,6 +146,7 @@ class MPVView(
 
     MPVLib.setOptionString("tls-verify", "yes")
     MPVLib.setOptionString("tls-ca-file", "${context.filesDir.path}/cacert.pem")
+    MPVLib.setOptionString("ytdl", "no")
 
     val screenshotDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
     screenshotDir.mkdirs()
@@ -150,7 +174,52 @@ class MPVView(
     for ((name, format) in observedProps) MPVLib.observeProperty(name, format)
   }
 
+  /**
+   * Attaches this view to an ALREADY-INITIALIZED global MPV instance (e.g. one created by
+   * [HeadlessPlaybackController]). Unlike [initialize], this does NOT call `MPVLib.create()` /
+   * `MPVLib.init()` — it only re-registers the surface callback and property observers so this
+   * view can drive the live session and render video once its surface is created.
+   */
+  fun attachToExistingSession() {
+    // Re-enable the GPU VO the headless controller disabled; surfaceCreated() will attach the
+    // surface and flip force-window on.
+    setVo(if (decoderPreferences.gpuNext.get()) "gpu-next" else "gpu")
+    holder.addCallback(this)
+    observeProperties()
+  }
+
+  override fun surfaceCreated(holder: SurfaceHolder) {
+    super.surfaceCreated(holder)
+    if (!MPVLifecycleLock.isNativeInitialized) return
+
+    // Audio may have been loaded while vo=null with no video track selected. Unlike vid=auto,
+    // selecting the attached-picture track by ID reliably starts its single-frame decoder.
+    // ONLY do this if the file has NO real (non-albumart) video tracks (i.e. audio-only files).
+    val trackCount = runCatching { MPVLib.getPropertyInt("track-list/count") ?: 0 }.getOrDefault(0)
+    var hasRealVideoTrack = false
+    var albumArtTrackId: Int? = null
+
+    for (index in 0 until trackCount) {
+      val type = runCatching { MPVLib.getPropertyString("track-list/$index/type") }.getOrNull()
+      if (type == "video") {
+        val isAlbumArt = runCatching { MPVLib.getPropertyBoolean("track-list/$index/albumart") }.getOrNull()
+        val id = runCatching { MPVLib.getPropertyInt("track-list/$index/id") }.getOrNull()
+        if (isAlbumArt == true) {
+          if (albumArtTrackId == null) albumArtTrackId = id
+        } else {
+          hasRealVideoTrack = true
+        }
+      }
+    }
+
+    if (!hasRealVideoTrack && albumArtTrackId != null) {
+      runCatching { MPVLib.setPropertyInt("vid", albumArtTrackId) }
+      runCatching { MPVLib.command("seek", "0", "relative+exact") }
+    }
+  }
+
   override fun postInitOptions() {
+    MPVLifecycleLock.onNativeInitialized()
     when (decoderPreferences.debanding.get()) {
       Debanding.None -> {}
       Debanding.CPU -> MPVLib.command("vf", "add", "@deband:gradfun=radius=12")
@@ -349,6 +418,10 @@ class MPVView(
     MPVLib.setOptionString("sub-use-margins", scaleByWindow)
     MPVLib.setOptionString("secondary-sub-scale-by-window", scaleByWindow)
     MPVLib.setOptionString("secondary-sub-use-margins", scaleByWindow)
+
+    val forceLtr = if (subtitlesPreferences.forceLtr.get()) "yes" else "no"
+    MPVLib.setOptionString("sub-vsfilter-bidi-compat", forceLtr)
+    MPVLib.setOptionString("sub-codepage", "auto:cp1256:utf-8")
   }
 
 

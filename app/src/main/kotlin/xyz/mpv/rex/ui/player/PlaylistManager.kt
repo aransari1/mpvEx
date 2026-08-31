@@ -24,6 +24,9 @@ class PlaylistManager {
     private val _playlistTitles = MutableStateFlow<List<String>>(emptyList())
     val playlistTitles: StateFlow<List<String>> = _playlistTitles.asStateFlow()
 
+    private val _playlistDurations = MutableStateFlow<List<Long>>(emptyList())
+    val playlistDurations: StateFlow<List<Long>> = _playlistDurations.asStateFlow()
+
     private val _currentIndex = MutableStateFlow(0)
     val currentIndex: StateFlow<Int> = _currentIndex.asStateFlow()
 
@@ -57,10 +60,12 @@ class PlaylistManager {
         totalCount: Int = -1,
         windowOffset: Int = 0,
         isM3u: Boolean = false,
-        titles: List<String> = emptyList()
+        titles: List<String> = emptyList(),
+        durations: List<Long> = emptyList()
     ) {
         _playlist.value = items
         _playlistTitles.value = titles
+        _playlistDurations.value = durations
         _currentIndex.value = index
         _playlistId = id
         _playlistTotalCount = totalCount
@@ -75,6 +80,11 @@ class PlaylistManager {
     fun getTitleAt(index: Int): String? {
         val list = _playlistTitles.value
         return if (index >= 0 && index < list.size) list[index] else null
+    }
+
+    fun getDurationAt(index: Int): Long {
+        val list = _playlistDurations.value
+        return if (index >= 0 && index < list.size) list[index] else 0L
     }
 
     fun updateIndex(index: Int) {

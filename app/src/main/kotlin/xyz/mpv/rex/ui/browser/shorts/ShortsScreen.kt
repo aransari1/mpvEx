@@ -53,6 +53,7 @@ import androidx.compose.material.icons.filled.Fullscreen
 import androidx.compose.material.icons.filled.FullscreenExit
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.ui.draw.scale
 import androidx.compose.material3.AlertDialog
@@ -122,6 +123,7 @@ import xyz.mpv.rex.ui.player.PlayerTutorialManager
 import xyz.mpv.rex.preferences.preference.collectAsState
 import xyz.mpv.rex.preferences.BrowserPreferences
 import xyz.mpv.rex.ui.player.controls.components.glassSurface
+import xyz.mpv.rex.utils.media.MediaUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -853,6 +855,7 @@ private fun ShortPageItem(
 
         if (showMore) {
             val isAutoSwipeEnabled by viewModel.autoSwipe.collectAsState()
+            val context = LocalContext.current
             MoreActionsSheet(
                 onDismiss = { showMore = false },
                 isAutoSwipeEnabled = isAutoSwipeEnabled,
@@ -865,6 +868,10 @@ private fun ShortPageItem(
                     } else {
                         MPVLib.setPropertyFloat("speed", 1.0f)
                     }
+                },
+                onShare = {
+                    showMore = false
+                    MediaUtils.shareVideos(context, listOf(video))
                 },
                 onShowBlocked = {
                     showMore = false
@@ -982,6 +989,7 @@ private fun MoreActionsSheet(
     onToggleAutoSwipe: () -> Unit,
     isSpeedLocked: Boolean,
     onToggleSpeedLock: (Boolean) -> Unit,
+    onShare: () -> Unit,
     onShowBlocked: () -> Unit,
     onShowInfo: () -> Unit,
     onDeleteShort: () -> Unit
@@ -1090,6 +1098,13 @@ private fun MoreActionsSheet(
                         view.performHapticFeedback(android.view.HapticFeedbackConstants.LONG_PRESS)
                     }
                 ),
+                colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+            )
+
+            ListItem(
+                headlineContent = { Text(stringResource(R.string.generic_share)) },
+                leadingContent = { Icon(Icons.Default.Share, contentDescription = null) },
+                modifier = Modifier.clickable { onShare() },
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent)
             )
 

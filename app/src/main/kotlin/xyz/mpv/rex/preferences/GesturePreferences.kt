@@ -15,6 +15,7 @@ class GesturePreferences(
   val useSingleTapForCenter = preferenceStore.getBoolean("use_single_tap_for_center", false)
   val preventSeekbarTap = preferenceStore.getBoolean("prevent_seekbar_tap", false)
   val useRelativeSeeking = preferenceStore.getBoolean("use_relative_seeking", true)
+  val enableReleaseToCancel = preferenceStore.getBoolean("enable_release_to_cancel", true)
   val useSingleTapForLeftRight = preferenceStore.getBoolean("use_single_tap_for_left_right", false)
   val reverseDoubleTap = preferenceStore.getBoolean("reverse_double_tap", false)
   val mediaPreviousGesture = preferenceStore.getEnum("media_previous_gesture", SingleActionGesture.PlaylistPrev)

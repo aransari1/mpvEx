@@ -218,10 +218,12 @@ object LuaScriptsScreen : Screen {
         }
       },
     ) { padding ->
+      val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
       LazyColumn(
         modifier = Modifier
           .fillMaxSize()
-          .padding(padding)
+          .padding(padding),
+        contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
       ) {
         items(availableScripts) { scriptName ->
           Column(

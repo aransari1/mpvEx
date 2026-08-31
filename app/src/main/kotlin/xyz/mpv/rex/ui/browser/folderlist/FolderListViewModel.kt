@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import xyz.mpv.rex.database.repository.VideoMetadataCacheRepository
+import xyz.mpv.rex.database.repository.HybridMediaIndexRepository
 import xyz.mpv.rex.domain.media.model.VideoFolder
 import xyz.mpv.rex.domain.playbackstate.repository.PlaybackStateRepository
 import xyz.mpv.rex.repository.MediaFileRepository
@@ -16,8 +17,10 @@ import xyz.mpv.rex.utils.media.MediaLibraryEvents
 import xyz.mpv.rex.utils.media.MetadataRetrieval
 import xyz.mpv.rex.utils.storage.FileTypeUtils
 import java.io.File
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -43,8 +46,8 @@ class FolderListViewModel(
   KoinComponent {
   private val foldersPreferences: FoldersPreferences by inject()
   private val appearancePreferences: AppearancePreferences by inject()
-  private val browserPreferences: xyz.mpv.rex.preferences.BrowserPreferences by inject()
   private val recentlyPlayedRepository: RecentlyPlayedRepository by inject()
+  private val hybridMediaIndex: HybridMediaIndexRepository by inject()
 
   private val _allVideoFolders = MutableStateFlow<List<VideoFolder>>(emptyList())
   private val _videoFolders = MutableStateFlow<List<VideoFolder>>(emptyList())
@@ -72,12 +75,6 @@ class FolderListViewModel(
 
   // Track previous folder count to detect if all folders were deleted
   private var previousFolderCount = 0
-
-  /*
-   * TRACKING LOADING STATE
-   */
-  private val _scanStatus = MutableStateFlow<String?>(null)
-  val scanStatus: StateFlow<String?> = _scanStatus.asStateFlow()
 
   private val _isEnriching = MutableStateFlow(false)
   val isEnriching: StateFlow<Boolean> = _isEnriching.asStateFlow()
@@ -211,23 +208,31 @@ class FolderListViewModel(
     }
   }
 
+  fun cancelIndexScan() {
+    hybridMediaIndex.cancelScan()
+  }
+
+  override fun refresh(silent: Boolean) {
+    viewModelScope.launch(Dispatchers.IO) {
+      if (!silent) _isLoading.value = true
+      currentScanJob?.cancel()
+      currentScanJob = null
+      hybridMediaIndex.ensureFresh(force = true, userInitiated = !silent)
+      loadData()
+    }
+  }
+
   override fun loadData() {
     loadVideoFolders()
   }
 
   private fun loadVideoFolders() {
-    // Prevent multiple concurrent scans
-    if (currentScanJob?.isActive == true) {
-      Log.d(TAG, "Scan already in progress, skipping")
-      return
-    }
-
+    currentScanJob?.cancel()
     currentScanJob = viewModelScope.launch(Dispatchers.IO) {
       try {
         val isFirstLoad = _allVideoFolders.value.isEmpty()
         if (isFirstLoad) {
           _isLoading.value = true
-          _scanStatus.value = "Scanning media..."
         }
         
         val startTime = System.currentTimeMillis()
@@ -240,7 +245,6 @@ class FolderListViewModel(
         if (MetadataRetrieval.isFolderMetadataNeeded(browserPreferences)) {
           if (isFirstLoad) {
             _isEnriching.value = true
-            _scanStatus.value = "Extracting metadata..."
           }
           folders = MetadataRetrieval.enrichFoldersIfNeeded(
             context = getApplication(),
@@ -251,15 +255,28 @@ class FolderListViewModel(
           _isEnriching.value = false
         }
 
+        val blacklist = foldersPreferences.blacklistedFolders.get()
+        val showAudio = browserPreferences.showAudioFiles.get()
+        val filteredFolders = folders.filter { folder -> 
+          folder.path !in blacklist && (showAudio || folder.videoCount > 0)
+        }
+        _videoFolders.value = filteredFolders
+        _foldersWithNewCount.value = filteredFolders.map { 
+          FolderWithNewCount(it, it.newCount) 
+        }
         _allVideoFolders.value = folders
-        _isLoading.value = false
-        _hasCompletedInitialLoad.value = true
-        _scanStatus.value = null
+      } catch (e: CancellationException) {
+        throw e
       } catch (e: Exception) {
         Log.e(TAG, "Error loading video folders", e)
-        _isLoading.value = false
-        _hasCompletedInitialLoad.value = true
-        _scanStatus.value = "Error loading folders"
+        _videoFolders.value = emptyList()
+        _foldersWithNewCount.value = emptyList()
+        _allVideoFolders.value = emptyList()
+      } finally {
+        if (coroutineContext.isActive) {
+          _isLoading.value = false
+          _hasCompletedInitialLoad.value = true
+        }
       }
     }
   }

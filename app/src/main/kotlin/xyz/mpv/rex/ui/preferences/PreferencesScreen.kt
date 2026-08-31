@@ -73,12 +73,14 @@ object PreferencesScreen : Screen {
         )
       },
     ) { padding ->
+      val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
       ProvidePreferenceLocals {
         LazyColumn(
           modifier =
             Modifier
               .fillMaxSize()
               .padding(padding),
+          contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
         ) {
           // Search bar - full width, prominent placement
           item {
@@ -209,30 +211,29 @@ object PreferencesScreen : Screen {
             }
           }
           
-          // File Management Section
+          // Media & Library Section
           item {
-            PreferenceSectionHeader(title = stringResource(R.string.pref_category_file_management))
+            PreferenceSectionHeader(title = stringResource(R.string.pref_media_library_title))
           }
           
           item {
             PreferenceCard {
               Preference(
-
-                title = { Text(text = stringResource(id = R.string.pref_folders_title)) },
+                title = { Text(text = stringResource(R.string.pref_media_library_title)) },
                 summary = { 
                   Text(
-                    text = stringResource(id = R.string.pref_folders_summary),
+                    text = stringResource(R.string.pref_media_library_summary),
                     color = MaterialTheme.colorScheme.outline
                   ) 
                 },
                 icon = { 
                   Icon(
-                    Icons.Outlined.Folder, 
+                    Icons.Outlined.VideoLibrary, 
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary
                   ) 
                 },
-                onClick = { backstack.add(FoldersPreferencesScreen) },
+                onClick = { backstack.add(MediaLibraryPreferencesScreen) },
               )
             }
           }

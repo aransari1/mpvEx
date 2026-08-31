@@ -10,7 +10,9 @@ import xyz.mpv.rex.repository.MediaFileRepository
 import xyz.mpv.rex.ui.browser.base.BaseBrowserViewModel
 import xyz.mpv.rex.ui.browser.videolist.VideoWithPlaybackInfo
 import xyz.mpv.rex.utils.media.MetadataRetrieval
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +31,6 @@ class MediaLibraryViewModel(
 ) : BaseBrowserViewModel<VideoWithPlaybackInfo>(application),
   KoinComponent {
   private val appearancePreferences: xyz.mpv.rex.preferences.AppearancePreferences by inject()
-  private val browserPreferences: xyz.mpv.rex.preferences.BrowserPreferences by inject()
   private val recentlyPlayedRepository: xyz.mpv.rex.domain.recentlyplayed.repository.RecentlyPlayedRepository by inject()
 
   private val _videos = MutableStateFlow<List<Video>>(emptyList())
@@ -56,31 +57,55 @@ class MediaLibraryViewModel(
           videoList = videoList.filterNot { it.isAudio }
         }
 
-        _videos.value = videoList
-        loadPlaybackInfo(videoList)
-        _isLoading.value = false
-
-        // Enrich with metadata in the background only if chips are enabled
         if (MetadataRetrieval.isVideoMetadataNeeded(browserPreferences) && videoList.isNotEmpty()) {
-          val enrichedList = MetadataRetrieval.enrichVideosIfNeeded(
-            context = getApplication(),
+          videoList = MetadataRetrieval.applyCachedMetadata(
             videos = videoList,
             browserPreferences = browserPreferences,
             metadataCache = metadataCache
           )
-          _videos.value = enrichedList
-          loadPlaybackInfo(enrichedList)
         }
+
+        _videos.value = videoList
+        loadPlaybackInfo(videoList)
+        _isLoading.value = false
+
+        // Extract metadata in the background only for uncached videos
+        if (MetadataRetrieval.isVideoMetadataNeeded(browserPreferences) && videoList.isNotEmpty()) {
+          val uncachedCount = videoList.count { it.fps == 0f || it.subtitleCodec.isEmpty() }
+          if (uncachedCount > 0) {
+            val enrichedList = MetadataRetrieval.enrichVideosIfNeeded(
+              context = getApplication(),
+              videos = videoList,
+              browserPreferences = browserPreferences,
+              metadataCache = metadataCache
+            )
+            _videos.value = enrichedList
+            loadPlaybackInfo(enrichedList)
+          }
+        }
+      } catch (e: CancellationException) {
+        throw e
       } catch (e: Exception) {
         Log.e(tag, "Error loading media library videos", e)
       } finally {
-        _isLoading.value = false
+        if (coroutineContext.isActive) {
+          _isLoading.value = false
+        }
       }
     }
   }
 
   override fun refresh(silent: Boolean) {
     loadData()
+  }
+
+  override suspend fun deleteVideos(videos: List<Video>): Pair<Int, Int> {
+    val deletedPaths = videos.map { it.path.ifBlank { it.uri.toString() } }.toSet()
+    _videos.value = _videos.value.filterNot { (it.path.ifBlank { it.uri.toString() }) in deletedPaths }
+    _videosWithPlaybackInfo.value = _videosWithPlaybackInfo.value.filterNot {
+      (it.video.path.ifBlank { it.video.uri.toString() }) in deletedPaths
+    }
+    return super.deleteVideos(videos)
   }
 
   private suspend fun loadPlaybackInfo(videos: List<Video>) {

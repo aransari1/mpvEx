@@ -77,11 +77,11 @@
   },
   "pref_appearance_tab_network_summary": {
     "source_hash": "0e33aee8da0e186af6e9dcd794ef20d8f956bd1f3eb4b2eeae5aa5ab70034bee",
-    "translated_value": "الوصول إلى محركات SMB وFTP وWebDAV"
+    "translated_value": "الوصول إلى مشاركات SMB وخوادم FTP وWebDAV"
   },
   "pref_appearance_summary": {
     "source_hash": "896487a28234df1659dd2247433266ba9aa3fd2d73e8fdf9f9feebe14ab94286",
-    "translated_value": "الوضع الداكن، Material You"
+    "translated_value": "الوضع الداكن ، الألوان الديناميكية"
   },
   "pref_appearance_category_theme": {
     "source_hash": "efb52e7172b77731d996ff4f51cd7b3dcfd55fc6f07392994619418d58d170dd",
@@ -221,7 +221,7 @@
   },
   "pref_appearance_thumbnail_strategy_first_frame_summary": {
     "source_hash": "0c90883236ce7c24dc3e387dc7783da5a81789925616c2e91b42f8104ab31dd8",
-    "translated_value": "أسرع استخراج. يستخدم علامة الثانية العاشرة من الفيديو."
+    "translated_value": "أسرع استخراج. يستخدم إطارًا عند الثانية العاشرة من الفيديو."
   },
   "pref_appearance_thumbnail_strategy_position_title": {
     "source_hash": "4df2af099a556867eee3ae14c63d0c22d96fc0d4825c0e3dc12facb617ed7323",
@@ -241,7 +241,7 @@
   },
   "pref_appearance_thumbnail_position_reset": {
     "source_hash": "3a498d6b9099c8648b6cc6ec408bb164373a44e5462d2cf5d35be16d1818d576",
-    "translated_value": "إعادة موضع الصورة المصغَّرة إلى الافتراضي"
+    "translated_value": "إعادة ضبط موضع الصورة المصغَّرة إلى الوضع الافتراضي"
   },
   "pref_appearance_theme_picker_label": {
     "source_hash": "31618ef34d6255c1a6d9a1c88cb083bc28aea4b837f612ccd6ebd277de946c90",
@@ -289,7 +289,7 @@
   },
   "theme_green_apple": {
     "source_hash": "d651cde2cdd36753f5688fbf746019e42efce0049f35b7017d9e2fa8c1a8c357",
-    "translated_value": "Green Apple"
+    "translated_value": "التفاح الأخضر"
   },
   "theme_lavender": {
     "source_hash": "60707cfeb40e2a665b352fd1618c7c84685856fdc4b7f5ebffc7987ade98df2f",
@@ -297,7 +297,7 @@
   },
   "theme_midnight": {
     "source_hash": "aa996cf21f0dbc617e27fac13ab13916a07944c2de10c2dbcd60b95a6023f80b",
-    "translated_value": "Midnight"
+    "translated_value": "منتصف الليل"
   },
   "theme_mocha": {
     "source_hash": "676cf0fe867132422c4421187d11d48a20e10f484a5dc396e9f7c0261aa80bd3",
@@ -305,7 +305,7 @@
   },
   "theme_strawberry": {
     "source_hash": "8b08b70bef0c5f31046c217add159aca8236f286665088b39d872ae5b37c1771",
-    "translated_value": "Strawberry"
+    "translated_value": "الفراولة"
   },
   "theme_tidal": {
     "source_hash": "f8251b05efbd16cc2f49d35b2d954ddf1e9409d6f42058ee66f0a6267f95180e",
@@ -333,15 +333,15 @@
   },
   "theme_sunset": {
     "source_hash": "275dbda9dedbb4a219a49e2ec4b35d325d3c5929a5ba1474264f09ae3d5492e9",
-    "translated_value": "Sunset"
+    "translated_value": "الغروب"
   },
   "theme_ocean": {
     "source_hash": "fed12611d2d8c162e34719e368f2b823bd4051762b171196a55fd975745d726f",
-    "translated_value": "Ocean"
+    "translated_value": "المحيط"
   },
   "theme_forest": {
     "source_hash": "eed88b3afe90b755e6c7524ea01c2b5a3e75235801054adb2a3a04bb6feaaab7",
-    "translated_value": "Forest"
+    "translated_value": "الغابة"
   },
   "theme_rose_gold": {
     "source_hash": "e0c49c658ee63e0c8c93f9ebe96b4035a8e8c9aa71f3987b605b022f3d0d50be",
@@ -349,7 +349,7 @@
   },
   "theme_violet": {
     "source_hash": "2a36428839a37e680cdce701c1100a695cf2cac101f81f594ba4ec8c8c8a8d3b",
-    "translated_value": "Violet"
+    "translated_value": "البنفسجي"
   },
   "theme_amber": {
     "source_hash": "a5cccbcead7dcd65375ec6ea6ec28e3cd59af94417bbbee3276764c5d60ae5e9",
@@ -357,7 +357,7 @@
   },
   "theme_coral": {
     "source_hash": "56ac628a2f10b3b0ac611cc5adc8d9b497c78d6f771a343d1d6d5407bb1e92dd",
-    "translated_value": "Coral"
+    "translated_value": "المرجان"
   },
   "theme_slate": {
     "source_hash": "10ad4c3873636fa8bcd943493cc5b4b17e164a7f57e306b124ff6f1a9f3cd26b",
@@ -369,7 +369,7 @@
   },
   "theme_monochrome": {
     "source_hash": "30cc92d87a1e767febfdd38cb7d9ec97c7516c9cfe721fd80dd065e88331947c",
-    "translated_value": "Monochrome"
+    "translated_value": "أحادي اللون"
   },
   "theme_catppuccin": {
     "source_hash": "baa951970c15b25cfd2dc5a9721387a7f6cb1a2f82a62bb57a08ddcba602f46a",
@@ -609,11 +609,11 @@
   },
   "pref_player_custom_skip_duration_title": {
     "source_hash": "9de3fd2509fb3f7d71f2d684120bf65d53b8a755c9dd25026a7ef4ee4f54fea2",
-    "translated_value": "مدة التخطي المخصصة"
+    "translated_value": "مدة التخطي المخصصة (بالثواني)"
   },
   "pref_player_custom_skip_duration_summary": {
     "source_hash": "6e07f455b44134fe27a4adaf0178252766f25aac6328ac3a7c952c43d3e915d5",
-    "translated_value": "المدة للتقديم عند الضغط على زر التخطي المخصص"
+    "translated_value": "مدة التخطي عند الضغط على زر التخطي المخصص"
   },
   "pref_player_seeking_title": {
     "source_hash": "d60b8785cdcd0bad8f2b5f9b1fbd6d72b83492f5885eacc2e72022aabb18e708",
@@ -645,11 +645,11 @@
   },
   "pref_player_gestures_pan_and_zoom": {
     "source_hash": "2b53072f18e04d959ce05bbf1d5e26fe0c28b12f6a223369987f88ca2173ecf7",
-    "translated_value": "التحريك والتكبير"
+    "translated_value": "السحب والتكبير"
   },
   "pref_player_gestures_pan_and_zoom_summary": {
     "source_hash": "bbe393dd0a8ebfa7fe8a4513b1a7442ed9b8de6e04acfb32daa21f49ba366e9f",
-    "translated_value": "السماح بتحريك الفيديو (السحب) إلى جانب التكبير"
+    "translated_value": "السماح بسحب الفيديو إلى جانب التكبير"
   },
   "pref_player_gestures_horizontal_swipe_to_seek": {
     "source_hash": "10160e92a3225f9fefd9b6214d0ba5d2bf72aab56ebea83cd87c9f8c69433792",
@@ -685,7 +685,7 @@
   },
   "pref_player_gestures_hold_for_multiple_speed": {
     "source_hash": "435f64e6f123fac18d343bbe5178b0229d3ab5465784e02e011fdaf9f6ec0da9",
-    "translated_value": "الضغط المطوَّل لتشغيل بسرعة مضاعفة"
+    "translated_value": "الضغط المطوَّل للتسريع بقيمة مخصصة"
   },
   "pref_player_controls": {
     "source_hash": "799c269135742a36ae48dddf3a69c47c7d2a428a34e351f6da93ae6490101b47",
@@ -853,7 +853,7 @@
   },
   "pref_gesture_tap_thumbnail_to_select_summary": {
     "source_hash": "0b006037e12a1c3095bc9faf5566499f8bb6e6c825450ff6de155124c9bf3fa8",
-    "translated_value": "عند التفعيل، يدخل النقر على الصور المصغَّرة وضع التحديد. عند التعطيل، يشغِّل النقر الفيديو. لا تأثير في وضع الشبكة."
+    "translated_value": "عند التفعيل، يُدخل النقر على الصور المصغَّرة وضع التحديد. عند التعطيل، يشغِّل النقر الفيديو. لا ينطبق ذلك على وضع الشبكة."
   },
   "pref_decoder": {
     "source_hash": "36883f070fe0e9946c42420d7c6be5ad3d94b79e70bfcdcbb7091d1d8b0d775d",
@@ -981,7 +981,7 @@
   },
   "pref_subtitles_custom_picker_folder_summary": {
     "source_hash": "110becd55b933894cb099a986f6a8a328d26b1b8f24851c1af1b3a41fa702ba3",
-    "translated_value": "المجلد المختار للفتح عند إضافة الترجمات يدوياً"
+    "translated_value": "المجلد الذي يُفتح عند إضافة الترجمات يدويًا"
   },
   "pref_subtitles_save_location": {
     "source_hash": "4826134a4ef026ef4c1ec2d0dd96f25034bf22de8d6b9d23837a8e27fa275092",
@@ -997,7 +997,7 @@
   },
   "all_languages": {
     "source_hash": "cf0875d166bd1925428edbf4691b3146d97a7bfb2841843d1cad481336feb4c4",
-    "translated_value": "الكل (تصفية انتقائية)"
+    "translated_value": "كل اللغات (تصفية انتقائية)"
   },
   "pref_subtitles_clear_downloads": {
     "source_hash": "0a9366481fa890ea8571547cb04bad5756561b594e0927c2698d18c0fce985d6",
@@ -1021,7 +1021,7 @@
   },
   "pref_subtitles_found": {
     "source_hash": "09c7484b514f62a706bf31f8d2c0254792a018879b02a5090108edfde863b849",
-    "translated_value": "تم العثور على %d ترجمة"
+    "translated_value": "تم العثور على %d من الترجمات"
   },
   "pref_subtitles_online_search_title": {
     "source_hash": "d9d7d17024990e5da3f886c3958313b4f5ccb31439a51650dfabb73eab9c5db4",
@@ -1129,7 +1129,7 @@
   },
   "pref_advanced_dump_logs_summary": {
     "source_hash": "19797180bba3bc9a79e464a38386841633f9f44dc3380410355d79fa1c439468",
-    "translated_value": "يصدر السجلات وينسخها لمشاركتها مع المطوِّرين"
+    "translated_value": "يُصدِّر السجلات وينسخها لمشاركتها مع المطورين"
   },
   "pref_advanced_verbose_logging_title": {
     "source_hash": "982bb6c1fefefb62ed33724cc01d87aea86b023494689b6c80717ae26f5a44fa",
@@ -1189,7 +1189,7 @@
   },
   "pref_anime4k_gpu_next_error": {
     "source_hash": "35fa64bc90ac1a0fae1fdf5b8a4c0291899f2abdc5b08be1b66b80bdeb5c3424",
-    "translated_value": "gpu-next is incompatible with Anime4K shaders. When Anime4K is enabled, the app will automatically use the legacy 'gpu' backend for shader compatibility."
+    "translated_value": "gpu-next غير متوافق مع شيدرات Anime4K. عند تفعيل Anime4K، سيستخدم التطبيق تلقائيًا خلفية العرض القديمة 'gpu' لضمان توافق الشيدرات."
   },
   "pref_anime4k_cannot_use_with_gpu_next": {
     "source_hash": "b5cf0bae9d6955f91fbec47ed28980f999f409a746508f5ca095b47ddc599a69",
@@ -1613,7 +1613,7 @@
   },
   "crash_screen_subtitle": {
     "source_hash": "6f976f59e009986be2d95a88570124606b4bb5aa4e7b0d916c948f3baee1be3e",
-    "translated_value": "يبدو أن %s واجه خطأً غير متوقع. ننصحك بمشاركة سجلات العطل في مشكلة على GitHub."
+    "translated_value": "يبدو أن %s واجه خطأً غير متوقع. ننصحك بمشاركة سجلات العطل ضمن بلاغ مشكلة على GitHub."
   },
   "crash_screen_logs_title": {
     "source_hash": "bb17d135a6009c6fbf42c2c5773d07c01839f98a4c0b8f5622b7d965d6e71e3c",
@@ -1669,7 +1669,7 @@
   },
   "pref_player_display_hide_player_control_time": {
     "source_hash": "fe893bb03650507ec1087ef19591713e2ac1608f0ed4cd333823de36b8ec873b",
-    "translated_value": "إخفاء وقت التحكم في المشغِّل"
+    "translated_value": "مدة إخفاء أدوات التحكم في المشغِّل"
   },
   "show_splash_ovals_on_double_tap_to_seek": {
     "source_hash": "7915f3ea877a2b47e7f3b73da050cb7b59c06bcd6193c8b9a679f8fa28f2265b",
@@ -1769,7 +1769,7 @@
   },
   "not_set_video_default": {
     "source_hash": "ced5c0a8b2293aeaaa386db3dbf62350e6fcd382c235105fb7252a1875c265d0",
-    "translated_value": "غير مُعيَّن (سيستخدم الافتراضي للفيديو)"
+    "translated_value": "غير مُعيَّن (سيُستخدم الافتراضي للفيديو)"
   },
   "enter_language_codes": {
     "source_hash": "5b5f9748bc674cdd2b61c6176abdc53e30022b02edc75fc8b1facb5da721ddf5",
@@ -1785,7 +1785,7 @@
   },
   "fonts_loaded": {
     "source_hash": "33f1cdbf7594611c253af1ea6c93e3ea1767f055fabadb9143ee407082696744",
-    "translated_value": "تم تحميل %1$d خط"
+    "translated_value": "تم تحميل %1$d من الخطوط"
   },
   "reload_fonts": {
     "source_hash": "92f5a2793d59879ef6e68629ab14689be88ebc40ddbe02f135c3a4653a6fc09d",
@@ -1857,7 +1857,7 @@
   },
   "pref_folders_summary": {
     "source_hash": "d536a488c4a06d5e3f3812635d46861e5b8a43a2839117d5249b7ca568af3048",
-    "translated_value": "إدارة قائمة المجلدات المحجوبة"
+    "translated_value": "إدارة القائمة السوداء للمجلدات"
   },
   "pref_folders_empty_title": {
     "source_hash": "1dfc2b2c717bdb37ea8482a873c049a7221040bc752d73a265d11782a586af08",
@@ -1869,7 +1869,7 @@
   },
   "pref_folders_add_folder": {
     "source_hash": "5ba71fc565630d1568321a94cdbbfbdf2995a1c9502b64212af0a2991053514d",
-    "translated_value": "إضافة مجلد إلى القائمة المحجوبة"
+    "translated_value": "إضافة مجلد إلى القائمة السوداء"
   },
   "pref_folders_select_folders": {
     "source_hash": "bd9e9d447fc0ceecf08a2cf7621a8e05abb81ca3bd01d8111232f6f1dae6ac6a",
@@ -1885,23 +1885,23 @@
   },
   "pref_folders_clear_all": {
     "source_hash": "8c8adddd2cad498e77d7039b18991dd3a9314fb28234c6cf47e7d9bf26be85d2",
-    "translated_value": "مسح جميع المجلدات المحجوبة"
+    "translated_value": "مسح جميع المجلدات من القائمة السوداء"
   },
   "pref_folders_clear_all_confirm_title": {
     "source_hash": "66f5ac909900c0a995bf4fc5e721a3aa3b0751626d10f7323507c4b2556d6ff8",
-    "translated_value": "مسح جميع المجلدات المحجوبة؟"
+    "translated_value": "مسح كل المجلدات من القائمة السوداء؟"
   },
   "pref_folders_clear_all_confirm_message": {
     "source_hash": "5bd84ebcabbfaed6632035546a0241214a95bf8c84588b98d95c9de6f308e142",
-    "translated_value": "سيؤدي هذا إلى إزالة جميع المجلدات من القائمة المحجوبة. يمكنك إعادة إضافتها لاحقاً."
+    "translated_value": "سيؤدي هذا إلى إزالة جميع المجلدات من القائمة السوداء. يمكنك إعادة إضافتها لاحقاً."
   },
   "pref_folders_blacklist": {
     "source_hash": "3094851745d4be7ea898da7ccabd6ce8a7436816bf363b5eff554e3be477cd3e",
-    "translated_value": "القائمة المحجوبة"
+    "translated_value": "القائمة السوداء"
   },
   "pref_folders_blacklisted": {
     "source_hash": "a9c32a101a4214f657592859df1d50a4560941a4c36141086195ac38aefa16f2",
-    "translated_value": "تم إضافة المجلد (المجلدات) إلى القائمة المحجوبة"
+    "translated_value": "تمت الإضافة إلى القائمة السوداء"
   },
   "playlist_add_m3u_title": {
     "source_hash": "4a7291923e66806628cc8e70232efae7a4f78127f4cbc719c7e6dec507c5982f",
@@ -2005,7 +2005,7 @@
   },
   "remove_playlist_items_confirm": {
     "source_hash": "a44f8042a92aa638c3b910822050750db519073efeba1be6053a3e127d028277",
-    "translated_value": "سيُزال %2$s المحدد من قائمة التشغيل. لن يُحذف %3$s الأصلي."
+    "translated_value": "سيُزال %2$s  من قائمة التشغيل. لن يُحذف %3$s الأصلي."
   },
   "search_videos": {
     "source_hash": "630c837e93662088d33abb104836570b5cdb0033458d46164ab32fe9f5d265c4",
@@ -2553,11 +2553,11 @@
   },
   "delete_files_msg": {
     "source_hash": "00704d23e9788079426c453cfdbf647c619d52effcf5073dfd00eb8c570d6599",
-    "translated_value": "سيؤدي هذا إلى حذف ملف(ملفات) الفيديو الأصلية نهائياً من تخزين جهازك.\n\nلا يمكن التراجع عن هذا الإجراء."
+    "translated_value": "سيؤدي هذا إلى حذفها نهائيًا من جهازك..\n\nلا يمكن التراجع عن هذا الإجراء."
   },
   "also_delete_files": {
     "source_hash": "6676034090bedb42dea4298f021811b288018297ff6d2df10ad0a1b49e094dd0",
-    "translated_value": "حذف الملف(الملفات) الأصلية أيضاً"
+    "translated_value": "حذف الملف الأصلي أيضًا"
   },
   "no_video_folders_found": {
     "source_hash": "8f8809fd500f78888dd777a85b0627d7a3577be6533ca24fe80d8fe453ec3fc8",
@@ -2653,7 +2653,7 @@
   },
   "blocked_videos_manager": {
     "source_hash": "3f245d0a38f8a481a073514d6ec8bacaa79c0246a2ac210ef6670d65ea23c2d4",
-    "translated_value": "مدير الفيديوهات المحجوبة"
+    "translated_value": "مدير الفيديوهات المحظورة"
   },
   "delete_short": {
     "source_hash": "da0517ca05bb743d3b660a19fd8462cb9045775f181faa6e22b367f653a3c012",
@@ -2701,11 +2701,11 @@
   },
   "adding_one_video_to_playlist": {
     "source_hash": "59a18904b02ff4d68551e5e1c418653bb15d0269400b64f6e3441d2eea0f52ba",
-    "translated_value": "جارٍ إضافة فيديو واحد إلى قائمة التشغيل"
+    "translated_value": "جارٍ إضافة فيديو إلى قائمة التشغيل"
   },
   "adding_n_videos_to_playlist": {
     "source_hash": "e57ca37eb5d44d91a0db94b22986629fdd76f3a172b9ac863857d9c4e76aa29f",
-    "translated_value": "جارٍ إضافة %1$d فيديو إلى قائمة التشغيل"
+    "translated_value": "جارٍ إضافة %1$d  إلى قائمة التشغيل"
   },
   "create_new_playlist": {
     "source_hash": "145d02c64b50e964869c77017c9fc14eb68d9a2b9b684ec999561a8746f3d644",
@@ -2721,11 +2721,11 @@
   },
   "n_videos_added_to": {
     "source_hash": "b7f1f512f11f37e1abb45561f385a28ad6c3a0fecb4b9454e04c46df63630a97",
-    "translated_value": "تمت إضافة %1$d فيديو إلى \"%2$s"
+    "translated_value": "تمت إضافة %1$d  إلى \\\"%2$s\\\""
   },
   "playlist_videos_count": {
     "source_hash": "7bdf8d3f2e5a55e7a5cf4a98a0b9c8fb30f934130fa07fe52fae3f9ff78eea31",
-    "translated_value": "%1$d فيديو • %2$s"
+    "translated_value": "عدد الفيديوهات: %1$d • %2$s"
   },
   "create_first_playlist_above": {
     "source_hash": "b47a56876f8566e0e19298fb8e7b7ec0b8e57af501f6e6f3b45c2789d41df61f",
@@ -2981,11 +2981,11 @@
   },
   "pref_include_short_horizontal_videos": {
     "source_hash": "6abca2323fd949c5a4e6ae933cb07b17404aeabf6e5da8fa48b940b7e55253da",
-    "translated_value": "تضمين الفيديوهات القصيرة العادية"
+    "translated_value": "تضمين الفيديوهات العادية"
   },
   "pref_include_short_horizontal_videos_summary": {
     "source_hash": "255d07ffe47f91ef9f7a2f9ce27f212677eb3470e5405d8a7418709213dfd79d",
-    "translated_value": "إظهار الفيديوهات الأفقية في التغذية إذا كانت قصيرة"
+    "translated_value": "إظهار الفيديوهات العادية أيضا في التغذية إذا كانت قصيرة المدة"
   },
   "pref_max_horizontal_video_duration": {
     "source_hash": "2117a0c81cc13661ef3c725538ddb771c06df6af21e3cc88b825b79641b6ebcf",
@@ -3005,7 +3005,7 @@
   },
   "pref_sourced_folders_count": {
     "source_hash": "ae06c60cb39db585113009538b9cb7228781349d4ac366340e049fc8073282ac",
-    "translated_value": "مصدرها %1$d مجلد(مجلدات)"
+    "translated_value": "مصدرها %1$d مجلد/مجلدات"
   },
   "pref_sourced_folders_list": {
     "source_hash": "5a9ed12c5f51149a240cd4d76a378d0b11b1879bd422c2136f80c81a66ea22f3",
@@ -3017,11 +3017,11 @@
   },
   "pref_blocked_videos": {
     "source_hash": "9ba5b84e68b751aa27d373c78c46f9bd775f23fcb05543dedf4a7ae22d038a33",
-    "translated_value": "الفيديوهات المحجوبة"
+    "translated_value": "الفيديوهات المحظورة"
   },
   "pref_blocked_videos_summary": {
     "source_hash": "2e27c3ab2ecd8c8f69818a27b80cd9f7be8a875fc53c11ac6ffe82a939bfd33e",
-    "translated_value": "عرض وإدارة المقاطع القصيرة المحجوبة"
+    "translated_value": "عرض وإدارة المقاطع القصيرة المحظورة"
   },
   "pref_select_sourced_folders": {
     "source_hash": "d6255cd240f95d580c875e2f5e13c54a8e3629de632f121fc4fb5a25277eb12a",
@@ -3069,7 +3069,7 @@
   },
   "mark_as_last_played_desc": {
     "source_hash": "0d622b1a48c9d6e27010d690f9368eb53ca03494e8573e975140523e6486611c",
-    "translated_value": "نقل إلى أعلى قائمة المشغَّلة مؤخراً"
+    "translated_value": "نقل إلى أعلى قائمة المشغَّل مؤخراً"
   },
   "mark_as_finished": {
     "source_hash": "7804f7a79a9eee323b6e89d3f8287c7d36076f4d76291646295f435b0dec736e",
@@ -3445,7 +3445,7 @@
   },
   "pref_appearance_player_gradient_opacity_title": {
     "source_hash": "801812c065dc13a10fb3812e50a91d2c004e8bf7ef1479c4a217035459421bb1",
-    "translated_value": "شفافية التدرّج في أدوات التحكم"
+    "translated_value": "شفافية العتامة في أدوات التحكم"
   },
   "pref_appearance_player_gradient_opacity_current": {
     "source_hash": "99b25699f27ca413ab488316655169940501e8eee694c344bebb90057a9405a7",
@@ -3485,7 +3485,7 @@
   },
   "pref_appearance_enable_glass_seekbar_title": {
     "source_hash": "3c3294ddf3a619756b7967dc41b6d73e2bf9212f66669e4c593513714178fca5",
-    "translated_value": "خلفية شريط التحريك الزجاجية"
+    "translated_value": "خلفية شريط التقدم الزجاجية"
   },
   "pref_appearance_enable_glass_seekbar_summary": {
     "source_hash": "902b37910dcd5b47e70bb6a570b13316572a302671280eaf15deaed9f3393beb",
@@ -3493,7 +3493,7 @@
   },
   "pref_player_show_circular_double_tap_seek_title": {
     "source_hash": "748e129e21ca9ce935c95151b6140768aebf1db61ec9d14501cfa310d07a224e",
-    "translated_value": "إظهار مؤشّر التحريك الدائري عند النقر المزدوج"
+    "translated_value": "إظهار مؤشّر التقديم بشكل الدائري عند النقر المزدوج"
   },
   "pref_player_show_circular_double_tap_seek_summary": {
     "source_hash": "387cef4690ac5d6521546724c29ad3fb5ac3a9f979a5aa95ea7b8230fbe5f6e8",
@@ -3585,7 +3585,7 @@
   },
   "control_layout_reorder_hint": {
     "source_hash": "695d8662ea4742018bae86173360694b1b5caef036d0ada55ed479546c757cc7",
-    "translated_value": "اضغط مطولاً لإعادة ترتيب العناصر. اضغط على علامة الناقص الحمراء لإزالتهم."
+    "translated_value": "اضغط مطولًا لإعادة ترتيب العناصر ، اضغط على علامة الناقص الحمراء لإزالتها."
   },
   "control_layout_drop_zone_empty": {
     "source_hash": "8e9f7aa2fcaee292259548b9c2d29d26a4be3dc2846461ca2c0438f50182f432",
@@ -3669,7 +3669,7 @@
   },
   "mark_as_new_desc": {
     "source_hash": "073e0b59856dc45771ca92c6abd16236d493845f32bfda54124404cd7a4f90b1",
-    "translated_value": "إزالة كل العلامات والتعليم كجديد"
+    "translated_value": "إزالة جميع العلامات والوسم كجديد"
   },
   "pref_enable_glass_shorts_controls": {
     "source_hash": "d6efc502444fe2fdb335902330df34e9610e1ef839ebf2531cdf6d8a734e6b81",
@@ -3869,7 +3869,7 @@
   },
   "pref_player_dynamic_speed_overlay": {
     "source_hash": "0833cc3858eda92366c0b49c6c5df8f79456393203981703797adf09f8ea1b39",
-    "translated_value": "عرض السرعة الديناميكي"
+    "translated_value": "التغيير الديناميكي للسرعة"
   },
   "pref_player_dynamic_speed_overlay_summary": {
     "source_hash": "32c1cfa91bb943bb9ee0998bd00b90cdbf7f127424a3a366c165e8aca6fd9433",
@@ -4025,11 +4025,11 @@
   },
   "pref_advanced_enable_media_info_title": {
     "source_hash": "25684b6e5eabf34718f0bcfd48a5c088fe736b5211dc175a61b99ead1fc7e4a3",
-    "translated_value": "تفعيل نشاط معلومات الوسائط"
+    "translated_value": "تفعيل خيار معلومات الوسائط"
   },
   "pref_advanced_enable_media_info_summary": {
     "source_hash": "78544605197c09bfa4d5cc8355537e82bbc432986ad07d9427ee798b4ebe4837",
-    "translated_value": "إظهار \"معلومات الوسائط\" كخيار في قوائم \"فتح باستخدام\" على مستوى النظام"
+    "translated_value": "إظهار \"\"معلومات الوسائط\"\" كخيار في قوائم \"\"فتح باستخدام\"\" على مستوى النظام"
   },
   "blocked_shorts_empty_state": {
     "source_hash": "e416eb0dba454807c72cdd7e9561d0502aafa98658bdc1f7e857b37ef195ce6e",
@@ -4066,5 +4066,513 @@
   "player_sheets_tab_gestures": {
     "source_hash": "19f425135f78d2b1d6874131c4f7e2a73fd064057c651e08d388449ebf18c606",
     "translated_value": "الإيماءات"
+  },
+  "ambient_mode_on": {
+    "source_hash": "94d2d7b8f801affe71a9a0cdf328ed05e86220f5995e3d7ac63f70fa6ae66770",
+    "translated_value": "الوضع السينيمائي: مفعّل"
+  },
+  "ambient_mode_off": {
+    "source_hash": "35e8a2753f65d0b14c9b76d4c7401df435f835eecd2328bfc779630e66f8713a",
+    "translated_value": "الوضع السينيمائي: معطّل"
+  },
+  "shorts_action_love": {
+    "source_hash": "9f4024faec10ef6d29aa32d7935d94b1a816fd4fe0359fbf12d49d44b5ff33b8",
+    "translated_value": "إعجاب"
+  },
+  "shorts_action_loved": {
+    "source_hash": "0bed945e401542d1de21d0050befa2366979ea8fe3f6b3a30c8d2a4b680cc6fa",
+    "translated_value": "أعجبني"
+  },
+  "shorts_action_block": {
+    "source_hash": "211d0bb8cf4f5b5202c2a9b7996e483898644aa24714b1e10edd80a54ba4b560",
+    "translated_value": "حظر"
+  },
+  "shorts_action_blocked": {
+    "source_hash": "18f2a0947f9d6523991b29b450307f22773f57d65f7efb98d48a167df04d6b1d",
+    "translated_value": "محظور"
+  },
+  "shorts_action_free": {
+    "source_hash": "f411a1fb62758b4c54690d0a702b4955b54dd22115416fa7b1ce51b4a084818d",
+    "translated_value": "حـر"
+  },
+  "shorts_action_back": {
+    "source_hash": "76900f1bfd16c8d4dd3d25e6f46638d7165aee23883ccea6bfe071c514421769",
+    "translated_value": "رجوع"
+  },
+  "shorts_action_more": {
+    "source_hash": "d47d7cb0e4f8fd2be5ee07826694c18917d83ca77d0a01698582d05f432db996",
+    "translated_value": "المزيد"
+  },
+  "shorts_no_blocked_videos_found": {
+    "source_hash": "ff7fdb7e4b246a2e8a78693f60744596cd9fbd976c0394f4beaf95edc254dae9",
+    "translated_value": "لم يُعثر على فيديوهات محظورة"
+  },
+  "shorts_no_vertical_videos_found": {
+    "source_hash": "547f122e16c08fe45f690e30b39057d805767a294f16945d074716c22ad56645",
+    "translated_value": "لم يُعثر على فيديوهات قصيرة"
+  },
+  "shorts_all_finished_title": {
+    "source_hash": "9231b62d703d9677f6c4597a2a711496b45cb8ec8e3e35391ba7d74644b55df9",
+    "translated_value": "انتهت جميع الفيديوهات"
+  },
+  "shorts_all_finished_message": {
+    "source_hash": "df78a3244c4f327117fb7c7874279853a86d644f9907ab18eec233d586ba0b29",
+    "translated_value": "شاهدت جميع الفيديوهات القصيرة المتاحة حالياً."
+  },
+  "shorts_video_info_title": {
+    "source_hash": "014cb05e1cdaf03d29f5d5354a375d4554ebae54d9e83ae595bf776d949f6d1c",
+    "translated_value": "معلومات الفيديو"
+  },
+  "shorts_video_info_resolution": {
+    "source_hash": "ec85ef7cb5945f5ba9c21cc7dcd67b2da8aa3667a04c2f001a266b41ff2b7822",
+    "translated_value": "الدقة: %1$dx%2$d"
+  },
+  "player_sheets_zoom_decrease": {
+    "source_hash": "a4199cb6b97c2fb256a6fe0800fc78fc7b9e447b172288fc6cd0bde8ed1a6256",
+    "translated_value": "تقليل التكبير"
+  },
+  "player_sheets_zoom_increase": {
+    "source_hash": "8420ff983584e8ab27379c1378a0858b75354dab667065ffa1da04fe8e06de44",
+    "translated_value": "زيادة التكبير"
+  },
+  "custom_buttons_title": {
+    "source_hash": "4ea34e99079c123522a728e16a4bed0646a637e22d1576ab451363755a5a1bf4",
+    "translated_value": "الأزرار المخصصة"
+  },
+  "custom_buttons_subtitle": {
+    "source_hash": "21c6eeb4f7bd306b5260c4beebab7e7ee6ff920e2787023f628f91020a2a6d5d",
+    "translated_value": "اسحب لإعادة الترتيب • اضغط على أي مكان للتوسيع والتعديل"
+  },
+  "custom_buttons_export_success": {
+    "source_hash": "88d8889d6d1f0b325319085792ce030261d59b43004daa436d3a47f3387d3156",
+    "translated_value": "تم تصدير الأزرار بنجاح"
+  },
+  "custom_buttons_import_export_title": {
+    "source_hash": "6e061fabef2190a6d7cb2576ae2b9df184c8c6243c1156a860dba3daa5b4763b",
+    "translated_value": "استيراد / تصدير"
+  },
+  "custom_buttons_import_export_desc": {
+    "source_hash": "ad272938a6ce41d69538eee526aba553bb132fca365042c2517a5cab2c60a45e",
+    "translated_value": "احفظ نسخة احتياطية أو شارك جميع أزرارك المخصصة مع أكواد Lua كملف XML"
+  },
+  "generic_import": {
+    "source_hash": "2cff9baabf56ca002610e113bc94deb6ededddfc3c130365b6e88ed5195bf774",
+    "translated_value": "استيراد"
+  },
+  "generic_export": {
+    "source_hash": "3664895579f0a7e68c4aa09c91316e20239bc74499010e6423ece40cad7c28f7",
+    "translated_value": "تصدير"
+  },
+  "custom_button_empty_slot": {
+    "source_hash": "f8b4d62d118662441f18e8eb1580d57fd8f6dfa8b79fc2c12806ad676f13db58",
+    "translated_value": "مكان فارغ"
+  },
+  "custom_button_drag_disabled": {
+    "source_hash": "4cc921e80e4ba62acbdcd5ef8efd8acdcd3372a184cd12239e6cbca2ca213125",
+    "translated_value": "السحب معطل"
+  },
+  "custom_button_field_label": {
+    "source_hash": "707eab0c23ecbf6e5382ba61a346bc76aefee81303280fc0e08e59df18afbf8a",
+    "translated_value": "الزر"
+  },
+  "custom_button_lua_scripts_label": {
+    "source_hash": "ca9557425f605e2a3f531a5e8205f9d3e2d82ce339b70ed7ed75a7441c9dee77",
+    "translated_value": "أكواد Lua"
+  },
+  "custom_button_title_field": {
+    "source_hash": "83dff2f044eb855eb2c55a93f7ee1402daba4c67bb7d8fa5a499589bf9fb7627",
+    "translated_value": "اسم الزر *"
+  },
+  "custom_button_tap_action": {
+    "source_hash": "bd8880749122b84e9f2b5aec20bbc67f05eba5547eaab53763007c6b62bec52f",
+    "translated_value": "إجراء الضغط"
+  },
+  "custom_button_tap_action_required": {
+    "source_hash": "a131a52893bb40c14f555db9adfc12c0ed2085f08fe088823b48b680d4868af6",
+    "translated_value": "إجراء الضغط *"
+  },
+  "custom_button_long_press_action": {
+    "source_hash": "e96ab6d8b913efddf15d9badfedb305fa30f79580c0176c373a31550f6805f05",
+    "translated_value": "إجراء الضغط المطول"
+  },
+  "custom_button_on_startup": {
+    "source_hash": "68fa16ae8cc78219ef08b97365e3494ae03f34586a74ba393dbe7a362aa3ff89",
+    "translated_value": "عند بدء التشغيل"
+  },
+  "custom_button_settings_label": {
+    "source_hash": "74a883a037bc227f91891ab654a753d3a99f31ab06ae5b5d2b6e594a692b41f8",
+    "translated_value": "الإعدادات"
+  },
+  "custom_button_enabled_label": {
+    "source_hash": "51b972725ecef161b76e1623415b6f8fa46c468638c8a604d134a827c326dca3",
+    "translated_value": "تفعيل الزر"
+  },
+  "custom_button_enabled_desc": {
+    "source_hash": "658eb1d482885deeca284c6eed5f9b6d3c28e4128ef77090fd908beee0c03ed2",
+    "translated_value": "الزر مفعّل في المشغل"
+  },
+  "custom_button_disabled_desc": {
+    "source_hash": "9b2d3ee65aed07ce78064d51005db174ca50b492551adc0fe0870695efaf18b6",
+    "translated_value": "الزر محفوظ لكنه مخفي"
+  },
+  "custom_button_add": {
+    "source_hash": "c0f290f352610a38e9f19ecaafb19e357f8ec84cfea8d36e28eb17bd8a16c393",
+    "translated_value": "إضافة زر"
+  },
+  "custom_button_lua_editor_hint": {
+    "source_hash": "1e30bafed251b73978107fbbcef008d1e46e9758058257182af746a201f4724a",
+    "translated_value": "اضغط لكتابة كود Lua…"
+  },
+  "custom_button_select_import_title": {
+    "source_hash": "d8d2157d88913027e35ca6e2840b2b253ae87ce9c4db8487d4299a02045c67d6",
+    "translated_value": "اختر الأزرار للاستيراد"
+  },
+  "custom_button_select_import_subtitle": {
+    "source_hash": "85bdc2ba48cfb2212e905f033d9140ed9cd3cb4ed6edc6ad6c3fbeb6186d771c",
+    "translated_value": "اختر الأزرار التي تريد استيرادها"
+  },
+  "custom_button_will_overwrite": {
+    "source_hash": "bd1132bafa29d2b254dda833fcd2a9b622ca81644b5d8b0d3d5b23dcd48ac3fb",
+    "translated_value": "سيتم استبدال الزر الموجود"
+  },
+  "custom_button_read_failed": {
+    "source_hash": "a63086f46436676b2f610eef8e37b1ef5ac81da1381898ab391a1c1f398045d1",
+    "translated_value": "فشل في قراءة الملف: %1$s"
+  },
+  "custom_button_field_label_with_slot": {
+    "source_hash": "fed2d9b8a028df44297fdbb3d9f0f25bdef72753019d56fb65f47943e26c7a2e",
+    "translated_value": "%1$s  ·  %2$s"
+  },
+  "custom_buttons_imported_count#plural#one": {
+    "source_hash": "b2e18b06ad27cc447cd221f54335914547c1adaedf6c3bc9b6271452d35c0df6",
+    "translated_value": "تم استيراد زر واحد"
+  },
+  "custom_buttons_imported_count#plural#other": {
+    "source_hash": "bfdff01366a6f26e5daae2dac53478a4cca945faa42b9fa5e04c0f99e8a49a40",
+    "translated_value": "تم استيراد %1$d زر"
+  },
+  "video_settings_filter_presets_title": {
+    "source_hash": "8b15e931722543793c8f6d22e6281868094a3aed8836979b71bde7d78db381cb",
+    "translated_value": "أنماط الفلاتر الجاهزة"
+  },
+  "filter_preset_none": {
+    "source_hash": "dc937b59892604f5a86ac96936cd7ff09e25f18ae6b758e8014a24c7fa039e91",
+    "translated_value": "عادي"
+  },
+  "filter_preset_none_desc": {
+    "source_hash": "cdfe1de4f2175d4d28a229e6bf74a656f99518a33fa1eee0cfa3b063e1a2ae5c",
+    "translated_value": "الإعدادات الافتراضية بدون تعديلات"
+  },
+  "filter_preset_vivid": {
+    "source_hash": "acbbdc931814110787e029449285ced1c985e1d2567b30f6510d540934fefa2d",
+    "translated_value": "حيوي"
+  },
+  "filter_preset_vivid_desc": {
+    "source_hash": "326dd3335293bdc1590091b1ccae3360bc7a28365e2dd86ed57da61bdffbd7c5",
+    "translated_value": "ألوان معززة بتفاصيل واضحة"
+  },
+  "filter_preset_warm_tone": {
+    "source_hash": "b51475dc0a816a5e3801bbf3089518c75160000376168e877922569d3de46acf",
+    "translated_value": "درجة دافئة"
+  },
+  "filter_preset_warm_tone_desc": {
+    "source_hash": "b1b2b8b51c8e230f4b40ff5b6f406194a00d95145b95ac58b8c1125876afb3f4",
+    "translated_value": "ألوان أكثر دفئاً بلمسة ذهبية"
+  },
+  "filter_preset_cool_tone": {
+    "source_hash": "af5b4dc43beeb8e2d25f65b777c148ad1c193497666c55bd1a0ac9d1674ee31a",
+    "translated_value": "درجة بارِدة"
+  },
+  "filter_preset_cool_tone_desc": {
+    "source_hash": "dfe2e3ca3a8f57a0b21451363b7e90d445d5fce29b36327e65e380cc9256c074",
+    "translated_value": "ألوان أكثر برودة بلمسة زرقاء"
+  },
+  "filter_preset_soft_pastel": {
+    "source_hash": "7f8b96504e854b6d8cca44ab4dd8c48f75672cae42357213b9ecaf68d81c1d80",
+    "translated_value": "باستيل ناعم"
+  },
+  "filter_preset_soft_pastel_desc": {
+    "source_hash": "b8a926f9be283174bae21d932ff205c0755747910299e6e1f6baab85f4515b72",
+    "translated_value": "ألوان ناعمة وهادئة بمظهر رقيق"
+  },
+  "filter_preset_cinematic": {
+    "source_hash": "912d0988b06550601e2fd95360ea72f9bb25f0c7dd54bc741a20dc24f28242c9",
+    "translated_value": "سينمائي"
+  },
+  "filter_preset_cinematic_desc": {
+    "source_hash": "fa673bc311d0c897943bcbb6bf520b188855d8a656d60ab7ee489c4e38134a99",
+    "translated_value": "تدرج ألوان يشبه الأفلام بعمق أكبر"
+  },
+  "filter_preset_dramatic": {
+    "source_hash": "82ebcd30003de028ffe198dfb2946f44806a66cface9d7b9c2fcc56654f92747",
+    "translated_value": "دراماتيكي"
+  },
+  "filter_preset_dramatic_desc": {
+    "source_hash": "b9e73243bb26e403d1400926fa59fe3254718506fe19897b5d522c506577b7a3",
+    "translated_value": "تباين عالٍ بمظهر دراماتيكي"
+  },
+  "filter_preset_night_mode": {
+    "source_hash": "01aac6e13b23a1ada5e5db1fdadcbf4889702fa018d6475b880a0f7f1f435f1b",
+    "translated_value": "الوضع الليلي"
+  },
+  "filter_preset_night_mode_desc": {
+    "source_hash": "f1e8a87fd56baa5461a8dcc4ccf21d4fc90ebf1d61255217807f15d922cfd64b",
+    "translated_value": "سطوع مخفّض للبيئات المعتمة"
+  },
+  "filter_preset_nostalgic": {
+    "source_hash": "b53839619c9788b1c2b1db3134f8db64c8c97b59438d9e9e291d00a990d51ef9",
+    "translated_value": "حنين"
+  },
+  "filter_preset_nostalgic_desc": {
+    "source_hash": "a79b3be1c67fdf996cb2c219d53d56a826114c839630f6aa68b8d8efb0acce92",
+    "translated_value": "مظهر أفلام قديمة وبتركيز ناعم"
+  },
+  "filter_preset_ghibli_style": {
+    "source_hash": "551781469038ffba2d26c1969662badc18178f15f72e5cf31107d962c03a1eda",
+    "translated_value": "أسلوب غيبلي"
+  },
+  "filter_preset_ghibli_style_desc": {
+    "source_hash": "eb12e51c8712344aeadff717adced64cdc24dc212e9c854bf40b1e8e12bbadcb",
+    "translated_value": "ألوان أنيميشن ناعمة وحالمة"
+  },
+  "filter_preset_neon_pop": {
+    "source_hash": "f0262d340be0bba083611ff94740fb9539c23dec7a5b12ab77e9ed5e46dd14a4",
+    "translated_value": "نيون زاهي"
+  },
+  "filter_preset_neon_pop_desc": {
+    "source_hash": "f8e02e1750abfe8a4a4696c92ca46e8fdfc00119cbd0bf1e188c39977e465f3e",
+    "translated_value": "ألوان نيون نابضة بحيوية لافتة"
+  },
+  "filter_preset_deep_black": {
+    "source_hash": "d57eb7d8be7249a62bb3a9a0ebefac9d44c42aff05d3641c4c4a88234cd3e62e",
+    "translated_value": "أسود غامق"
+  },
+  "filter_preset_deep_black_desc": {
+    "source_hash": "dbac9195f155e6e2e319e6ce93148a1db93926ce48cb546eb99f2cfca33fd24e",
+    "translated_value": "أسود عميق معزز لشاشات الأوليد"
+  },
+  "pref_gesture_enable_release_to_cancel_title": {
+    "source_hash": "94dfb635a44cbfc0215a55dc1d0bca9bb082153abf7f802922ed77eec6bc9c52",
+    "translated_value": "تفعيل \"الإفلات للإلغاء\""
+  },
+  "pref_gesture_enable_release_to_cancel_summary": {
+    "source_hash": "39ac175ec36cae663366cde0948a7e512c8aa0b60c28b4b3440b1bb244df9966",
+    "translated_value": "إعادة موضع التقديم إلى الأصل عند الإفلات بالقرب من نقطة بدء السحب"
+  },
+  "pref_player_background_playback": {
+    "source_hash": "7f6f095d5b3a3c185b9f80a4a2d5c570910405e64de04b6120935ce6f184668c",
+    "translated_value": "التشغيل في الخلفية"
+  },
+  "pref_background_playback_always": {
+    "source_hash": "de9f057a471cdb8d3b082719bdc7ad2031788d042947349723fa83c9d13a517a",
+    "translated_value": "دائماً"
+  },
+  "pref_background_playback_audio_only": {
+    "source_hash": "e8c9549d90737964947bab79ce2825bd1172fe4aff88e045b43d685333df62b9",
+    "translated_value": "الملفات الصوتية فقط"
+  },
+  "pref_background_playback_video_only": {
+    "source_hash": "320624d2f93d07686b1230b21863f5214a985ba81d95901bfd32359c7f5acd82",
+    "translated_value": "ملفات الفيديو فقط"
+  },
+  "pref_background_playback_never": {
+    "source_hash": "6300ef800bb884295b0b4b35682b75cecd7cc550d202db56d04a0643b8fb873f",
+    "translated_value": "أبداً"
+  },
+  "pref_player_show_seekbar_chapters_title": {
+    "source_hash": "32ee6e0289f92c7b1310188ad74916849ba5ec47a9728bcdf2f0844f84fe9dd8",
+    "translated_value": "عرض الفصول"
+  },
+  "pref_player_show_seekbar_chapters_summary": {
+    "source_hash": "e35962ff20317cc30e1255d740748b1dda1a50b79c753b5c52df5121e2ce41f9",
+    "translated_value": "عرض علامات الفصول على شريط التقدم"
+  },
+  "pref_player_show_seekbar_read_ahead_title": {
+    "source_hash": "f805fa37d8cbf62f55aee5ae7d9d8fc87e7d57980b486c3db7d6f8ffd88e5a50",
+    "translated_value": "عرض نطاق التخزين المؤقت"
+  },
+  "pref_player_show_seekbar_read_ahead_summary": {
+    "source_hash": "4f832f27a8631b8e7979c59c23a7f35674c2209924e0c6a7b058a7c470212afd",
+    "translated_value": "عرض تلميح بصرّي للمحتوى المُخزّن مؤقتاً على شريط التقديم"
+  },
+  "ab_loop_cut_clip": {
+    "source_hash": "6749ab247ac10e1e83574ba612ce5b4f1a5df98280b3bde3d57dd14a82f511c9",
+    "translated_value": "قص المقطع"
+  },
+  "ab_loop_set_both_points": {
+    "source_hash": "21666b87c143e0f6879973ed8719a5a6fbbda4c9c7a5e32b488b749571ef43c6",
+    "translated_value": "يرجى تحديد النقطتين A و B لاقتطاع المقطع"
+  },
+  "ab_loop_exporting_clip": {
+    "source_hash": "bd08dcb7f5ab4db326883773c28f9e4438a2e9f84983c28cfa5b6b7485018655",
+    "translated_value": "جارٍ تصدير المقطع..."
+  },
+  "ab_loop_clip_saved": {
+    "source_hash": "0dec1a5d99b84e83742cca60d69f0da4ca74d4e5a64021d267877f030932b0aa",
+    "translated_value": "تم حفظ المقطع في %s"
+  },
+  "ab_loop_clip_error": {
+    "source_hash": "7a5098d79155c0b3e859579c52adeedc41fab7b59956c80c0cc51dc61b278d0e",
+    "translated_value": "فشل تصدير المقطع: %s"
+  },
+  "pref_player_show_speed_indicator_overlay": {
+    "source_hash": "2c2333d5f9be28ea1c08080a02f41e212d1137c6f9c0f031a4e2f39ee5a2dc04",
+    "translated_value": "إظهار مؤشر التسريع"
+  },
+  "pref_player_show_speed_indicator_overlay_summary": {
+    "source_hash": "fd00bfd06f2db75a34d57e9965eb027b66a9fc287e294c01b1bb409e277b8eb7",
+    "translated_value": "عرض شارة مؤشر السرعة عند الضغط المطوّل للتشغيل السريع"
+  },
+  "pref_decoder_codec_info_title": {
+    "source_hash": "109f5539f30637a7bec3e5ba557e9780058ee412cc0dee6360459fb2385111d2",
+    "translated_value": "دعم الجهاز للتراميز"
+  },
+  "pref_decoder_codec_info_summary": {
+    "source_hash": "a6a272bba79356a91b359c2058aece55cbf183f651086831948f5bfab9a4c480",
+    "translated_value": "فحص قدرات التسريع العتادي (HW) والفك البرمجي (SW) لصيغ الفيديو والصوت"
+  },
+  "codec_info_hw_badge": {
+    "source_hash": "94ba9cd5ffa703b9bec6723daf6fb003db5e1e99bf051f26562a74b9f6271482",
+    "translated_value": "مُسرَّع بالعتاد"
+  },
+  "codec_info_sw_badge": {
+    "source_hash": "5ceb788fe7d5ed45af6fbb654075b70d7c27d544942b82cd340c4b0c96b51367",
+    "translated_value": "برمجي (بالمعالج)"
+  },
+  "codec_info_filter_all": {
+    "source_hash": "a52ace420f2175d08b1577a1bea5445e36801229c074ef9ed6c55a73401fd9c2",
+    "translated_value": "الكل"
+  },
+  "codec_info_filter_video": {
+    "source_hash": "d534be829e32196b4d1e53b67103cf1e376b1d60071857572598c196abfefbc6",
+    "translated_value": "الفيديو"
+  },
+  "codec_info_filter_audio": {
+    "source_hash": "bc1b88907d3b748af99cb9d4ffc07a0118dad5dab21a9dbdcc5a17a09641364a",
+    "translated_value": "الصوت"
+  },
+  "codec_info_filter_hw_only": {
+    "source_hash": "e7f72a9180f7e6b2b712157d4623a7e0a986f1a344aae0c0092ebe5460c29f95",
+    "translated_value": "العتادي فقط"
+  },
+  "codec_info_stats_title": {
+    "source_hash": "5c21be9f4ab65b6f2e3f28d73a64d2e9a7c2d174e0f7a1675f977882a9f7393d",
+    "translated_value": "ملخص تراميز النظام"
+  },
+  "codec_info_stats_summary": {
+    "source_hash": "7024bf7d7a4ee90757362f550022bc04332f5c175c072bc86a6b3a2919a95bfd",
+    "translated_value": "%1$d مرمّز (%2$d عتادي, %3$d برمجي)"
+  },
+  "codec_info_max_res": {
+    "source_hash": "e958f655480bc1d27d6206524f03d5ae9414d9770ae2a82f47988ce5a47ea0ab",
+    "translated_value": "الحد الأقصى: %s"
+  },
+  "open_with_mini_player": {
+    "source_hash": "84f3c6b3e068e3286640c7d03ac3fd9e8dee4083cc43a70dc74d9c75d534cf23",
+    "translated_value": "فتح بالمُشغّل المصغّر"
+  },
+  "pref_player_section_mini_player": {
+    "source_hash": "2113289ad08a45a1abb862209124013539ec3be064da742b091486a0883f5ff6",
+    "translated_value": "المُشغّل المصغّر"
+  },
+  "pref_player_play_in_mini_player": {
+    "source_hash": "d61f08d5fd33f074485c77a0cdc3b4055bf5ccedc8440bd85aad56ae0c5ae629",
+    "translated_value": "تشغيل الصوت في المُشغّل المصغّر"
+  },
+  "pref_player_play_in_mini_player_summary_on": {
+    "source_hash": "04659693cbab529635701a72cff2331ddd3f27f41f627d91c16890be2624324e",
+    "translated_value": "عند النقر على ملف صوتي، يبدأ التشغيل مباشرة في شريط المُشغّل المصغّر السفلي"
+  },
+  "pref_player_play_in_mini_player_summary_off": {
+    "source_hash": "005a5e05767ac3b40fe16ba60a5b089cad3615f3b230ee11faa1ec02a45b111f",
+    "translated_value": "عند النقر على ملف صوتي، يُفتح المُشغّل بملء الشاشة"
+  },
+  "pref_include_no_media_content_title": {
+    "source_hash": "9e21cf77ffa88f31e8f8bf68c5e043f0cda538d5d71bc47e98dfc29f174307bc",
+    "translated_value": "تضمين محتوى .nomedia"
+  },
+  "pref_include_no_media_content_summary": {
+    "source_hash": "354fed8e3a8123ea40f8c0d63c442f1540f1f0f28728e8e04fc62831fdaf6170",
+    "translated_value": "إظهار الوسائط من المجلدات المستبعدة من مكتبة وسائط أندرويد. قد يستغرق فحص هذه المجلدات وقتاً أطول."
+  },
+  "pref_add_library_root": {
+    "source_hash": "82b5438745c48d29ecc17cf127d1b7417a37d5d1a9e1129d5b1a1df63812cc88",
+    "translated_value": "إضافة مجلد إلى المكتبة"
+  },
+  "pref_clear_library_roots": {
+    "source_hash": "0a0a92e4e587e34b48262799feff56a5048658befbc0c952608e5549f54294dc",
+    "translated_value": "إزالة مجلدات المكتبة المحددة"
+  },
+  "pref_library_root_count": {
+    "source_hash": "56037758a5b4aecad14a51d05336621d4a4f578198bfad48a6e2def89845dd2c",
+    "translated_value": "المجلدات المحددة في المكتبة: %1$d"
+  },
+  "pref_library_roots_title": {
+    "source_hash": "b8b8255c88730e62b1dd6572b811079cc6650f1749253c02263486d8ff8e00db",
+    "translated_value": "مجلدات فحص المكتبة"
+  },
+  "pref_library_roots_summary": {
+    "source_hash": "511d592cc2c64a5c770fa37c243294d937f3e4634f28263eb746ec93b790bc8c",
+    "translated_value": "مجلدات مخصصة وجذور SAF مُصرَّح بها صراحةً لفهرسة المكتبة"
+  },
+  "pref_library_roots_empty_title": {
+    "source_hash": "80240065dd49cad0556bd390ba0bacbddadadb119d904b34e1ea9e2baa0d500e",
+    "translated_value": "لم تتم إضافة أي مجلدات إلى المكتبة"
+  },
+  "pref_library_roots_empty_message": {
+    "source_hash": "a1222427300615cc15f2644694dd6ff70930be35a6bf9818c2114a371ec2a8bb",
+    "translated_value": "أضف مسارات مجلدات مخصصة أو أدلة تخزين خارجي لفهرستها في مكتبتك."
+  },
+  "pref_library_roots_clear_all_confirm_title": {
+    "source_hash": "afabb5f19c661db0b7b132a72ae4f18d1d4858b67197ccad6d33ed75cef57b33",
+    "translated_value": "إزالة جميع مجلدات المكتبة؟"
+  },
+  "pref_library_roots_clear_all_confirm_message": {
+    "source_hash": "a06872879fbd8d4198e3a535d54e6914c8797fa398656791c4bd9214f71daa5e",
+    "translated_value": "هل أنت متأكد من رغبتك في إزالة جميع جذور فحص المكتبة المضافة؟ سيتم التخلي عن الأذونات الدائمة الممنوحة لها."
+  },
+  "pref_media_library_title": {
+    "source_hash": "1beb470bcc494ea941b4512485c2d5f7e43346ae5f64086c63670ca294f78ab4",
+    "translated_value": "الوسائط والمكتبة"
+  },
+  "pref_media_library_summary": {
+    "source_hash": "1b1d170a91e428a094fb3726a3b540a7f6f288c0d766f0115d99d529dd4bd2b5",
+    "translated_value": "إدارة جذور الفحص وملفات .nomedia والمجلدات المحظورة والفهرسة"
+  },
+  "pref_category_content_discovery": {
+    "source_hash": "2f920c60a70134cb06bdba00bdc9656293268e9266953e468316f90b0957fbbe",
+    "translated_value": "المحتوى والاكتشاف"
+  },
+  "pref_category_storage_exclusions": {
+    "source_hash": "1fbe77f3e142f0afcfc10fc6b1eff4b93917ae1563fb5ee3f4131cad1cfa6956",
+    "translated_value": "التخزين والاستثناءات"
+  },
+  "pref_category_library_maintenance": {
+    "source_hash": "5cbe78f9ee15b1d85033483e65a67a4414390e946d0791d71cb4b5cdc3065257",
+    "translated_value": "صيانة المكتبة"
+  },
+  "pref_rescan_library_title": {
+    "source_hash": "c5ac5b41824488cd5663bf625db6a883713d790e84e6f5844341aa02b151eef0",
+    "translated_value": "فرض إعادة فحص المكتبة"
+  },
+  "pref_rescan_library_summary": {
+    "source_hash": "126875d1e1c5bbb8736f1bb321ddfb6ca66cf400e619ff572b0ab0c0a713b41d",
+    "translated_value": "إعادة فهرسة التخزين المشترك الداخلي والجذور المخصصة لاكتشاف الوسائط"
+  },
+  "pref_clear_metadata_cache_title": {
+    "source_hash": "98928bac09661c44a9f739deb8404dc2b4ee20713411e7ff1539b23570f0f547",
+    "translated_value": "مسح ذاكرة التخزين المؤقت للبيانات الوصفية"
+  },
+  "pref_clear_metadata_cache_summary": {
+    "source_hash": "e341085154d6bc76f047b511f7347759c46cacce3d89d86ccade9db566060882",
+    "translated_value": "حذف البيانات الوصفية المخزنة مؤقتاً للفيديو، وأبعاد الإطارات، وذاكرة التخزين المؤقت للصور المصغرة"
+  },
+  "pref_rescan_started_toast": {
+    "source_hash": "5b11c335879a9c2e50362e5a019e2403a0069636022b839ca0a3fdc022655723",
+    "translated_value": "بدأ إعادة فحص مكتبة الوسائط"
+  },
+  "pref_cache_cleared_toast": {
+    "source_hash": "c4c4d13d542efce4b542175770501073714590e3c5b4b780478a7478e2b8f53e",
+    "translated_value": "تم مسح ذاكرة التخزين المؤقت للبيانات الوصفية"
   }
 }

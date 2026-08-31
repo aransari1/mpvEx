@@ -2,6 +2,7 @@ package xyz.mpv.rex.ui.preferences
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -23,7 +24,9 @@ import xyz.mpv.rex.R
 import xyz.mpv.rex.preferences.PlayerPreferences
 import xyz.mpv.rex.preferences.preference.collectAsState
 import xyz.mpv.rex.presentation.Screen
+import xyz.mpv.rex.ui.player.BackgroundPlaybackMode
 import xyz.mpv.rex.ui.player.PlayerOrientation
+import xyz.mpv.rex.ui.player.ResumePlaybackMode
 import xyz.mpv.rex.ui.player.controls.components.sheets.toFixed
 import xyz.mpv.rex.ui.utils.LocalBackStack
 import kotlinx.serialization.Serializable
@@ -65,12 +68,14 @@ object PlayerPreferencesScreen : Screen {
         )
       },
     ) { padding ->
+      val navBarHeight = xyz.mpv.rex.ui.browser.LocalNavigationBarHeight.current
       ProvidePreferenceLocals {
         LazyColumn(
           modifier =
             Modifier
               .fillMaxSize()
               .padding(padding),
+          contentPadding = androidx.compose.foundation.layout.PaddingValues(bottom = navBarHeight + 16.dp),
         ) {
           // General Section
           item {
@@ -96,11 +101,34 @@ object PlayerPreferencesScreen : Screen {
 
               PreferenceDivider()
 
+              val resumePlaybackMode by preferences.resumePlaybackMode.collectAsState()
+              ListPreference(
+                value = resumePlaybackMode,
+                onValueChange = preferences.resumePlaybackMode::set,
+                values = ResumePlaybackMode.entries,
+                valueToText = { AnnotatedString(context.getString(it.titleRes)) },
+                title = { Text(text = stringResource(id = R.string.pref_player_resume_playback_title)) },
+                summary = {
+                  Text(
+                    text = stringResource(id = resumePlaybackMode.titleRes),
+                    color = MaterialTheme.colorScheme.outline,
+                  )
+                },
+              )
+
+              PreferenceDivider()
+
               val savePositionOnQuit by preferences.savePositionOnQuit.collectAsState()
               SwitchPreference(
                 value = savePositionOnQuit,
                 onValueChange = preferences.savePositionOnQuit::set,
                 title = { Text(stringResource(R.string.pref_player_save_position_on_quit)) },
+                summary = {
+                  Text(
+                    text = stringResource(R.string.pref_player_save_position_on_quit_summary),
+                    color = MaterialTheme.colorScheme.outline,
+                  )
+                },
               )
 
               PreferenceDivider()
@@ -203,6 +231,48 @@ object PlayerPreferencesScreen : Screen {
                       stringResource(R.string.pref_player_resume_on_unlock_summary_on)
                     else
                       stringResource(R.string.pref_player_resume_on_unlock_summary_off),
+                    color = MaterialTheme.colorScheme.outline,
+                  )
+                },
+              )
+            }
+          }
+
+          // Mini Player Section
+          item {
+            PreferenceSectionHeader(title = stringResource(R.string.pref_player_section_mini_player))
+          }
+
+          item {
+            PreferenceCard {
+              val backgroundPlayback by preferences.backgroundPlayback.collectAsState()
+              ListPreference(
+                value = backgroundPlayback,
+                onValueChange = preferences.backgroundPlayback::set,
+                values = BackgroundPlaybackMode.entries,
+                valueToText = { AnnotatedString(context.getString(it.titleRes)) },
+                title = { Text(text = stringResource(id = R.string.pref_player_background_playback)) },
+                summary = {
+                  Text(
+                    text = stringResource(id = backgroundPlayback.titleRes),
+                    color = MaterialTheme.colorScheme.outline,
+                  )
+                },
+              )
+
+              PreferenceDivider()
+
+              val playInMiniPlayerDirectly by preferences.playInMiniPlayerDirectly.collectAsState()
+              SwitchPreference(
+                value = playInMiniPlayerDirectly,
+                onValueChange = preferences.playInMiniPlayerDirectly::set,
+                title = { Text(text = stringResource(R.string.pref_player_play_in_mini_player)) },
+                summary = {
+                  Text(
+                    text = if (playInMiniPlayerDirectly)
+                      stringResource(R.string.pref_player_play_in_mini_player_summary_on)
+                    else
+                      stringResource(R.string.pref_player_play_in_mini_player_summary_off),
                     color = MaterialTheme.colorScheme.outline,
                   )
                 },
@@ -416,6 +486,21 @@ object PlayerPreferencesScreen : Screen {
 
               PreferenceDivider()
 
+              val rememberLongPressSpeed by preferences.rememberLongPressSpeed.collectAsState()
+              SwitchPreference(
+                value = rememberLongPressSpeed,
+                onValueChange = preferences.rememberLongPressSpeed::set,
+                title = { Text(stringResource(R.string.pref_player_remember_long_press_speed_title)) },
+                summary = {
+                  Text(
+                    stringResource(R.string.pref_player_remember_long_press_speed_summary),
+                    color = MaterialTheme.colorScheme.outline,
+                  )
+                },
+              )
+
+              PreferenceDivider()
+
               val showDynamicSpeedOverlay by preferences.showDynamicSpeedOverlay.collectAsState()
               SwitchPreference(
                 value = showDynamicSpeedOverlay,
@@ -424,6 +509,21 @@ object PlayerPreferencesScreen : Screen {
                 summary = {
                   Text(
                     stringResource(R.string.pref_player_dynamic_speed_overlay_summary),
+                    color = MaterialTheme.colorScheme.outline,
+                  )
+                }
+              )
+
+              PreferenceDivider()
+
+              val showSpeedIndicatorOverlay by preferences.showSpeedIndicatorOverlay.collectAsState()
+              SwitchPreference(
+                value = showSpeedIndicatorOverlay,
+                onValueChange = preferences.showSpeedIndicatorOverlay::set,
+                title = { Text(stringResource(R.string.pref_player_show_speed_indicator_overlay)) },
+                summary = {
+                  Text(
+                    stringResource(R.string.pref_player_show_speed_indicator_overlay_summary),
                     color = MaterialTheme.colorScheme.outline,
                   )
                 }
