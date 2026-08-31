@@ -1369,12 +1369,12 @@
     <string name="pref_appearance_language_title">App Language</string>
     <string name="pref_appearance_language_summary">Change the display language of the app</string>
 
-    <string name="welcome_title">Welcome to mpvRex</string>
+    <string name="welcome_title">Welcome to mpvNext</string>
     <string name="welcome_subtitle">Your modern, powerful, and customizable media player.</string>
     <string name="welcome_language_section_title">Preferred Language</string>
     <string name="welcome_language_section_desc">Select your display language</string>
     <string name="storage_access_granted">Storage Access Granted</string>
-    <string name="storage_access_granted_desc">Permission is granted. mpvRex is ready to discover and play your media.</string>
+    <string name="storage_access_granted_desc">Permission is granted. mpvNext is ready to discover and play your media.</string>
     <string name="welcome_grant_permission">Grant Permission</string>
     <string name="welcome_get_started">Get Started</string>
     <string name="welcome_skip_permission">Continue without storage access</string>
